@@ -98,5 +98,6 @@ public final class Constants {
         public static final int FOLLOW_SHOOTER_MOTOR = 22;
         public static final int INTAKE_MOTOR = 31;
         public static final int INDEXER_MOTOR = 32;
+        public static final int HOOD_MOTOR = 30;//CHANGE THIS TO CORRECT PORT
     }
 }
