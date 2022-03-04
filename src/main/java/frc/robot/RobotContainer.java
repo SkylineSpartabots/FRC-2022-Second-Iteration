@@ -4,6 +4,7 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
+import frc.robot.commands.CASDriveCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
 import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
@@ -96,9 +97,9 @@ public class RobotContainer {
     // buttons
     m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn));
     m_controller.getYButton().whenPressed(new SetIntakeCommand(intakeReverse));
+    m_controller.getRightStickButton().whenHeld(new CASDriveCommand());
     m_controller.getYButton().whenReleased(new SetIntakeCommand(intakeOn));
     m_controller.getBButton().whenPressed(new SetIntakeCommand(intakeOff));
-    
     //DPAD
     Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});//hold dpad up for indexer up
     dpadUp.whenActive(new SetIndexerCommand(indexerUp)).whenInactive(new SetIndexerCommand(indexerOff));

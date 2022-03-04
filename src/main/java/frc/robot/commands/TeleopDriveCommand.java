@@ -10,7 +10,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class TeleopDriveCommand extends CommandBase {
-    private DrivetrainSubsystem m_drivetrainSubsystem;
+    protected DrivetrainSubsystem m_drivetrainSubsystem;
 
     public TeleopDriveCommand(DrivetrainSubsystem m_drivetrainSubsystem) {
         this.m_drivetrainSubsystem = m_drivetrainSubsystem;
@@ -23,7 +23,7 @@ public class TeleopDriveCommand extends CommandBase {
         driveWithJoystick();
     }
 
-    private final Controller m_controller;
+    protected final Controller m_controller;
 
     //limit accel/deccel
     SlewRateLimiter driveXFilter = new SlewRateLimiter(7);
@@ -56,7 +56,7 @@ public class TeleopDriveCommand extends CommandBase {
         }
     }
 
-    private static double modifyAxis(double value) {
+    protected static double modifyAxis(double value) {
         // Deadband
         value = applyDeadband(value, 0.3);
 
