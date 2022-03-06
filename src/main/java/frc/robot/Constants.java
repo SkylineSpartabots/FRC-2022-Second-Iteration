@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -30,8 +32,12 @@ public final class Constants {
     public static final double intakeOff = 0.0;
     public static final double intakeReverse = -0.5;
 
-    //NEED TO MEASURE / CALCULATE
     public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
+    //Dummy values, need to find/calculate
+    public static final List<Translation2d> kReferenceTranslations = List.of(
+                new Translation2d(1, 0),
+                new Translation2d(3, 3)
+        );
 
     public static final class DriveConstants {
         public static final double kTrackWidth = 0.4953;

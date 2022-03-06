@@ -11,6 +11,7 @@ import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -138,6 +140,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_navx.reset();    
     rotationOffset = pose.getRotation().getDegrees();
     m_odometry.resetPosition(pose, pose.getRotation());
+  }
+
+  public void resetOdometryFromReference(){
+    Translation2d current = getPose().getTranslation();
+    double minError = 100d;
+    Translation2d newPos = null;
+    for(Translation2d ref : Constants.kReferenceTranslations){
+      double errorX = Math.abs(ref.getX() - current.getX());
+      double errorY = Math.abs(ref.getY() - current.getY());
+      double error = Math.sqrt(Math.pow(errorX, 2) + Math.pow(errorY, 2));
+      if(error < minError){
+        newPos = ref;
+        minError = error;
+      }
+    }
+    resetOdometryFromPosition(new Pose2d(newPos, getGyroscopeRotation()));
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
