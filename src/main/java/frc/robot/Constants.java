@@ -34,7 +34,6 @@ public final class Constants {
     
     public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
 
-    public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
     //Dummy values, need to find/calculate
     public static final List<Translation2d> kReferenceTranslations = List.of(
                 new Translation2d(1, 0),
