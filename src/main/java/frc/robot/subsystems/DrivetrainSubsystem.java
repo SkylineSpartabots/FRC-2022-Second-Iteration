@@ -98,14 +98,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_navx.zeroYaw();
   }
 
-  private double rotationOffset = 0;
   public Rotation2d getGyroscopeRotation() {
-   if (m_navx.isMagnetometerCalibrated()) {
-     // We will only get valid fused headings if the magnetometer is calibrated
-     return Rotation2d.fromDegrees(m_navx.getFusedHeading() + rotationOffset);
-   }
-   // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees((-m_navx.getYaw())+rotationOffset);
+   return Rotation2d.fromDegrees(normalize(-m_navx.getAngle()));
+  }
+
+  public double normalize(double deg){    
+    double angle = deg % 360;
+    if(angle < -180){
+        angle = 180-(Math.abs(angle)-180);
+    }
+    else if (angle > 180){
+      angle = -180+(Math.abs(angle)-180);
+    }
+    return angle;
   }
   
   public Pose2d getPose(){
@@ -115,28 +120,28 @@ public class DrivetrainSubsystem extends SubsystemBase {
   //resets to 0,0
   public void resetOdometry() {
     m_navx.reset();
-    rotationOffset = 0;
-    m_odometry.resetPosition(new Pose2d(), new Rotation2d(rotationOffset));
+    m_navx.setAngleAdjustment(0);
+    m_odometry.resetPosition(new Pose2d(), new Rotation2d(0));
   }  
   
   //resets to start position (for blue four/five ball auto)
   public void resetFromStart() {    
     final double startX = 7.82;
     final double startY = 2.97;
-    final double startRot = -110;
+    final double startRot = -111;
     resetOdometryFromPosition(startX, startY, startRot);
   }
 
   //resets from offset
   public void resetOdometryFromPosition(double x, double y, double rot) {
     m_navx.reset();
-    rotationOffset = rot;
-    m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rotationOffset));
+    m_navx.setAngleAdjustment(-rot);
+    m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rot));
   }
-
+  
   public void resetOdometryFromPosition(Pose2d pose) {
     m_navx.reset();    
-    rotationOffset = pose.getRotation().getDegrees();
+    m_navx.setAngleAdjustment(-pose.getRotation().getDegrees());
     m_odometry.resetPosition(pose, pose.getRotation());
   }
 

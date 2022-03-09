@@ -38,7 +38,7 @@ public class AutonomousCommandFactory {
     public static Command blueFourBallAuto(){
         DrivetrainSubsystem m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
 
-        Pose2d startPose = getPose(7.72, 2.82, -110);
+        Pose2d startPose = getPose(7.72, 2.82, -111);
         Pose2d ball1 = getPose(5.36, 1.98, -160);
         Pose2d ball2 = getPose(1.13, 1.33, -137);
         Pose2d ball3 = getPose(7.63, 0.65, -90);

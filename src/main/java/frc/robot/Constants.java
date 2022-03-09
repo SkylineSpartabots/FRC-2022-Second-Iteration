@@ -14,7 +14,7 @@ public final class Constants {
     // timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
     
-    public static final double shootVelocityCondition = 1000;// CHANGE THIS VALUE
+    public static final double shootVelocityCondition = 10000;// CHANGE THIS VALUE
     public static final double shooterFire = 0.51;
     public static final double shooterRamp = 0.5;
     public static final double shooterIdle = 0.2;
@@ -28,6 +28,8 @@ public final class Constants {
     public static final double intakeOn = 0.5;
     public static final double intakeOff = 0.0;
     public static final double intakeReverse = -0.5;
+    
+    public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
 
     public static final class DriveConstants {
 
@@ -98,6 +100,8 @@ public final class Constants {
         public static final int FOLLOW_SHOOTER_MOTOR = 22;
         public static final int INTAKE_MOTOR = 31;
         public static final int INDEXER_MOTOR = 32;
-        public static final int HOOD_MOTOR = 30;//CHANGE THIS TO CORRECT PORT
+        public static final int HOOD_MOTOR = 12;//CHANGE THIS TO CORRECT PORT
+
+        //hood port is 12
     }
 }

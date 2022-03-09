@@ -1,7 +1,10 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.util.Controller;
@@ -10,7 +13,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class TeleopDriveCommand extends CommandBase {
-    private DrivetrainSubsystem m_drivetrainSubsystem;
+    protected DrivetrainSubsystem m_drivetrainSubsystem;
 
     public TeleopDriveCommand(DrivetrainSubsystem m_drivetrainSubsystem) {
         this.m_drivetrainSubsystem = m_drivetrainSubsystem;
@@ -23,13 +26,13 @@ public class TeleopDriveCommand extends CommandBase {
         driveWithJoystick();
     }
 
-    private final Controller m_controller;
+    protected final Controller m_controller;
 
     //limit accel/deccel
     SlewRateLimiter driveXFilter = new SlewRateLimiter(7);
     SlewRateLimiter driveYFilter = new SlewRateLimiter(7);
     SlewRateLimiter rotFilter = new SlewRateLimiter(20);
-
+    
     public void driveWithJoystick() {
         // get joystick input for drive
         var xSpeed = -modifyAxis(m_controller.getLeftY()) * DriveConstants.kMaxSpeedMetersPerSecond;
@@ -38,10 +41,12 @@ public class TeleopDriveCommand extends CommandBase {
 
         SmartDashboard.putNumber("xSpeed", xSpeed);
         SmartDashboard.putNumber("ySpeed", ySpeed);
-        SmartDashboard.putNumber("rotSpeed", rot);
+        SmartDashboard.putNumber("rotSpeed", rot/3.14159*180);
         
+        
+        //rotFilter.calculate
         m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
-                rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));
+            rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));
     }
 
     public static double applyDeadband(double value, double deadband) {
@@ -56,9 +61,9 @@ public class TeleopDriveCommand extends CommandBase {
         }
     }
 
-    private static double modifyAxis(double value) {
+    protected static double modifyAxis(double value) {
         // Deadband
-        value = applyDeadband(value, 0.3);
+        value = applyDeadband(value, 0.1);
 
         // Square the axis
         value = Math.copySign(value * value, value);

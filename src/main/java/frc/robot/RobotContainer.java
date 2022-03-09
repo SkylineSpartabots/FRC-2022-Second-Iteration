@@ -4,11 +4,14 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
+import frc.robot.commands.CASDriveCommand;
+import frc.robot.commands.SetSubsystemCommand.SetHoodCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
 import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
 import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -16,6 +19,7 @@ import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -92,19 +96,43 @@ public class RobotContainer {
         new SetIntakeCommand(intakeOff)));//on trigger release
      m_controller.getRightBumper().whenActive(new SetIndexerCommand(indexerUp));//right bumper hold
      m_controller.getRightBumper().whenInactive(new SetIndexerCommand(indexerOff));//right bumper release
+
+     //joystick buttons     
+    m_controller.getRightStickButton().whenHeld(new CASDriveCommand());
      
     // buttons
-    m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn));
+    /*
     m_controller.getYButton().whenPressed(new SetIntakeCommand(intakeReverse));
-    m_controller.getYButton().whenReleased(new SetIntakeCommand(intakeOn));
+    m_controller.getYButton().whenReleased(new SetIntakeCommand(intakeOn));*/
+
+    
+    //m_controller.getAButton().whenPressed(new SetHoodCommand(0));
+    //m_controller.getYButton().whenPressed(new SetHoodCommand(-10000));
+    HoodSubsystem m_hoodSubsystem = HoodSubsystem.getInstance();
+    m_controller.getYButton().whenPressed(new InstantCommand(() ->  m_hoodSubsystem.resetHoodPosition(), m_hoodSubsystem));
+    m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn));
     m_controller.getBButton().whenPressed(new SetIntakeCommand(intakeOff));
     
     //DPAD
+    
+    //FOR TESTING PURPOSES
+    ShooterSubsystem m_ShooterSubsystem = ShooterSubsystem.getInstance();//sets shooter manually
+    Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});
+    dpadUp.whenActive(m_ShooterSubsystem::increaseVelocity);
+    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});
+    dpadDown.whenActive(m_ShooterSubsystem::decreaseVelocity);
+    
+    Trigger dpadLeft = new Trigger(() -> {return m_controller.getDpadLeft();});//sets hood position manually
+    dpadLeft.whenActive(m_hoodSubsystem::increaseTarget);
+    Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
+    dpadRight.whenActive(m_hoodSubsystem::decreaseTarget);
+    
+    /*
     Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});//hold dpad up for indexer up
     dpadUp.whenActive(new SetIndexerCommand(indexerUp)).whenInactive(new SetIndexerCommand(indexerOff));
     Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});//hold dpad down for indexer down
     dpadDown.whenActive(new SetIndexerCommand(indexerDown)).whenInactive(new SetIndexerCommand(indexerOff));
-    
+    */
   }
 
   public void onRobotDisabled() {

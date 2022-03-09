@@ -15,7 +15,7 @@ public class SetShooterCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        m_subsystem.setShooterPercentPower(percentPower);
+       m_subsystem.setShooterVelocity(percentPower);
     }
 
     @Override
