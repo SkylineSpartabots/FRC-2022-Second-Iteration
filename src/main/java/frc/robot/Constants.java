@@ -4,17 +4,20 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 //holds robot-wide constants
 public final class Constants {
     // timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
     
-    public static final double shootVelocityCondition = 1000;// CHANGE THIS VALUE
+    public static final double shootVelocityCondition = 10000;// CHANGE THIS VALUE
     public static final double shooterFire = 0.51;
     public static final double shooterRamp = 0.5;
     public static final double shooterIdle = 0.2;
@@ -28,15 +31,20 @@ public final class Constants {
     public static final double intakeOn = 0.5;
     public static final double intakeOff = 0.0;
     public static final double intakeReverse = -0.5;
+    
+    public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
+
+    //Dummy values, need to find/calculate
+    public static final List<Translation2d> kReferenceTranslations = List.of(
+                new Translation2d(1, 0),
+                new Translation2d(3, 3)
+        );
 
     public static final class DriveConstants {
-
         public static final double kTrackWidth = 0.4953;
         // Distance between centers of right and left wheels on robot
         public static final double kWheelBase = 0.4953;
         // Distance between front and back wheels on robot
-
-
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
                 new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -44,33 +52,36 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         public static final boolean kGyroReversed = false;
-
         //Calculated via SysId
         public static final double ksVolts = 0.70541;
         public static final double kvVoltSecondsPerMeter = 0.33259;
         public static final double kaVoltSecondsSquaredPerMeter = 0.016433;
-
         //Tuned to taste for desired max velocity
         public static final double kVelocityGain = 6;
-
         // The maximum voltage that will be delivered to the drive motors.
         // This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
         public static final double kMaxVoltage = 12.0;
-
         // The maximum velocity of the robot in meters per second.
         // This is a measure of how fast the robot should be able to drive in a straight line.
         public static final double kMaxSpeedMetersPerSecond = 6380.0 / 60.0 *
                SdsModuleConfigurations.MK4_L2.getDriveReduction() *
                SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
-     
        // need measure on robot
        public static final double kMaxAccelerationMetersPerSecondSquared = 10; 
-
        //The maximum angular velocity of the robot in radians per second.
        //This is a measure of how fast the robot can rotate in place.
        // Here we calculate the theoretical maximum angular velocity. You can also replace this with a measured amount.
        public static final double kMaxAngularSpeedRadiansPerSecond = kMaxSpeedMetersPerSecond /
               Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
+        
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = kMaxAngularSpeedRadiansPerSecond;
+
+        public static final double kpRotation = 0.1;
+        public static final double kiRotation = 0.0;
+        public static final double kdRotation = 0;
+        public static final TrapezoidProfile.Constraints kRotationConstraints =
+                new TrapezoidProfile.Constraints(
+                        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
     public static final class Ports{
@@ -98,6 +109,8 @@ public final class Constants {
         public static final int FOLLOW_SHOOTER_MOTOR = 22;
         public static final int INTAKE_MOTOR = 31;
         public static final int INDEXER_MOTOR = 32;
-        public static final int HOOD_MOTOR = 30;//CHANGE THIS TO CORRECT PORT
+        public static final int HOOD_MOTOR = 12;//CHANGE THIS TO CORRECT PORT
+
+        //hood port is 12
     }
 }

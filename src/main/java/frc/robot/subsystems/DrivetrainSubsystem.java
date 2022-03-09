@@ -11,6 +11,7 @@ import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -98,14 +100,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_navx.zeroYaw();
   }
 
-  private double rotationOffset = 0;
   public Rotation2d getGyroscopeRotation() {
-   if (m_navx.isMagnetometerCalibrated()) {
-     // We will only get valid fused headings if the magnetometer is calibrated
-     return Rotation2d.fromDegrees(m_navx.getFusedHeading() + rotationOffset);
-   }
-   // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees((-m_navx.getYaw())+rotationOffset);
+   return Rotation2d.fromDegrees(normalize(-m_navx.getAngle()));
+  }
+
+  public double normalize(double deg){    
+    double angle = deg % 360;
+    if(angle < -180){
+        angle = 180-(Math.abs(angle)-180);
+    }
+    else if (angle > 180){
+      angle = -180+(Math.abs(angle)-180);
+    }
+    return angle;
   }
   
   public Pose2d getPose(){
@@ -115,29 +122,45 @@ public class DrivetrainSubsystem extends SubsystemBase {
   //resets to 0,0
   public void resetOdometry() {
     m_navx.reset();
-    rotationOffset = 0;
-    m_odometry.resetPosition(new Pose2d(), new Rotation2d(rotationOffset));
+    m_navx.setAngleAdjustment(0);
+    m_odometry.resetPosition(new Pose2d(), new Rotation2d(0));
   }  
   
   //resets to start position (for blue four/five ball auto)
   public void resetFromStart() {    
     final double startX = 7.82;
     final double startY = 2.97;
-    final double startRot = -110;
+    final double startRot = -111;
     resetOdometryFromPosition(startX, startY, startRot);
   }
 
   //resets from offset
   public void resetOdometryFromPosition(double x, double y, double rot) {
     m_navx.reset();
-    rotationOffset = rot;
-    m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rotationOffset));
+    m_navx.setAngleAdjustment(-rot);
+    m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rot));
   }
-
+  
   public void resetOdometryFromPosition(Pose2d pose) {
     m_navx.reset();    
-    rotationOffset = pose.getRotation().getDegrees();
+    m_navx.setAngleAdjustment(-pose.getRotation().getDegrees());
     m_odometry.resetPosition(pose, pose.getRotation());
+  }
+
+  public void resetOdometryFromReference(){
+    Translation2d current = getPose().getTranslation();
+    double minError = 100d;
+    Translation2d newPos = null;
+    for(Translation2d ref : Constants.kReferenceTranslations){
+      double errorX = Math.abs(ref.getX() - current.getX());
+      double errorY = Math.abs(ref.getY() - current.getY());
+      double error = Math.sqrt(Math.pow(errorX, 2) + Math.pow(errorY, 2));
+      if(error < minError){
+        newPos = ref;
+        minError = error;
+      }
+    }
+    resetOdometryFromPosition(new Pose2d(newPos, getGyroscopeRotation()));
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {

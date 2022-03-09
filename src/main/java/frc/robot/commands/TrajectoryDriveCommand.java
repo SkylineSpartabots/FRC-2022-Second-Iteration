@@ -90,7 +90,7 @@ public class TrajectoryDriveCommand extends CommandBase {
       new Pose2d(m_subsystem.getPose().getX(), m_subsystem.getPose().getY(), m_subsystem.getGyroscopeRotation()), desiredSpeed , m_endRotation);
     m_subsystem.drive(targetChassisSpeeds);
 
-    SmartDashboard.putNumber("Elapsed Time", m_timer.get());
+    /*SmartDashboard.putNumber("Elapsed Time", m_timer.get());
     SmartDashboard.putNumber("Desired acceleration", desiredSpeed.accelerationMetersPerSecondSq);
     SmartDashboard.putNumber("Desired velocity", desiredSpeed.velocityMetersPerSecond);
     SmartDashboard.putNumber("DesiredX", desiredSpeed.poseMeters.getX());
@@ -100,7 +100,7 @@ public class TrajectoryDriveCommand extends CommandBase {
     SmartDashboard.putNumber("End Rotation", m_endRotation.getDegrees());
     SmartDashboard.putNumber("Auto X Speed", targetChassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("Auto Y Speed", targetChassisSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("Auto Rot Speed", targetChassisSpeeds.omegaRadiansPerSecond);
+    SmartDashboard.putNumber("Auto Rot Speed", targetChassisSpeeds.omegaRadiansPerSecond);*/
   }
 
   // Called once the command ends or is interrupted.

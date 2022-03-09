@@ -37,7 +37,7 @@ public class Controller {
     }
     
     public boolean getDpadUp(){ return xbox.getPOV() == 0; }
-    public boolean getDpadRigbt(){ return xbox.getPOV() == 90;}
+    public boolean getDpadRight(){ return xbox.getPOV() == 90;}
     public boolean getDpadDown(){ return xbox.getPOV() == 180;}
     public boolean getDpadLeft(){ return xbox.getPOV() == 270;}
 
