@@ -11,6 +11,7 @@ import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.util.Color;
 
 //holds robot-wide constants
 public final class Constants {
@@ -33,6 +34,12 @@ public final class Constants {
     public static final double intakeReverse = -0.5;
     
     public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
+
+    public static final Color kColorSenorBlue = new Color(0.153076171875,0.39892578125, 0.448486328125);
+    public static final Color kColorSenorRed = new Color(0.532470703125, 0.340576171875, 0.12744140625);
+    public static final Color allianceColor = kColorSenorBlue;
+    public static final double kColorSensorLoadingDistance = 50;
+    public static final double kColorSensorIndexerDistance = 180;
 
     //Dummy values, need to find/calculate
     public static final List<Translation2d> kReferenceTranslations = List.of(

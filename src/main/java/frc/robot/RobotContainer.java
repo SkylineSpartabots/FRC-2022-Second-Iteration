@@ -9,6 +9,7 @@ import frc.robot.commands.SetSubsystemCommand.SetHoodCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
 import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
+import frc.robot.commands.WaitUntilCommand.WaitUntilIndexerCommand;
 import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -76,7 +77,9 @@ public class RobotContainer {
     // back button
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets odometry and heading
     m_controller.getXButton().whenPressed(m_drivetrainSubsystem::resetFromStart);// resets odometry and heading
-    m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetOdometryFromReference);//what does this do????
+    //m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetOdometryFromReference);//what does this do????
+    m_controller.getStartButton().whenPressed(new WaitUntilIndexerCommand());
+
      //left triggers and bumpers
      Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});//left trigger deadzone 0.8
      leftTriggerAxis.whenActive(new SetShooterCommand(shooterRamp));//on trigger hold
@@ -88,7 +91,7 @@ public class RobotContainer {
      rightTriggerAxis.whenActive(//TO DO: FIGURE OUT CANCELLING COMMAND
         new SequentialCommandGroup( //on trigger hold, waits for
           new SetShooterCommand(shooterFire), //ramps up shooter to shooting speeds
-          new WaitUntilCommand(() -> {return ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition);}), //waits for correct velocity
+          new WaitUntilCommand(() -> {return ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition, 1000);}), //waits for correct velocity
           new SetIndexerCommand(indexerFire), new SetIntakeCommand(intakeOn))); //fires indexer
      rightTriggerAxis.whenInactive(new ParallelCommandGroup(
         new SetShooterCommand(shooterIdle),
