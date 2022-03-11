@@ -15,5 +15,6 @@ import edu.wpi.first.wpilibj.util.Color;
 public final class Constants {
     public static final Color kColorSenorBlue = new Color(0.153076171875,0.39892578125, 0.448486328125);
     public static final Color kColorSenorRed = new Color(0.532470703125, 0.340576171875, 0.12744140625);
-    public static final double kColorSensorLoadingDistance = 200;
+    public static final double kColorSensorLoadingDistance = 50;
+    public static final double kColorSensorIndexerDistance = 180;
 }

@@ -15,15 +15,18 @@ import frc.robot.Constants;
 import java.util.Objects;
 
 public class ColorSensorSubsystem extends SubsystemBase {
-    private static final I2C.Port i2cPort = I2C.Port.kOnboard;
+    private static final I2C.Port onboardI2C = I2C.Port.kOnboard;
+    private static final I2C.Port kMxpI2C = I2C.Port.kMXP;
     private static final ColorMatch m_colorMatcher = new ColorMatch();
     private static ColorSensorSubsystem mInstance;
     //Initialize other sensors with this method
     private static TunedColorSensor m_intakeSensor;
+    private static TunedColorSensor m_indexerSensor;
     private ColorSensorSubsystem() {
         m_colorMatcher.addColorMatch(Constants.kColorSenorBlue);
         m_colorMatcher.addColorMatch(Constants.kColorSenorRed);
-        m_intakeSensor = new TunedColorSensor(Constants.kColorSensorLoadingDistance, i2cPort);
+        m_intakeSensor = new TunedColorSensor(Constants.kColorSensorLoadingDistance, onboardI2C);
+        m_indexerSensor = new TunedColorSensor(Constants.kColorSensorIndexerDistance, kMxpI2C);
     }
 
     private class TunedColorSensor{
@@ -59,14 +62,14 @@ public class ColorSensorSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        Color detectedColor = m_intakeSensor.colorSensor.getColor();
+        Color detectedColor = m_indexerSensor.colorSensor.getColor();
 
-        SmartDashboard.putNumber("proximity", getProximity(m_intakeSensor));
+        SmartDashboard.putNumber("proximity", getProximity(m_indexerSensor));
         SmartDashboard.putNumber("red", detectedColor.red);
         SmartDashboard.putNumber("blue", detectedColor.blue);
         SmartDashboard.putNumber("green", detectedColor.green);
         SmartDashboard.putBoolean("alliance", isAllianceBall(detectedColor, Constants.kColorSenorBlue));
-        SmartDashboard.putBoolean("loaded?", isBallLoaded(m_intakeSensor));
+        SmartDashboard.putBoolean("loaded?", isBallLoaded(m_indexerSensor));
     }
     /* TODO (in general)
      *  implement a way to check if a ball is loaded - done, see isBallLoaded
