@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
+import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
 import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -39,7 +40,8 @@ public class WaitUntilIndexerCommand extends CommandBase {
                 new ParallelCommandGroup(new WaitUntilHoodAtPosition(0), new WaitUntilShooterAtVelocity(5000)),
                 new SetIndexerCommand(Constants.indexerUp), 
                 new WaitUntilCommand(() -> !m_color.isIndexerBallLoaded()),
-                new SetIndexerCommand(Constants.indexerOff)).schedule();
+                new SetShooterCommand(0), 
+                new WaitUntilIndexerCommand());
         }
         else{
             new WaitUntilIntakeCommand().schedule();

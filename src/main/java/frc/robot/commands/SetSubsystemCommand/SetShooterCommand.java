@@ -7,10 +7,10 @@ public class SetShooterCommand extends CommandBase {
     private final ShooterSubsystem m_subsystem;
     private double velocity;
 
-    public SetShooterCommand(double percentPower) {
+    public SetShooterCommand(double velocity) {
         m_subsystem = ShooterSubsystem.getInstance();
         addRequirements(m_subsystem);
-        this.velocity = percentPower;
+        this.velocity = velocity;
     }
 
     @Override
