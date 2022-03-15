@@ -75,14 +75,14 @@ public class ColorSensorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Color detectedColor = m_indexerSensor.colorSensor.getColor();
+        // Color detectedColor = m_indexerSensor.colorSensor.getColor();
         
-        SmartDashboard.putNumber("proximity", getProximity(m_indexerSensor));
-        SmartDashboard.putNumber("red", detectedColor.red);
-        SmartDashboard.putNumber("blue", detectedColor.blue);
-        SmartDashboard.putNumber("green", detectedColor.green);
-        SmartDashboard.putBoolean("alliance", isAllianceBall(detectedColor, Constants.kColorSenorBlue));
-        SmartDashboard.putBoolean("loaded?", isBallLoaded(m_indexerSensor));
+        // SmartDashboard.putNumber("proximity", getProximity(m_indexerSensor));
+        // SmartDashboard.putNumber("red", detectedColor.red);
+        // SmartDashboard.putNumber("blue", detectedColor.blue);
+        // SmartDashboard.putNumber("green", detectedColor.green);
+        // SmartDashboard.putBoolean("alliance", isAllianceBall(detectedColor, Constants.kColorSenorBlue));
+        // SmartDashboard.putBoolean("loaded?", isBallLoaded(m_indexerSensor));
     }
     /* TODO (in general)
      *  implement a way to check if a ball is loaded - done, see isBallLoaded

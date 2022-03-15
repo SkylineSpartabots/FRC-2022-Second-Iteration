@@ -71,8 +71,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //manual set velocity FOR TESTING PURPOSES
     private double velocity = 0;
-    public void increaseVelocity(){velocity += 500;setShooterVelocity(velocity);}
-    public void decreaseVelocity(){velocity -= 500;setShooterVelocity(velocity);}
+    public void increaseVelocity(){velocity += 500;setShooterPercentPower(velocity);}
+    public void decreaseVelocity(){velocity -= 500;setShooterPercentPower(velocity);}
 
 
     @Override

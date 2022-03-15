@@ -15,6 +15,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import static frc.robot.Constants.*;
 
@@ -47,7 +48,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
-
+    LimelightSubsystem m_limelight = LimelightSubsystem.getInstance();
     // Set the scheduler to log Shuffleboard events for command initialize,
     // interrupt, finish
     CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker(
