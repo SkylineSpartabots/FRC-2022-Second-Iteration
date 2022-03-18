@@ -11,6 +11,7 @@ import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.util.Color;
 
 //holds robot-wide constants
 public final class Constants {
@@ -24,15 +25,24 @@ public final class Constants {
     public static final double shooterOff = 0.0;
 
     public static final double indexerOff = 0.0;
-    public static final double indexerUp = 0.4;
+    public static final double indexerUp = 0.5;
     public static final double indexerDown = -0.2;
     public static final double indexerFire = 0.6;
 
-    public static final double intakeOn = 0.5;
+    public static final double intakeOn = 0.7;
     public static final double intakeOff = 0.0;
     public static final double intakeReverse = -0.5;
     
     public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
+
+    public static final Color kColorSensorBlueIntake = new Color(0.19,0.43, 0.37);
+    public static final Color kColorSensorRedIntake = new Color(0.44, 0.38, 0.16);
+    public static final Color kColorSensorBlueIndexer = new Color(0.13,0.48, 0.38);
+    public static final Color kColorSensorRedIndexer = new Color(0.49, 0.36, 0.14);
+    public static final Color allianceColorIntake = kColorSensorBlueIntake;
+    public static final Color allianceColorIndexer = kColorSensorBlueIndexer;
+    public static final double kColorSensorLoadingDistance = 50;
+    public static final double kColorSensorIndexerDistance = 170;
 
     //Dummy values, need to find/calculate
     public static final List<Translation2d> kReferenceTranslations = List.of(
@@ -88,29 +98,28 @@ public final class Constants {
         public static final int FRONT_LEFT_DRIVE = 2;
         public static final int FRONT_LEFT_STEER = 1;
         public static final int FRONT_LEFT_STEER_ENCODER = 9;
-        public static final double FRONT_LEFT_OFFSET = -Math.toRadians(301.72576904296875);
+        public static final double FRONT_LEFT_OFFSET = -Math.toRadians(81.3812255859375);
 
         public static final int FRONT_RIGHT_DRIVE = 8;
         public static final int FRONT_RIGHT_STEER = 7;
         public static final int FRONT_RIGHT_STEER_ENCODER = 12;
-        public static final double FRONT_RIGHT_OFFSET = -Math.toRadians(265.9515380859375);
+        public static final double FRONT_RIGHT_OFFSET = -Math.toRadians(303.48358154296875);
 
         public static final int BACK_LEFT_DRIVE = 4;
         public static final int BACK_LEFT_STEER = 3;
         public static final int BACK_LEFT_STEER_ENCODER = 10;
-        public static final double BACK_LEFT_OFFSET = -Math.toRadians(246.1761474609375);
+        public static final double BACK_LEFT_OFFSET = -Math.toRadians(349.26910400390625);
 
         public static final int BACK_RIGHT_DRIVE = 6;
         public static final int BACK_RIGHT_STEER = 5;
         public static final int BACK_RIGHT_STEER_ENCODER = 11;
-        public static final double BACK_RIGHT_OFFSET = -Math.toRadians(234.228515625);
+        public static final double BACK_RIGHT_OFFSET = -Math.toRadians(156.5277099609375);
 
         public static final int MASTER_SHOOTER_MOTOR = 21;
         public static final int FOLLOW_SHOOTER_MOTOR = 22;
         public static final int INTAKE_MOTOR = 31;
         public static final int INDEXER_MOTOR = 32;
-        public static final int HOOD_MOTOR = 12;//CHANGE THIS TO CORRECT PORT
+        public static final int HOOD_MOTOR = 23;//CHANGE THIS TO CORRECT PORT
 
-        //hood port is 12
     }
 }

@@ -60,8 +60,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000) [for against the hub]
-    public boolean shooterAtVelocityRPS(double velocity){
-        if(mMasterShooter.getSelectedSensorVelocity()> velocity){
+    public boolean shooterAtVelocityRPS(double velocity, double threshold){
+        if(mMasterShooter.getSelectedSensorVelocity()> velocity - threshold && mMasterShooter.getSelectedSensorVelocity() < velocity + threshold){
             return true;
         }
         else{
@@ -78,7 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic(){
         SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
-        //SmartDashboard.putNumber("Shooter Target", velocity);
+        SmartDashboard.putNumber("Shooter Target", velocity);
         SmartDashboard.putNumber("Shooter Vel", mMasterShooter.getSelectedSensorVelocity());
     }
 }

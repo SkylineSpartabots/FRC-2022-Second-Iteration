@@ -72,13 +72,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //DrivetrainSubsystem.getInstance().resetOdometry();
     if (m_autonomousCommand != null) {
       // cancels auto command
       m_autonomousCommand.cancel();
     }
     Command CAS = new CASShootCommand();
-    //CAS.schedule();
   }
 
   /** This function is called periodically during operator control. */

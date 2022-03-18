@@ -40,10 +40,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
     private LimelightSubsystem(){
         nt = NetworkTableInstance.getDefault().getTable("limelight");
-    }
-
-    public void init(){
-        nt.getEntry("ledMode").setNumber(LimelightControl.LED_Default.number());
+        nt.getEntry("ledMode").setNumber(LimelightControl.LED_Off.number());
         nt.getEntry("camMode").setNumber(LimelightControl.Cam_Vision.number());
     }
 
@@ -61,7 +58,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
     public double getXOffset(){
         return nt.getEntry("tx").getDouble(0.0);
-    }
+    } 
 
     public double getYOffset(){
         return nt.getEntry("ty").getDouble(0.0);

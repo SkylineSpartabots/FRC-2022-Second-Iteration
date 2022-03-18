@@ -78,7 +78,7 @@ public class HoodSubsystem extends SubsystemBase {
     @Override
     public void periodic(){  
         SmartDashboard.putNumber("Hood Position", getHoodPosition());
-        //SmartDashboard.putNumber("Hood Target", target);
+        SmartDashboard.putNumber("Hood Target", target);
         SmartDashboard.putNumber("Hood Power", m_hoodMotor.getMotorOutputPercent());
     }
 }
