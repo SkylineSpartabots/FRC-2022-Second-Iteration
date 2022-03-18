@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
+import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
 import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -33,11 +34,12 @@ public class WaitUntilIntakeCommand extends CommandBase {
     @Override
     public void end(boolean interrupted){
         m_subsystem.setIntakePercentPower(Constants.intakeOff);
-        if(!m_color.isAllianceBallIndexer()){
+        //add a short wait before determining alliance ball color
+        /*if(!m_color.isAllianceBallIndexer()){
             new SequentialCommandGroup(
-                new SetIndexerCommand(Constants.intakeReverse), 
+                new SetIntakeCommand(Constants.intakeReverse), 
                 new WaitCommand(1),
                 new SetIndexerCommand(Constants.indexerOff)).schedule();
-        }
+        }*/
     }
 }

@@ -35,11 +35,14 @@ public final class Constants {
     
     public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
 
-    public static final Color kColorSenorBlue = new Color(0.153076171875,0.39892578125, 0.448486328125);
-    public static final Color kColorSenorRed = new Color(0.532470703125, 0.340576171875, 0.12744140625);
-    public static final Color allianceColor = kColorSenorBlue;
+    public static final Color kColorSensorBlueIntake = new Color(0.19,0.43, 0.37);
+    public static final Color kColorSensorRedIntake = new Color(0.44, 0.38, 0.16);
+    public static final Color kColorSensorBlueIndexer = new Color(0.13,0.48, 0.38);
+    public static final Color kColorSensorRedIndexer = new Color(0.49, 0.36, 0.14);
+    public static final Color allianceColorIntake = kColorSensorBlueIntake;
+    public static final Color allianceColorIndexer = kColorSensorBlueIndexer;
     public static final double kColorSensorLoadingDistance = 50;
-    public static final double kColorSensorIndexerDistance = 180;
+    public static final double kColorSensorIndexerDistance = 170;
 
     //Dummy values, need to find/calculate
     public static final List<Translation2d> kReferenceTranslations = List.of(

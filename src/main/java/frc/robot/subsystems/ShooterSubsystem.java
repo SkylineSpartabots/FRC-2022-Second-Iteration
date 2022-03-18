@@ -71,14 +71,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //manual set velocity FOR TESTING PURPOSES
     private double velocity = 0;
-    public void increaseVelocity(){velocity += 500;setShooterPercentPower(velocity);}
-    public void decreaseVelocity(){velocity -= 500;setShooterPercentPower(velocity);}
+    public void increaseVelocity(){velocity += 500;setShooterVelocity(velocity);}
+    public void decreaseVelocity(){velocity -= 500;setShooterVelocity(velocity);}
 
 
     @Override
     public void periodic(){
         SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
-        //SmartDashboard.putNumber("Shooter Target", velocity);
+        SmartDashboard.putNumber("Shooter Target", velocity);
         SmartDashboard.putNumber("Shooter Vel", mMasterShooter.getSelectedSensorVelocity());
     }
 }

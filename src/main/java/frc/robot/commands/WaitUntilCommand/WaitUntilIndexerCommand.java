@@ -35,16 +35,19 @@ public class WaitUntilIndexerCommand extends CommandBase {
     @Override
     public void end(boolean interrupted){
         m_subsystem.setIndexerPercentPower(Constants.indexerOff);
-        if(!m_color.isAllianceBallIndexer()){
+        new WaitUntilIntakeCommand().schedule();
+
+        //add a short pause before determining ball color
+        /*if(!m_color.isAllianceBallIndexer()){//ejection system
             new SequentialCommandGroup(
                 new ParallelCommandGroup(new WaitUntilHoodAtPosition(0), new WaitUntilShooterAtVelocity(5000)),
                 new SetIndexerCommand(Constants.indexerUp), 
                 new WaitUntilCommand(() -> !m_color.isIndexerBallLoaded()),
                 new SetShooterCommand(0), 
-                new WaitUntilIndexerCommand());
+                new WaitUntilIndexerCommand()).schedule();
         }
         else{
             new WaitUntilIntakeCommand().schedule();
-        }
+        }*/
     }
 }
