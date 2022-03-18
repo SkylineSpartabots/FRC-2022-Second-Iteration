@@ -85,6 +85,9 @@ public final class Constants {
     }
 
     public static final class Ports{
+        public static final int LEFT_CLIMB = 42;
+        public static final int RIGHT_CLIMB = 41;
+
         public static final int FRONT_LEFT_DRIVE = 2;
         public static final int FRONT_LEFT_STEER = 1;
         public static final int FRONT_LEFT_STEER_ENCODER = 9;

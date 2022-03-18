@@ -5,11 +5,13 @@ package frc.robot;
 
 import frc.lib.util.Controller;
 import frc.robot.commands.CASDriveCommand;
+import frc.robot.commands.SetSubsystemCommand.SetClimbCommand;
 import frc.robot.commands.SetSubsystemCommand.SetHoodCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
 import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
 import frc.robot.factories.AutonomousCommandFactory;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -40,11 +42,13 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private DrivetrainSubsystem m_drivetrainSubsystem;
+  private ClimbSubsystem mClimbSubsystem;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    mClimbSubsystem = ClimbSubsystem.getInstance();
     m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
 
     // Set the scheduler to log Shuffleboard events for command initialize,
@@ -115,6 +119,7 @@ public class RobotContainer {
     //DPAD
     
     //FOR TESTING PURPOSES
+    /*
     ShooterSubsystem m_ShooterSubsystem = ShooterSubsystem.getInstance();//sets shooter manually
     Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});
     dpadUp.whenActive(m_ShooterSubsystem::increaseVelocity);
@@ -125,6 +130,7 @@ public class RobotContainer {
     dpadLeft.whenActive(m_hoodSubsystem::increaseTarget);
     Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
     dpadRight.whenActive(m_hoodSubsystem::decreaseTarget);
+    */
     
     /*
     Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});//hold dpad up for indexer up
@@ -132,6 +138,18 @@ public class RobotContainer {
     Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});//hold dpad down for indexer down
     dpadDown.whenActive(new SetIndexerCommand(indexerDown)).whenInactive(new SetIndexerCommand(indexerOff));
     */
+
+    Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});
+    dpadUp.whenActive(new SetClimbCommand(true, true));
+    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});
+    dpadDown.whenActive(new SetClimbCommand(false, true));
+    Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
+    dpadRight.whenActive(new SetClimbCommand(true, false));
+    Trigger dpadLeft = new Trigger(() -> {return m_controller.getDpadLeft();});
+    dpadLeft.whenActive(new SetClimbCommand(false, false));
+
+
+
   }
 
   public void onRobotDisabled() {
