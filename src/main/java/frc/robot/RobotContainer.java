@@ -113,7 +113,7 @@ public class RobotContainer {
     //m_controller.getAButton().whenPressed(new SetHoodCommand(0));
     //m_controller.getYButton().whenPressed(new SetHoodCommand(-10000));
     HoodSubsystem m_hoodSubsystem = HoodSubsystem.getInstance();
-    m_controller.getYButton().whenPressed(new InstantCommand(() ->  m_hoodSubsystem.resetHoodPosition(), m_hoodSubsystem));
+    //m_controller.getYButton().whenPressed(new InstantCommand(() ->  m_hoodSubsystem.resetHoodPosition(), m_hoodSubsystem));
     m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn));
     m_controller.getBButton().whenPressed(new SetIntakeCommand(intakeOff));
     //DPAD
@@ -147,6 +147,7 @@ public class RobotContainer {
     dpadRight.whenActive(new SetClimbCommand(true, false));
     Trigger dpadLeft = new Trigger(() -> {return m_controller.getDpadLeft();});
     dpadLeft.whenActive(new SetClimbCommand(false, false));
+    m_controller.getYButton().whenPressed(new InstantCommand(() -> mClimbSubsystem.motionCompleteHalt(), mClimbSubsystem));
 
 
 

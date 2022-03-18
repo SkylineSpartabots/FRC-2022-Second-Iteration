@@ -59,6 +59,11 @@ public class ClimbSubsystem extends SubsystemBase {
             mRightClimb.set(ControlMode.PercentOutput, -0.1);
         }
     }
+
+    public void motionCompleteHalt(){
+        mRightClimb.set(ControlMode.PercentOutput, 0);
+        mLeftClimb.set(ControlMode.PercentOutput, 0);
+    }
 }
 
 //left is 42, right 41
