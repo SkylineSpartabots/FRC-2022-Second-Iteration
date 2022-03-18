@@ -34,7 +34,7 @@ public class ClimbSubsystem extends SubsystemBase {
         talon.setInverted(b);
         talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setNeutralMode(NeutralMode.Brake);
         /*
         talon.config_kF(0, 0.047, Constants.kTimeOutMs);
         talon.config_kP(0, 0.02, Constants.kTimeOutMs);
@@ -61,8 +61,8 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     public void motionCompleteHalt(){
-        mRightClimb.set(ControlMode.PercentOutput, 0);
-        mLeftClimb.set(ControlMode.PercentOutput, 0);
+        mRightClimb.neutralOutput();
+        mLeftClimb.neutralOutput();
     }
 }
 
