@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.CASDriveCommand;
+import frc.robot.commands.CASShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -173,6 +175,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
     SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
+    SmartDashboard.putNumber("Distance", CASShootCommand.calculateDistance(
+      getPose().getX(), getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY()));
     SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
     SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
      

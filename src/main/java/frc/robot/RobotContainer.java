@@ -5,6 +5,7 @@ package frc.robot;
 
 import frc.lib.util.Controller;
 import frc.robot.commands.CASDriveCommand;
+import frc.robot.commands.CASShootCommand;
 import frc.robot.commands.SetSubsystemCommand.SetHoodCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
@@ -92,7 +93,7 @@ public class RobotContainer {
      rightTriggerAxis.whenActive(//TO DO: FIGURE OUT CANCELLING COMMAND
         new SequentialCommandGroup( //on trigger hold, waits for
           new SetShooterCommand(shooterFire), //ramps up shooter to shooting speeds
-          new WaitUntilCommand(() -> {return ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition, 1000);}), //waits for correct velocity
+          new WaitUntilCommand(() -> {return ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition, 8000);}), //waits for correct velocity
           new SetIndexerCommand(indexerFire), new SetIntakeCommand(intakeOn))); //fires indexer
      rightTriggerAxis.whenInactive(new ParallelCommandGroup(
         new SetShooterCommand(shooterIdle),
@@ -114,6 +115,7 @@ public class RobotContainer {
     //m_controller.getYButton().whenPressed(new SetHoodCommand(-10000));
     HoodSubsystem m_hoodSubsystem = HoodSubsystem.getInstance();
     m_controller.getYButton().whenPressed(new InstantCommand(() ->  m_hoodSubsystem.resetHoodPosition(), m_hoodSubsystem));
+    //m_controller.getYButton().whenPressed(m_hoodSubsystem::resetHoodPosition);
     m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn));
     m_controller.getBButton().whenPressed(new SetIntakeCommand(intakeOff));
     //DPAD
@@ -121,9 +123,10 @@ public class RobotContainer {
     //FOR TESTING PURPOSES
     ShooterSubsystem m_ShooterSubsystem = ShooterSubsystem.getInstance();//sets shooter manually
     Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});
-    dpadUp.whenActive(m_ShooterSubsystem::increaseVelocity);
+    dpadUp.whenActive(new CASShootCommand());
+    //dpadUp.whenActive(m_ShooterSubsystem::increaseVelocity);
     Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});
-    dpadDown.whenActive(m_ShooterSubsystem::decreaseVelocity);
+    //dpadDown.whenActive(m_ShooterSubsystem::decreaseVelocity);
     
     Trigger dpadLeft = new Trigger(() -> {return m_controller.getDpadLeft();});//sets hood position manually
     dpadLeft.whenActive(m_hoodSubsystem::increaseTarget);

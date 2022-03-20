@@ -19,8 +19,8 @@ public final class Constants {
     public static final int kTimeOutMs = 10;
     
     public static final double shootVelocityCondition = 10000;// CHANGE THIS VALUE
-    public static final double shooterFire = 0.51;
-    public static final double shooterRamp = 0.5;
+    public static final double shooterFire = 0.40;
+    public static final double shooterRamp = 0.4;
     public static final double shooterIdle = 0.2;
     public static final double shooterOff = 0.0;
 
@@ -63,9 +63,9 @@ public final class Constants {
 
         public static final boolean kGyroReversed = false;
         //Calculated via SysId
-        public static final double ksVolts = 0.70541;
-        public static final double kvVoltSecondsPerMeter = 0.33259;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.016433;
+        public static final double ksVolts = 0.54428; //before 3/1: 70541, 33259, 016433
+        public static final double kvVoltSecondsPerMeter = 0.34232;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.10268;
         //Tuned to taste for desired max velocity
         public static final double kVelocityGain = 6;
         // The maximum voltage that will be delivered to the drive motors.

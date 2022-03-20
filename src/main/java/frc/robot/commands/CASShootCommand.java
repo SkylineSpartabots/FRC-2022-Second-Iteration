@@ -52,32 +52,35 @@ public class CASShootCommand extends CommandBase {
     //if greater than 5 meters away, reset hood position and turn off shooter
     
     private void calculateShooterHood(double distance){
-      double minHubDistance = 1.5;
-      double maxHubDistance = 5.0;
+      double minHubDistance = 2;
+      double maxHubDistance = 6.0;
 
-      double hoodSlope = -6316.0;
-      double hoodIntercept = 7317.0;
+      double hoodSlope = -10309.0;
+      double hoodIntercept = 21041.0;
       double targetHoodPosition = hoodSlope * distance + hoodIntercept;
 
-      double shooterA = 36.70;
+      double shooterSlope = 735.8;
+      double shooterIntercept = 6157.0;
+      double targetShooterVelocity = shooterSlope * distance + shooterIntercept;
+      /*double shooterA = 36.70;
       double shooterExp = 3.105;
       double shooterIntercept = 9868.0;
-      double targetShooterVelocity = shooterA * Math.pow(distance, shooterExp) + shooterIntercept;
-      if(targetShooterVelocity < 10000) targetShooterVelocity = 10000;
-      else if(targetShooterVelocity > 14500) targetShooterVelocity = 14500;
+      double targetShooterVelocity = shooterA * Math.pow(distance, shooterExp) + shooterIntercept;*/
+      if(targetShooterVelocity > 11000) targetShooterVelocity = 11000;
+      //else if(targetShooterVelocity > 14500) targetShooterVelocity = 14500;
 
       
       if(targetHoodPosition > 0) targetHoodPosition = 0;
-      else if(targetHoodPosition < -15000) {
-        targetHoodPosition = 0;
-        targetShooterVelocity = 0;
+      else if(targetHoodPosition < -38000) {
+        targetHoodPosition = -38000;
+        //CANNOT SHOOT IF THIS IS CALLED
       }
-/*
+
+      boolean shootable = true;
       //if distance invalid, slow down
       if(distance > maxHubDistance || distance < minHubDistance) {
-        targetHoodPosition = 0;
-        targetShooterVelocity = 0;
-      }*/
+          shootable = false;
+      }
 
       m_hood.moveHoodToPosition((int)targetHoodPosition);
       m_shooter.setShooterVelocity((int)targetShooterVelocity);
@@ -85,12 +88,13 @@ public class CASShootCommand extends CommandBase {
       SmartDashboard.putNumber("Hood Target", targetHoodPosition);
       SmartDashboard.putNumber("Shooter Target", targetShooterVelocity);
       SmartDashboard.putNumber("Distance Away", distance);
+      SmartDashboard.putBoolean("Shootable?", shootable);
 
     }
 
 
 
-    private double calculateDistance(double x1, double y1, double x2, double y2){
+    public static double calculateDistance(double x1, double y1, double x2, double y2){
         return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
     }
 

@@ -76,7 +76,6 @@ public class Robot extends TimedRobot {
       // cancels auto command
       m_autonomousCommand.cancel();
     }
-    Command CAS = new CASShootCommand();
   }
 
   /** This function is called periodically during operator control. */

@@ -40,7 +40,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
     private LimelightSubsystem(){
         nt = NetworkTableInstance.getDefault().getTable("limelight");
-        nt.getEntry("ledMode").setNumber(LimelightControl.LED_Off.number());
+        nt.getEntry("ledMode").setNumber(LimelightControl.LED_On.number());
         nt.getEntry("camMode").setNumber(LimelightControl.Cam_Vision.number());
     }
 
@@ -69,12 +69,28 @@ public class LimelightSubsystem extends SubsystemBase {
     //post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", getXOffset());
     SmartDashboard.putNumber("LimelightY", getYOffset());
+    SmartDashboard.putNumber("Limelight Distance", getDistance());
   }
 
-    /*public double getDistance() {
-        double x = (Constants.kTargetHeight - Constants.kLensHeight) / 
-            Math.tan(Math.toRadians(Constants.kLensHorizontalAngle + getYOffset()));
-        x /= Math.cos(Math.toRadians(Math.abs(getXOffset())));
-        return x;
-    }*/
+    public double getDistance() {
+        /*double x = (2.642 - 0.8046) / 
+            Math.tan(Math.toRadians(56 + getYOffset()));
+        x /= Math.cos(Math.toRadians(Math.abs(getXOffset())));*/
+
+        // how many degrees back is your limelight rotated from perfectly vertical?
+        double limelightMountAngleDegrees = 56.0;
+
+        // distance from the center of the Limelight lens to the floor
+        double limelightLensHeightInches = 31.7;
+
+        // distance from the target to the floor
+        double goalHeightInches = 104.0;
+
+        double angleToGoalDegrees = limelightMountAngleDegrees + getYOffset();
+        double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+        //calculate distance
+        double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/Math.tan(angleToGoalRadians);
+        return distanceFromLimelightToGoalInches*0.0254;
+    }
 }

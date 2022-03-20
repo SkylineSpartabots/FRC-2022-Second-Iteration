@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 
+import java.sql.Time;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 
@@ -37,22 +39,21 @@ public class HoodSubsystem extends SubsystemBase {
         m_hoodMotor.enableVoltageCompensation(true);
         m_hoodMotor.setNeutralMode(NeutralMode.Brake);
         m_hoodMotor.config_kF(0, 0.0, Constants.kTimeOutMs);
-        m_hoodMotor.config_kP(0, 0.275, Constants.kTimeOutMs);
+        m_hoodMotor.config_kP(0, 0.3, Constants.kTimeOutMs);
         m_hoodMotor.config_kI(0, 0.0, Constants.kTimeOutMs);
         m_hoodMotor.config_kD(0, 0.0, Constants.kTimeOutMs);
+        resetHoodPosition();
     }
-
     public void moveHoodToPosition(int targetPosition){
         m_hoodMotor.set(ControlMode.Position, targetPosition);
     }
 
     public void resetHoodPosition() {
-        m_hoodMotor.setSelectedSensorPosition(0, 0, Constants.kTimeOutMs);
+        m_hoodMotor.setSelectedSensorPosition(0);
+        target = 0;
+        moveHoodToPosition(target);
     }
 
-    public void resetHoodPosition(int pos) {
-        m_hoodMotor.setSelectedSensorPosition(pos, 0, Constants.kTimeOutMs);
-    }
 
     public double getHoodPosition(){        
         return m_hoodMotor.getSelectedSensorPosition();

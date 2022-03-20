@@ -42,8 +42,8 @@ public class ShooterSubsystem extends SubsystemBase {
         talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Coast);
-        talon.config_kF(0, 0.047, Constants.kTimeOutMs);
-        talon.config_kP(0, 0.02, Constants.kTimeOutMs);
+        talon.config_kF(0, 0.048, Constants.kTimeOutMs);
+        talon.config_kP(0, 0.12, Constants.kTimeOutMs);
         talon.config_kI(0, 0, Constants.kTimeOutMs);
         talon.config_kD(0, 0, Constants.kTimeOutMs);
     }
