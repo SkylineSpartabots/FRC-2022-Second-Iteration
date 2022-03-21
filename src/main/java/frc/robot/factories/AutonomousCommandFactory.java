@@ -24,6 +24,7 @@ public class AutonomousCommandFactory {
 
     public static void swapAutonomousCommands() {
         m_chooser.setDefaultOption("Blue Four Ball Auto Bottom Left", blueFourBallAuto());
+        m_chooser.addOption("Drive 5 meters", driveFiveMeters());
 
         SmartDashboard.putData(m_chooser);
     }
@@ -32,6 +33,11 @@ public class AutonomousCommandFactory {
         return m_chooser.getSelected();
     }
 
+    public static Command driveFiveMeters(){
+        return new SequentialCommandGroup(
+            new TrajectoryDriveCommand(getPose(5.0, 0, 0), List.of(), false)
+        );
+    }
     public static Pose2d getPose(double x, double y, double rot){
        return new Pose2d(x, y, new Rotation2d(Math.toRadians(rot)));
     }

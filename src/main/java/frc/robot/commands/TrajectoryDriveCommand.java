@@ -62,9 +62,9 @@ public class TrajectoryDriveCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    PIDController xController = new PIDController(5, 0, 0);
-    PIDController yController = new PIDController(5, 0, 0);
-    ProfiledPIDController thetaController = new ProfiledPIDController(4, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
+    PIDController xController = new PIDController(5.0, 0, 0);
+    PIDController yController = new PIDController(5.0, 0, 0);
+    ProfiledPIDController thetaController = new ProfiledPIDController(2.0, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_controller = new HolonomicDriveController(xController, yController, thetaController);

@@ -14,6 +14,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 
 public class CASDriveCommand extends TeleopDriveCommand{
     private Translation2d m_targetPosition;
@@ -23,7 +24,7 @@ public class CASDriveCommand extends TeleopDriveCommand{
         super(DrivetrainSubsystem.getInstance());
        
         m_targetPosition = Constants.targetHudPosition;
-        m_thetaController = new PIDController(2.5,0,0);
+        m_thetaController = new PIDController(3.0,0,0);
         m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
@@ -34,8 +35,10 @@ public class CASDriveCommand extends TeleopDriveCommand{
         
         double targetAngle = Math.toRadians(findAngle(m_drivetrainSubsystem.getPose(), m_targetPosition.getX(), m_targetPosition.getY(), 180));
 
-        var rot = m_thetaController.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(),targetAngle);
-        if(Math.abs(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - Math.toDegrees(targetAngle)) < 3){
+        //var rot = m_thetaController.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(),targetAngle);
+        
+        var rot = m_thetaController.calculate(Math.toRadians(LimelightSubsystem.getInstance().getXOffset()),0.0);
+        if(Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3.0){
             rot = 0;
         }
 

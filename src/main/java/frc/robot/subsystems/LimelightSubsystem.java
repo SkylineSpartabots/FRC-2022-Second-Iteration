@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -57,7 +58,7 @@ public class LimelightSubsystem extends SubsystemBase {
     }
 
     public double getXOffset(){
-        return nt.getEntry("tx").getDouble(0.0);
+        return nt.getEntry("tx").getDouble(180.0);
     } 
 
     public double getYOffset(){
@@ -70,6 +71,13 @@ public class LimelightSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("LimelightX", getXOffset());
     SmartDashboard.putNumber("LimelightY", getYOffset());
     SmartDashboard.putNumber("Limelight Distance", getDistance());
+
+    if(Math.abs(getXOffset()) < 3.0 && getXOffset() != 0.0){      
+        double x = 8.23 + (getDistance() * Math.sin(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + getXOffset())));
+        double y = 4.165 + (getDistance() * Math.cos(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + getXOffset())));
+        //DrivetrainSubsystem.getInstance().resetOdometryFromPosition(
+        //    x,y, DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees());
+    }
   }
 
     public double getDistance() {
@@ -78,19 +86,24 @@ public class LimelightSubsystem extends SubsystemBase {
         x /= Math.cos(Math.toRadians(Math.abs(getXOffset())));*/
 
         // how many degrees back is your limelight rotated from perfectly vertical?
-        double limelightMountAngleDegrees = 56.0;
+        double limelightMountAngleDegrees = 27.0;
 
         // distance from the center of the Limelight lens to the floor
-        double limelightLensHeightInches = 31.7;
+        double limelightLensHeightInches = 35;
 
         // distance from the target to the floor
         double goalHeightInches = 104.0;
 
         double angleToGoalDegrees = limelightMountAngleDegrees + getYOffset();
-        double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+        //distance from limelight to center: 12 inches
+        //distance from lens to ground: 35 inches
+        //angle of limelight: 28 degrees
+
 
         //calculate distance
-        double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/Math.tan(angleToGoalRadians);
+        double distanceFromLimelightToGoalInches = 
+            ((goalHeightInches - limelightLensHeightInches)/(Math.tan(Math.toRadians(angleToGoalDegrees))))
+            + 12 + 24;
         return distanceFromLimelightToGoalInches*0.0254;
     }
 }

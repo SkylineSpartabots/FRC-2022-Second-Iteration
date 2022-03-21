@@ -63,9 +63,9 @@ public final class Constants {
 
         public static final boolean kGyroReversed = false;
         //Calculated via SysId
-        public static final double ksVolts = 0.54428; //before 3/1: 70541, 33259, 016433
-        public static final double kvVoltSecondsPerMeter = 0.34232;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.10268;
+        public static final double ksVolts = 0.74397; //before 3/1: 70541, 33259, 016433
+        public static final double kvVoltSecondsPerMeter = 0.33778;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.016934;
         //Tuned to taste for desired max velocity
         public static final double kVelocityGain = 6;
         // The maximum voltage that will be delivered to the drive motors.
