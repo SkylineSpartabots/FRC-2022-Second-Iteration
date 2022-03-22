@@ -143,6 +143,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rot));
   }
   
+  //resets from offset
+  public void resetOdometryFromPosition(double x, double y) {
+    m_odometry.resetPosition(new Pose2d(x,y,getGyroscopeRotation()), getGyroscopeRotation());
+  }
+
   public void resetOdometryFromPosition(Pose2d pose) {
     m_navx.reset();    
     m_navx.setAngleAdjustment(-pose.getRotation().getDegrees());
