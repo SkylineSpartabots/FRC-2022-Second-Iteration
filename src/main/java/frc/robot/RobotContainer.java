@@ -9,13 +9,12 @@ import frc.robot.commands.CASShootCommand;
 import frc.robot.commands.SetSubsystemCommand.SetHoodCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
+import frc.robot.commands.SetSubsystemCommand.SetIntakeIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
-import frc.robot.commands.WaitUntilCommand.WaitUntilIndexerCommand;
 import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import static frc.robot.Constants.*;
@@ -76,11 +75,33 @@ public class RobotContainer {
   private void configureButtonBindings() {
     final double triggerDeadzone = 0.8;
 
+    HoodSubsystem m_hoodSubsystem = HoodSubsystem.getInstance();
+    IndexerSubsystem m_indexerSubsystem = IndexerSubsystem.getInstance();
+    ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
+
+    //DPAD
+    Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});
+    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});    
+    Trigger dpadLeft = new Trigger(() -> {return m_controller.getDpadLeft();});
+    Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
+
+    dpadUp.whenActive(m_hoodSubsystem::moveHoodUp).whenInactive(m_hoodSubsystem::stopHood);  //works  
+    dpadDown.whenActive(m_hoodSubsystem::moveHoodDown).whenInactive(m_hoodSubsystem::stopHood);   //works
+    dpadRight.whenActive(m_hoodSubsystem::resetHoodPosition);
+    dpadLeft.whenActive(m_drivetrainSubsystem::resetFromStart);
+
+    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
+    m_controller.getRightBumper().whenActive(new SetIntakeIndexerCommand(0.8, 0.5));//right bumper hold
+    m_controller.getRightBumper().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
+    m_controller.getLeftBumper().whenActive(new SetIntakeIndexerCommand(-0.5, -0.3));//right bumper hold
+    m_controller.getLeftBumper().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
+
     // back button
+    /*
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets odometry and heading
     m_controller.getXButton().whenPressed(m_drivetrainSubsystem::resetFromStart);// resets odometry and heading
     //m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetOdometryFromReference);//what does this do????
-    m_controller.getStartButton().whenPressed(new WaitUntilIndexerCommand());
+    m_controller.getStartButton().whenPressed(new InstantCommand(()-> IndexerSubsystem.getInstance().startAutoIntaking()));
 
      //left triggers and bumpers
      Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});//left trigger deadzone 0.8
@@ -94,21 +115,22 @@ public class RobotContainer {
         new SequentialCommandGroup( //on trigger hold, waits for
           new SetShooterCommand(shooterFire), //ramps up shooter to shooting speeds
           new WaitUntilCommand(() -> {return ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition, 8000);}), //waits for correct velocity
-          new SetIndexerCommand(indexerFire), new SetIntakeCommand(intakeOn))); //fires indexer
+          new SetIndexerCommand(indexerFire, false), new SetIntakeCommand(intakeOn, false))); //fires indexer
      rightTriggerAxis.whenInactive(new ParallelCommandGroup(
         new SetShooterCommand(shooterIdle),
-        new SetIndexerCommand(indexerOff),
-        new SetIntakeCommand(intakeOff)));//on trigger release
-     m_controller.getRightBumper().whenActive(new SetIndexerCommand(indexerUp));//right bumper hold
-     m_controller.getRightBumper().whenInactive(new SetIndexerCommand(indexerOff));//right bumper release
+        new SetIndexerCommand(indexerOff, false),
+        new SetIntakeCommand(intakeOff, false)));//on trigger release
 
+
+m_controller.getRightBumper().whenActive(new SetIndexerCommand(indexerUp, false));//right bumper hold
+m_controller.getRightBumper().whenInactive(new SetIndexerCommand(indexerOff, false));//right bumper release
      //joystick buttons     
     m_controller.getRightStickButton().whenHeld(new CASDriveCommand());
      
     // buttons
-    /*
+    
     m_controller.getYButton().whenPressed(new SetIntakeCommand(intakeReverse));
-    m_controller.getYButton().whenReleased(new SetIntakeCommand(intakeOn));*/
+    m_controller.getYButton().whenReleased(new SetIntakeCommand(intakeOn));
 
     
     //m_controller.getAButton().whenPressed(new SetHoodCommand(0));
@@ -116,8 +138,8 @@ public class RobotContainer {
     HoodSubsystem m_hoodSubsystem = HoodSubsystem.getInstance();
     m_controller.getYButton().whenPressed(new InstantCommand(() ->  m_hoodSubsystem.resetHoodPosition(), m_hoodSubsystem));
     //m_controller.getYButton().whenPressed(m_hoodSubsystem::resetHoodPosition);
-    m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn));
-    m_controller.getBButton().whenPressed(new SetIntakeCommand(intakeOff));
+    m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn, false));
+    m_controller.getBButton().whenPressed(new SetIntakeCommand(intakeOff, false));
     //DPAD
     
     //FOR TESTING PURPOSES
@@ -133,7 +155,7 @@ public class RobotContainer {
     Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
     dpadRight.whenActive(m_hoodSubsystem::decreaseTarget);
     
-    /*
+    
     Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});//hold dpad up for indexer up
     dpadUp.whenActive(new SetIndexerCommand(indexerUp)).whenInactive(new SetIndexerCommand(indexerOff));
     Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});//hold dpad down for indexer down
@@ -143,8 +165,8 @@ public class RobotContainer {
 
   public void onRobotDisabled() {
     //called when robot is disabled. Set all subsytems to 0
-    IntakeSubsystem.getInstance().setIntakePercentPower(0.0);
-    IndexerSubsystem.getInstance().setIndexerPercentPower(0.0);
+    IndexerSubsystem.getInstance().setIntakePercentPower(0.0, false);
+    IndexerSubsystem.getInstance().setIndexerPercentPower(0.0, false);
     ShooterSubsystem.getInstance().setShooterVelocity(0);
     HoodSubsystem.getInstance().moveHoodToPosition(0);
   }

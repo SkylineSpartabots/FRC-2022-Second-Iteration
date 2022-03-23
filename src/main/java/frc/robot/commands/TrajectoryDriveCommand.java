@@ -68,7 +68,7 @@ public class TrajectoryDriveCommand extends CommandBase {
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_controller = new HolonomicDriveController(xController, yController, thetaController);
-    m_controller.setEnabled(true);
+    m_controller.setEnabled(false);
 
     TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAcceleration).setKinematics(DriveConstants.kDriveKinematics).setReversed(reverse);
     

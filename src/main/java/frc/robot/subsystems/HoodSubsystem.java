@@ -31,6 +31,7 @@ public class HoodSubsystem extends SubsystemBase {
     }
 
     private final LazyTalonFX m_hoodMotor; 
+    private int target = 0; //TARGET IS FOR OUTPUT ONLY
 
     private HoodSubsystem() {
         m_hoodMotor = TalonFXFactory.createDefaultFalcon("Hood Motor", Ports.HOOD_MOTOR);//creates motor
@@ -46,12 +47,35 @@ public class HoodSubsystem extends SubsystemBase {
     }
     public void moveHoodToPosition(int targetPosition){
         m_hoodMotor.set(ControlMode.Position, targetPosition);
+        target = targetPosition;
     }
 
     public void resetHoodPosition() {
         m_hoodMotor.setSelectedSensorPosition(0);
         target = 0;
         moveHoodToPosition(target);
+    }
+
+    private boolean isCASActive = false;
+    public void CASIsActive(){
+        isCASActive = true;
+    }
+    public void CASIsInactive(){
+        isCASActive = false;
+    }
+
+    //move hood using controls for reset
+    public void moveHoodUp(){
+        if(!isCASActive)
+        m_hoodMotor.set(ControlMode.PercentOutput, -0.1);
+    }
+    public void moveHoodDown(){
+        if(!isCASActive)
+        m_hoodMotor.set(ControlMode.PercentOutput, 0.1);
+    }
+    public void stopHood(){
+        if(!isCASActive)
+        m_hoodMotor.set(ControlMode.PercentOutput, 0);
     }
 
 
@@ -70,11 +94,6 @@ public class HoodSubsystem extends SubsystemBase {
         }
     }
     
-    //manual set target FOR TESTING
-    int target = 0;
-    public void increaseTarget(){target += 1000; moveHoodToPosition(target);}
-    public void decreaseTarget(){target -= 1000; moveHoodToPosition(target);}
-
 
     @Override
     public void periodic(){  

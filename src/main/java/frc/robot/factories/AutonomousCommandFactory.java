@@ -1,31 +1,25 @@
 package frc.robot.factories;
-
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.*;
 import frc.robot.commands.SetSubsystemCommand.*;
-import frc.robot.commands.WaitUntilCommand.WaitUntilIndexerCommand;
-import frc.robot.commands.WaitUntilCommand.WaitUntilIntakeCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import static frc.robot.Constants.*;
+import frc.robot.subsystems.HoodSubsystem;
 
+import static frc.robot.Constants.*;
 import java.util.List;
 
 public class AutonomousCommandFactory {
 
     public static SendableChooser<Command> m_chooser = new SendableChooser<>();
-
     public static void swapAutonomousCommands() {
-        m_chooser.setDefaultOption("Blue Four Ball Auto Bottom Left", blueFourBallAuto());
-        m_chooser.addOption("Drive 5 meters", driveFiveMeters());
-
+        m_chooser.setDefaultOption("fiveBallAuto", fiveBallAuto());
+        m_chooser.addOption("PIDTest", PIDTest());
         SmartDashboard.putData(m_chooser);
     }
 
@@ -33,61 +27,71 @@ public class AutonomousCommandFactory {
         return m_chooser.getSelected();
     }
 
-    public static Command driveFiveMeters(){
-        return new SequentialCommandGroup(
-            new TrajectoryDriveCommand(getPose(5.0, 0, 0), List.of(), false)
-        );
-    }
     public static Pose2d getPose(double x, double y, double rot){
-       return new Pose2d(x, y, new Rotation2d(Math.toRadians(rot)));
-    }
-    public static Command blueFourBallAuto(){
-        DrivetrainSubsystem m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
+            return new Pose2d(x, y, new Rotation2d(Math.toRadians(rot)));
+        }
 
-        Pose2d startPose = getPose(7.77, 2.94, -111);
-        Pose2d shootPose = getPose(7.67, 2.59, -111);
-        Pose2d ball1 = getPose(5.5, 2.07, -160);
-        Pose2d ball2 = getPose(1.58, 1.48, -137);
-        Pose2d ball3 = getPose(7.63, 0.65, -90);
+    public static Command fiveBallAuto(){
+        Pose2d position1 = getPose(7.494, 1.776, -87.28149);
+        Pose2d position2 = getPose(7.545, 0.715, -89.37506);
+        Pose2d position3 = getPose(5.809, 2.507, -143.5408);
+        Pose2d position4 = getPose(5.321, 2.117, -140.974);
+        Pose2d position5 = getPose(1.367, 1.423, -136.7892);
+        Pose2d position6 = getPose(5.321, 2.117, -140.974);
 
-        //SET STARTING POSITION
-        Command resetOdo = new InstantCommand(() ->  m_drivetrainSubsystem.resetOdometryFromPosition(startPose), m_drivetrainSubsystem);
+        Command calibration = new CalibrationCommand(position1);
+        Command command0 = new SetShooterCommand(0.5);
+        Command command1 = new SetHoodCommand(-14000);
+        Command command2 = new SetIntakeCommand(intakeOn,true);
+        Command command3 = new SetIndexerCommand(indexerUp,true);
+        Command driveToPosition2 = new TrajectoryDriveCommand(position2, List.of(), false);
+        Command driveToPosition3 = new TrajectoryDriveCommand(position3, List.of(), true);
+        Command command4 = new SetIntakeCommand(intakeOn,false);
+        Command command5 = new SetIndexerCommand(indexerUp,false);
+        Command driveToPosition4 = new TrajectoryDriveCommand(position4, List.of(), true);
+        Command command6 = new SetIntakeCommand(intakeOn,true);
+        Command command7 = new SetIndexerCommand(indexerUp,true);
+        Command driveToPosition5 = new TrajectoryDriveCommand(position5, List.of(), false);
+        Command driveToPosition6 = new TrajectoryDriveCommand(position6, List.of(), true);
+        Command command8 = new SetIntakeCommand(intakeOn,false);
+        Command command9 = new SetIndexerCommand(indexerUp,false);
 
-        Command turnOnIntake = new WaitUntilIntakeCommand();
-        Command rampUpShooter = new SetShooterCommand(shooterRamp);
-        Command driveToFirstBall = new TrajectoryDriveCommand(ball1, List.of(), false);
-        Command driveBackToShoot = new TrajectoryDriveCommand(shootPose,List.of(), true);
-        Command fireIndexer = new SetIndexerCommand(indexerFire);
-        Command waitForShooterToFinish = new WaitCommand(1);
-        Command turnOnIntake2 = new WaitUntilIndexerCommand();
-        Command driveToSecondBall = new TrajectoryDriveCommand(ball2, List.of(), false);
-        Command driveBackToShootSecondTime = new TrajectoryDriveCommand(shootPose,List.of(),true);
-        Command fireIndexer2 = new SetIndexerCommand(indexerFire);
-        Command waitForShooterToFinish2 = new WaitCommand(1);
-        Command turnOffIndexer2 = new SetIndexerCommand(indexerOff);
-        Command turnOffShooter2 = new SetShooterCommand(shooterOff);
-        //Command driveToThirdBall = new TrajectoryDriveCommand(ball3, List.of(), false);
-        //Command turnIntakeOff = new SetIntakeCommand(intakeOff);
 
-        return new SequentialCommandGroup(        
-            resetOdo,
-            new ParallelDeadlineGroup(//ParallelDeadlineGroup(
-                new SequentialCommandGroup(
-                    rampUpShooter,
-                    driveToFirstBall,
-                    driveBackToShoot),
-                turnOnIntake),
-            fireIndexer, new SetIntakeCommand(intakeOn),
-            waitForShooterToFinish,
-            new ParallelDeadlineGroup(//WHY DOES THIS NOT WORK WHEN NO BALLS INTAKED IN???????????????
-                new SequentialCommandGroup(
-                    driveToSecondBall,
-                    driveBackToShootSecondTime),
-                turnOnIntake2),
-            fireIndexer2, new SetIntakeCommand(intakeOn),
-            waitForShooterToFinish2,
-            turnOffIndexer2,
-            turnOffShooter2
+        return new SequentialCommandGroup(
+            calibration,
+            command0,
+            command1,
+            command2,
+            command3,
+            driveToPosition2, 
+            driveToPosition3,  
+            command4,
+            command5,
+            driveToPosition4,
+            command6,
+            command7,
+            driveToPosition5,
+            driveToPosition6,
+            command8,
+            command9
             );
     }
+
+    public static Command PIDTest(){
+        DrivetrainSubsystem m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
+
+        Pose2d position1 = getPose(7.781, 2.937, -110.1519);
+        Pose2d position2 = getPose(7.475, 1.756, -87.28149);
+
+        Command resetOdo = new InstantCommand(()->m_drivetrainSubsystem.resetOdometryFromPosition(position1), m_drivetrainSubsystem);
+
+        Command driveToPosition2 = new TrajectoryDriveCommand(position2, List.of(), false);
+
+
+        return new SequentialCommandGroup(
+            resetOdo,
+            driveToPosition2
+            );
+    }
+
 }

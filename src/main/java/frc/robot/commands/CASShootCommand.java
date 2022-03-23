@@ -8,7 +8,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class CASShootCommand extends CommandBase {
@@ -27,6 +26,7 @@ public class CASShootCommand extends CommandBase {
     @Override
     public void initialize() {
         m_hood.resetHoodPosition();
+        m_hood.CASIsActive();
     }
 
     //hood values span from 0 (reset positon) to -17,000
@@ -94,6 +94,12 @@ public class CASShootCommand extends CommandBase {
 
     public static double calculateDistance(double x1, double y1, double x2, double y2){
         return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+    }
+
+    
+    @Override
+    public void end(boolean interruptable){
+      m_hood.CASIsInactive();
     }
 
 }
