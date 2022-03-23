@@ -50,8 +50,9 @@ public class AimSequence extends TeleopDriveCommand{
                 double y = 4.165 - (m_limelightSubsystem.getDistance() * 
                     Math.sin(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180
                     + m_limelightSubsystem.getXOffset())));//plus or minus xoffset???
-                DrivetrainSubsystem.getInstance().resetOdometryFromPosition(
-                    x,y, DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees());
+                
+                    DrivetrainSubsystem.getInstance().resetOdometryFromPosition(
+                        x,y, DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees());
             }
         }
         else{

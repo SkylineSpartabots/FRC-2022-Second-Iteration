@@ -7,8 +7,10 @@ import frc.lib.util.Controller;
 import frc.robot.commands.*;
 import frc.robot.commands.CAS.AimByLimelight;
 import frc.robot.commands.CAS.AimByOdo;
+import frc.robot.commands.CAS.AimSequence;
 import frc.robot.commands.CAS.RobotIdle;
 import frc.robot.commands.CAS.RobotOff;
+import frc.robot.commands.CAS.ShootByLimelight;
 import frc.robot.commands.SetSubsystemCommand.*;
 import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -72,7 +74,6 @@ public class RobotContainer {
 
   // configures button bindings to controller
   private void configureButtonBindings() {
-    final double triggerDeadzone = 0.8;
 
     HoodSubsystem m_hoodSubsystem = HoodSubsystem.getInstance();
     IndexerSubsystem m_indexerSubsystem = IndexerSubsystem.getInstance();
@@ -98,10 +99,31 @@ public class RobotContainer {
     m_controller.getAButton().whenActive(new RobotIdle());
     m_controller.getBButton().whenActive(new RobotOff());
     m_controller.getXButton().whenActive(new SetShooterCommand(shooterIdle));
-    m_controller.getYButton().whenActive(new SetShooterCommand(0.0));
+    m_controller.getYButton().and(m_controller.getBButton()).whenActive(new SetShooterCommand(0));
     
-    m_controller.getRightStickButton().whenHeld(new AimByLimelight());
-    m_controller.getLeftStickButton().whenHeld(new AimByOdo());
+    //sets intake override using Y and bumpers
+    m_controller.getYButton().and(m_controller.getRightBumper()).whenActive(new SetIntakeCommand(intakeOn, false));
+    m_controller.getYButton().and(m_controller.getRightBumper()).whenInactive(new SetIntakeCommand(0.0, false));
+    m_controller.getYButton().and(m_controller.getLeftBumper()).whenActive(new SetIntakeCommand(intakeReverse, false));
+    m_controller.getYButton().and(m_controller.getLeftBumper()).whenInactive(new SetIntakeCommand(0.0, false));
+
+
+    /*m_controller.getYButton().and(dpadUp).whenActive(new SetShooterCommand(0));
+    m_controller.getYButton().and(dpadDown).whenActive(new SetShooterCommand(0));
+    m_controller.getYButton().and(dpadRight).whenActive(new SetShooterCommand(0));
+    m_controller.getYButton().and(dpadLeft).whenActive(new SetShooterCommand(0));*/
+    
+    m_controller.getRightStickButton().whenHeld(new AimSequence());
+    m_controller.getLeftStickButton().whenHeld(new AimByLimelight());
+    
+    final double triggerDeadzone = 0.3;
+    Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});
+    Trigger rightTriggerAxis = new Trigger(() -> { return m_controller.getRightTriggerAxis() > triggerDeadzone;});
+    
+    leftTriggerAxis.whenActive(new ShootByLimelight(false));
+    rightTriggerAxis.whenActive(new ShootByLimelight(true));
+    
+    
 
     // back button
     /*

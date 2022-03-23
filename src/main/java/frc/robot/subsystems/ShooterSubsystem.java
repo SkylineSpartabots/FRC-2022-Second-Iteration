@@ -59,6 +59,10 @@ public class ShooterSubsystem extends SubsystemBase {
         mMasterShooter.set(ControlMode.Velocity, velocity);
     }
 
+    public void increaseShooterVelocity(double amount){
+        setShooterVelocity(mMasterShooter.getSelectedSensorVelocity() + amount);
+    }
+
     //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000) [for against the hub]
     public boolean isShooterAtVelocity(int velocity, int threshold){
         if(mMasterShooter.getSelectedSensorVelocity()> velocity - threshold && mMasterShooter.getSelectedSensorVelocity() < velocity + threshold){
