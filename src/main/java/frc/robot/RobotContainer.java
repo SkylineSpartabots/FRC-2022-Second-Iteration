@@ -5,6 +5,7 @@ package frc.robot;
 
 import frc.lib.util.Controller;
 import frc.robot.commands.*;
+import frc.robot.commands.CAS.AimByLimelight;
 import frc.robot.commands.CAS.AimByOdo;
 import frc.robot.commands.CAS.RobotIdle;
 import frc.robot.commands.CAS.RobotOff;
@@ -99,7 +100,8 @@ public class RobotContainer {
     m_controller.getXButton().whenActive(new SetShooterCommand(shooterIdle));
     m_controller.getYButton().whenActive(new SetShooterCommand(0.0));
     
-    m_controller.getRightStickButton().whenHeld(new AimByOdo());
+    m_controller.getRightStickButton().whenHeld(new AimByLimelight());
+    m_controller.getLeftStickButton().whenHeld(new AimByOdo());
 
     // back button
     /*

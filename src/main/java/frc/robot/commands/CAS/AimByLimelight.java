@@ -17,13 +17,13 @@ import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
-public class AimByOdometry extends TeleopDriveCommand{
+public class AimByLimelight extends TeleopDriveCommand{
     private PIDController m_thetaController;
 
-    public AimByOdometry() {
+    public AimByLimelight() {
         super(DrivetrainSubsystem.getInstance());
        
-        m_thetaController = new PIDController(8.0,0,0);
+        m_thetaController = new PIDController(2.0,0,0);
         m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
