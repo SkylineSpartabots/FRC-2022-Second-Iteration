@@ -20,6 +20,6 @@ public class WaitUntilShooterAtVelocity extends CommandBase {
 
     @Override
     public boolean isFinished() {
-      return m_subsystem.shooterAtVelocityRPS(velocity, 1000);
+      return m_subsystem.isShooterAtVelocity((int)velocity, 1000);
     }
 }

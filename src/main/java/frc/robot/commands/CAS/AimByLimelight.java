@@ -17,7 +17,7 @@ import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
-public class AimByLimelight extends TeleopDriveCommand{
+public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQUENCE
     private PIDController m_thetaController;
 
     public AimByLimelight() {

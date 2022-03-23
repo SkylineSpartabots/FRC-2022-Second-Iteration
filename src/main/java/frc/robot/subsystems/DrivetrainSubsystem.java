@@ -104,7 +104,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    return Rotation2d.fromDegrees(normalize(-m_navx.getAngle()));
   }
 
-  public double normalize(double deg){    
+  public static double normalize(double deg){    
     double angle = deg % 360;
     if(angle < -180){
         angle = 180-(Math.abs(angle)-180);
@@ -218,5 +218,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
   }
 
-  
+  public static double findAngle(Pose2d currentPose, double toX, double toY, double offsetDeg){
+      double deltaY = (toY - currentPose.getY());
+      double deltaX = (toX - currentPose.getX());
+
+      double absolute = Math.toDegrees(Math.atan2(deltaY, deltaX));
+      return normalize(absolute + offsetDeg);
+  }
 }

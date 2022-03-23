@@ -17,7 +17,7 @@ import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
-public class AimByOdo extends TeleopDriveCommand{
+public class AimByOdo extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQUENCE
     private Translation2d m_targetPosition;
     private PIDController m_thetaController;
 
@@ -57,7 +57,7 @@ public class AimByOdo extends TeleopDriveCommand{
             DrivetrainSubsystem.getInstance().resetOdometryFromPosition(
                 x,y, DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees());
         }
-        
+
     }
 
     public double findAngle(Pose2d currentPose, double toX, double toY, double offsetDeg){

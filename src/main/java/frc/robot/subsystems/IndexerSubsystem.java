@@ -63,14 +63,25 @@ public class IndexerSubsystem extends SubsystemBase{
     
     boolean autoIndexer = false;
     public void setIndexerPercentPower(double power, boolean autoIndexer) {
-        m_IndexerMotor.set(ControlMode.PercentOutput, power);
-        this.autoIndexer = autoIndexer;
+        if(autoIndexer && !isIndexerBallLoaded()){
+            m_IndexerMotor.set(ControlMode.PercentOutput, power);
+            this.autoIndexer = autoIndexer;
+        }
+        else{
+            m_IndexerMotor.set(ControlMode.PercentOutput, 0);
+
+        }
     }
     
     boolean autoIntake = false;
     public void setIntakePercentPower(double power, boolean autoIntake) {
-        m_IntakeMotor.set(ControlMode.PercentOutput, power);
-        this.autoIntake = autoIntake;
+        if(autoIntake && !isIntakeBallLoaded()){
+            m_IntakeMotor.set(ControlMode.PercentOutput, power);
+            this.autoIntake = autoIntake;
+        }
+        else{            
+            m_IntakeMotor.set(ControlMode.PercentOutput, 0);
+        }
     }
 
     public void startAutoIntaking(){

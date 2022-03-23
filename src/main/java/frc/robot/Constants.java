@@ -29,6 +29,8 @@ public final class Constants {
 
     public static final double intakeOn = 0.8;
     public static final double intakeReverse = -0.5;
+
+    public static final double waitBetweenShots = 0.25;
     
 
     

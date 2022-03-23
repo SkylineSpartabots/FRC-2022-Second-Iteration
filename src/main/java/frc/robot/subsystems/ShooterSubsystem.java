@@ -60,7 +60,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000) [for against the hub]
-    public boolean shooterAtVelocityRPS(double velocity, double threshold){
+    public boolean isShooterAtVelocity(int velocity, int threshold){
         if(mMasterShooter.getSelectedSensorVelocity()> velocity - threshold && mMasterShooter.getSelectedSensorVelocity() < velocity + threshold){
             return true;
         }

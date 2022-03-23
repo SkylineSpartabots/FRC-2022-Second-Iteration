@@ -89,6 +89,7 @@ public class TrajectoryDriveCommand extends CommandBase {
     ChassisSpeeds targetChassisSpeeds = m_controller.calculate(
       new Pose2d(m_subsystem.getPose().getX(), m_subsystem.getPose().getY(), m_subsystem.getGyroscopeRotation()), desiredSpeed , m_endRotation);
     m_subsystem.drive(targetChassisSpeeds);
+    //STOP TRAJECTORY HALF A SECOND EARLY
 
     /*SmartDashboard.putNumber("Elapsed Time", m_timer.get());
     SmartDashboard.putNumber("Desired acceleration", desiredSpeed.accelerationMetersPerSecondSq);
