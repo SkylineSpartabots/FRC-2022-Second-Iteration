@@ -58,7 +58,7 @@ public class LimelightSubsystem extends SubsystemBase {
     }
 
     public double getXOffset(){
-        return nt.getEntry("tx").getDouble(180.0);
+        return nt.getEntry("tx").getDouble(0.0);
     } 
 
     public double getYOffset(){
@@ -81,24 +81,10 @@ public class LimelightSubsystem extends SubsystemBase {
   }
 
     public double getDistance() {
-        /*double x = (2.642 - 0.8046) / 
-            Math.tan(Math.toRadians(56 + getYOffset()));
-        x /= Math.cos(Math.toRadians(Math.abs(getXOffset())));*/
-
-        // how many degrees back is your limelight rotated from perfectly vertical?
         double limelightMountAngleDegrees = 27.0;
-
-        // distance from the center of the Limelight lens to the floor
         double limelightLensHeightInches = 35;
-
-        // distance from the target to the floor
         double goalHeightInches = 104.0;
-
         double angleToGoalDegrees = limelightMountAngleDegrees + getYOffset();
-        //distance from limelight to center: 12 inches
-        //distance from lens to ground: 35 inches
-        //angle of limelight: 28 degrees
-
 
         //calculate distance
         double distanceFromLimelightToGoalInches = 

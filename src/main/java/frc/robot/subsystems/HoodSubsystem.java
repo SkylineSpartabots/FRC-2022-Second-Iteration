@@ -50,10 +50,10 @@ public class HoodSubsystem extends SubsystemBase {
         target = targetPosition;
     }
 
-    public void resetHoodPosition() {
-        m_hoodMotor.setSelectedSensorPosition(0);
+    public void resetHoodPosition() {        
         target = 0;
         moveHoodToPosition(target);
+        m_hoodMotor.setSelectedSensorPosition(0);
     }
 
     private boolean isCASActive = false;

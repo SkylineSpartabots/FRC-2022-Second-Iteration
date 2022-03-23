@@ -4,13 +4,11 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
-import frc.robot.commands.CASDriveCommand;
-import frc.robot.commands.CASShootCommand;
-import frc.robot.commands.SetSubsystemCommand.SetHoodCommand;
-import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
-import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
-import frc.robot.commands.SetSubsystemCommand.SetIntakeIndexerCommand;
-import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
+import frc.robot.commands.*;
+import frc.robot.commands.CAS.AimByOdo;
+import frc.robot.commands.CAS.RobotIdle;
+import frc.robot.commands.CAS.RobotOff;
+import frc.robot.commands.SetSubsystemCommand.*;
 import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -91,10 +89,17 @@ public class RobotContainer {
     dpadLeft.whenActive(m_drivetrainSubsystem::resetFromStart);
 
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
-    m_controller.getRightBumper().whenActive(new SetIntakeIndexerCommand(0.8, 0.5));//right bumper hold
+    m_controller.getRightBumper().whenActive(new SetIntakeIndexerCommand(intakeOn, indexerUp));//right bumper hold
     m_controller.getRightBumper().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
-    m_controller.getLeftBumper().whenActive(new SetIntakeIndexerCommand(-0.5, -0.3));//right bumper hold
+    m_controller.getLeftBumper().whenActive(new SetIntakeIndexerCommand(intakeReverse, indexerDown));//right bumper hold
     m_controller.getLeftBumper().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
+
+    m_controller.getAButton().whenActive(new RobotIdle());
+    m_controller.getBButton().whenActive(new RobotOff());
+    m_controller.getXButton().whenActive(new SetShooterCommand(shooterIdle));
+    m_controller.getYButton().whenActive(new SetShooterCommand(0.0));
+    
+    m_controller.getRightStickButton().whenHeld(new AimByOdo());
 
     // back button
     /*

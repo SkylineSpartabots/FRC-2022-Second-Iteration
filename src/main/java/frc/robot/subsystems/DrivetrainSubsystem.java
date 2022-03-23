@@ -180,7 +180,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
     SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
-    SmartDashboard.putNumber("Distance", CASShootCommand.calculateDistance(
+    SmartDashboard.putNumber("Distance", calculateDistance(
       getPose().getX(), getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY()));
     SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
     SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
@@ -212,4 +212,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public double getVoltageByVelocity(double targetVelocity){
     return m_feedforward.calculate(targetVelocity * DriveConstants.kVelocityGain);
   }
+  public static double distanceFromHub(){
+    return calculateDistance(
+      DrivetrainSubsystem.getInstance().getPose().getX(), DrivetrainSubsystem.getInstance().getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY());
+  }
+  public static double calculateDistance(double x1, double y1, double x2, double y2){
+    return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+  }
+
+  
 }

@@ -21,17 +21,16 @@ public final class Constants {
     public static final double shootVelocityCondition = 10000;// CHANGE THIS VALUE
     public static final double shooterFire = 0.40;
     public static final double shooterRamp = 0.4;
-    public static final double shooterIdle = 0.2;
+    public static final double shooterIdle = 0.3;
     public static final double shooterOff = 0.0;
 
-    public static final double indexerOff = 0.0;
     public static final double indexerUp = 0.5;
-    public static final double indexerDown = -0.2;
-    public static final double indexerFire = 0.6;
+    public static final double indexerDown = -0.3;
 
-    public static final double intakeOn = 0.7;
-    public static final double intakeOff = 0.0;
+    public static final double intakeOn = 0.8;
     public static final double intakeReverse = -0.5;
+    
+
     
     public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
 

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.CAS;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -13,14 +13,15 @@ import frc.lib.util.Controller;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
-public class CASDriveCommand extends TeleopDriveCommand{
+public class AimByOdo extends TeleopDriveCommand{
     private Translation2d m_targetPosition;
     private PIDController m_thetaController;
 
-    public CASDriveCommand() {
+    public AimByOdo() {
         super(DrivetrainSubsystem.getInstance());
        
         m_targetPosition = Constants.targetHudPosition;
@@ -48,6 +49,15 @@ public class CASDriveCommand extends TeleopDriveCommand{
     
         m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
                 rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));
+
+        LimelightSubsystem m_limelightSubsystem = LimelightSubsystem.getInstance();
+        if(Math.abs(m_limelightSubsystem.getXOffset()) < 3.0 && m_limelightSubsystem.getXOffset() != 0.0){      
+            double x = 8.23 - (m_limelightSubsystem.getDistance() * Math.cos(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180 + m_limelightSubsystem.getXOffset())));
+            double y = 4.165 - (m_limelightSubsystem.getDistance() * Math.sin(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180+ m_limelightSubsystem.getXOffset())));
+            DrivetrainSubsystem.getInstance().resetOdometryFromPosition(
+                x,y, DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees());
+        }
+        
     }
 
     public double findAngle(Pose2d currentPose, double toX, double toY, double offsetDeg){
