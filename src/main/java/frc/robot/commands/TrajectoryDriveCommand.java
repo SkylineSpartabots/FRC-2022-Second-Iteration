@@ -36,8 +36,10 @@ public class TrajectoryDriveCommand extends CommandBase {
   private HolonomicDriveController m_controller;
 
   //SET MAX SPEED AND MAX ACCELERATION
-  private final double maxSpeed = 2;
-  private final double maxAcceleration = 1;
+  private double maxSpeed = 2;
+  private double maxAcceleration = 1;
+
+  private double timeOffset = 0.5;
   
 
   double endX, endY, endRotation;
@@ -50,6 +52,18 @@ public class TrajectoryDriveCommand extends CommandBase {
     this.endY = endPose.getY();
     this.endRotation = endPose.getRotation().getDegrees();
     this.interiorPoints = interiorPoints;
+    this.reverse = reverse;
+  }
+  
+  public TrajectoryDriveCommand(Pose2d endPose, List<Translation2d> interiorPoints, boolean reverse, double timeOffset, double maxSpeed, double maxAcceleration){
+    this();
+    this.endX = endPose.getX();
+    this.endY = endPose.getY();
+    this.endRotation = endPose.getRotation().getDegrees();
+    this.interiorPoints = interiorPoints;
+    this.maxSpeed = maxSpeed;
+    this.maxAcceleration = maxAcceleration;
+    this.timeOffset = timeOffset;
     this.reverse = reverse;
   }
 
@@ -68,7 +82,7 @@ public class TrajectoryDriveCommand extends CommandBase {
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_controller = new HolonomicDriveController(xController, yController, thetaController);
-    m_controller.setEnabled(false);
+    m_controller.setEnabled(true);
 
     TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAcceleration).setKinematics(DriveConstants.kDriveKinematics).setReversed(reverse);
     
@@ -114,6 +128,6 @@ public class TrajectoryDriveCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_timer.hasElapsed(m_trajectory.getTotalTimeSeconds());
+    return m_timer.hasElapsed(m_trajectory.getTotalTimeSeconds() - timeOffset);
   }
 }

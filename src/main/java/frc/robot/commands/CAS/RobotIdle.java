@@ -25,7 +25,8 @@ public class RobotIdle extends CommandBase {
     public void initialize() {        
         HoodSubsystem.getInstance().CASIsInactive();
         HoodSubsystem.getInstance().stopHood();
-        ShooterSubsystem.getInstance().setShooterPercentPower(shooterIdle);
+        //HoodSubsystem.getInstance().moveHoodToPosition(0);
+        ShooterSubsystem.getInstance().setShooterVelocity(shooterIdle);
         IndexerSubsystem.getInstance().setIndexerPercentPower(indexerUp, true);
         IndexerSubsystem.getInstance().setIntakePercentPower(intakeOn, true);
     }

@@ -47,13 +47,12 @@ public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQU
         if(Math.abs(m_limelightSubsystem.getXOffset()) < 3.0 && m_limelightSubsystem.getXOffset() != 0.0){      
             double x = 8.23 - (m_limelightSubsystem.getDistance() * 
                 Math.cos(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180 
-                + m_limelightSubsystem.getXOffset())));
+                - m_limelightSubsystem.getXOffset())));
             double y = 4.165 - (m_limelightSubsystem.getDistance() * 
                 Math.sin(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180
-                + m_limelightSubsystem.getXOffset())));//plus or minus xoffset???
+                - m_limelightSubsystem.getXOffset())));//plus or minus xoffset???
             
-                DrivetrainSubsystem.getInstance().resetOdometryFromPosition(
-                    x,y, DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees());
+                DrivetrainSubsystem.getInstance().resetOdometryFromPosition(x,y);
         }
     
         m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 

@@ -17,18 +17,23 @@ import edu.wpi.first.wpilibj.util.Color;
 public final class Constants {
     // timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
+
+    public static final double shooterFixed = 10500;
+    public static final double hoodFixed = -15000;
     
+    
+    public static final double shooterIdle = 6000;
+
     public static final double shootVelocityCondition = 10000;// CHANGE THIS VALUE
     public static final double shooterFire = 0.40;
     public static final double shooterRamp = 0.4;
-    public static final double shooterIdle = 0.3;
     public static final double shooterOff = 0.0;
 
     public static final double indexerUp = 0.5;
-    public static final double indexerDown = -0.3;
+    public static final double indexerDown = -0.4;
 
-    public static final double intakeOn = 0.8;
-    public static final double intakeReverse = -0.5;
+    public static final double intakeOn = 0.51;
+    public static final double intakeReverse = -0.4;
 
     public static final double waitBetweenShots = 0.25;
     

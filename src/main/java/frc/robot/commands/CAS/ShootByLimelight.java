@@ -35,8 +35,6 @@ public class ShootByLimelight extends CommandBase {
         m_hood.CASIsActive();
     }
 
-    //hood values span from 0 (reset positon) to -17,000
-    int maxHoodPosition = -17000;
 
     @Override
     public void execute(){
@@ -73,10 +71,10 @@ public class ShootByLimelight extends CommandBase {
       double maxVelocity = 10500;
 
       double minHood = 0;
-      double maxHood = -37000;
+      double maxHood = -32000;
 
-      int shooterThreshold = 100;
-      int hoodThreshold = 1000;
+      int shooterThreshold = 200;
+      int hoodThreshold = 250;
       
 
       double targetHoodPosition = hoodSlope * distance + hoodIntercept;
@@ -111,7 +109,7 @@ public class ShootByLimelight extends CommandBase {
       //CHECKS IF WE CAN SHOOT
       if(moveIndexer && shootable && !shotBall){//checks if we want to move indexer, then if we are shootable, then if we have not shot ball yet
         if(m_shooter.isShooterAtVelocity((int)targetShooterVelocity, shooterThreshold)//is shooter at velocity?
-            && m_hood.getIsHoodAtPosition((int)targetHoodPosition, shooterThreshold)){ //is hood at position?
+            && m_hood.getIsHoodAtPosition((int)targetHoodPosition, hoodThreshold)){ //is hood at position?
               boolean withinRange = false;
 
               if(LimelightSubsystem.getInstance().getXOffset() == 0){//do we use limelight or odo angle to hub?
@@ -128,7 +126,7 @@ public class ShootByLimelight extends CommandBase {
                   withinRange = true;
                 }
               }
-              if(!withinRange){
+              if(withinRange){
                 new SequentialCommandGroup(
                   new SetIndexerCommand(Constants.indexerUp, false), 
                   new WaitCommand(0.25),

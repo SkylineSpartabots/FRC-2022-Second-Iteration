@@ -40,7 +40,7 @@ public class HoodSubsystem extends SubsystemBase {
         m_hoodMotor.enableVoltageCompensation(true);
         m_hoodMotor.setNeutralMode(NeutralMode.Brake);
         m_hoodMotor.config_kF(0, 0.0, Constants.kTimeOutMs);
-        m_hoodMotor.config_kP(0, 0.3, Constants.kTimeOutMs);
+        m_hoodMotor.config_kP(0, 0.28, Constants.kTimeOutMs);
         m_hoodMotor.config_kI(0, 0.0, Constants.kTimeOutMs);
         m_hoodMotor.config_kD(0, 0.0, Constants.kTimeOutMs);
         resetHoodPosition();

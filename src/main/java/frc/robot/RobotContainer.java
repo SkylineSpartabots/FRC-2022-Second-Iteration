@@ -6,7 +6,6 @@ package frc.robot;
 import frc.lib.util.Controller;
 import frc.robot.commands.*;
 import frc.robot.commands.CAS.AimByLimelight;
-import frc.robot.commands.CAS.AimByOdo;
 import frc.robot.commands.CAS.AimSequence;
 import frc.robot.commands.CAS.RobotIdle;
 import frc.robot.commands.CAS.RobotOff;
@@ -89,7 +88,8 @@ public class RobotContainer {
     dpadDown.whenActive(m_hoodSubsystem::moveHoodDown).whenInactive(m_hoodSubsystem::stopHood);   //works
     dpadRight.whenActive(m_hoodSubsystem::resetHoodPosition);
     dpadLeft.whenActive(m_drivetrainSubsystem::resetFromStart);
-
+    
+    m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetFromStart);// resets to 0 -> for testing only
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
     m_controller.getRightBumper().whenActive(new SetIntakeIndexerCommand(intakeOn, indexerUp));//right bumper hold
     m_controller.getRightBumper().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
@@ -98,20 +98,25 @@ public class RobotContainer {
 
     m_controller.getAButton().whenActive(new RobotIdle());
     m_controller.getBButton().whenActive(new RobotOff());
-    m_controller.getXButton().whenActive(new SetShooterCommand(shooterIdle));
-    m_controller.getYButton().and(m_controller.getBButton()).whenActive(new SetShooterCommand(0));
+    m_controller.getXButton().whenHeld(new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)));   
+    m_controller.getXButton().whenHeld(new SetHoodCommand((int)hoodFixed));
+    m_controller.getXButton().whenHeld(new AimSequence());
+    m_controller.getXButton().whenReleased(new RobotIdle());
+    //m_controller.getYButton().and(m_controller.getBButton()).whenActive(new SetShooterCommand(0));
     
     //sets intake override using Y and bumpers
-    m_controller.getYButton().and(m_controller.getRightBumper()).whenActive(new SetIntakeCommand(intakeOn, false));
+    /*m_controller.getYButton().and(m_controller.getRightBumper()).whenActive(new SetIntakeCommand(intakeOn, false));
     m_controller.getYButton().and(m_controller.getRightBumper()).whenInactive(new SetIntakeCommand(0.0, false));
     m_controller.getYButton().and(m_controller.getLeftBumper()).whenActive(new SetIntakeCommand(intakeReverse, false));
-    m_controller.getYButton().and(m_controller.getLeftBumper()).whenInactive(new SetIntakeCommand(0.0, false));
+    m_controller.getYButton().and(m_controller.getLeftBumper()).whenInactive(new SetIntakeCommand(0.0, false));*/
 
 
     /*m_controller.getYButton().and(dpadUp).whenActive(new SetShooterCommand(0));
     m_controller.getYButton().and(dpadDown).whenActive(new SetShooterCommand(0));
     m_controller.getYButton().and(dpadRight).whenActive(new SetShooterCommand(0));
     m_controller.getYButton().and(dpadLeft).whenActive(new SetShooterCommand(0));*/
+
+    
     
     m_controller.getRightStickButton().whenHeld(new AimSequence());
     m_controller.getLeftStickButton().whenHeld(new AimByLimelight());

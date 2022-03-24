@@ -63,34 +63,38 @@ public class IndexerSubsystem extends SubsystemBase{
     
     boolean autoIndexer = false;
     public void setIndexerPercentPower(double power, boolean autoIndexer) {
-        if(autoIndexer && !isIndexerBallLoaded()){
-            m_IndexerMotor.set(ControlMode.PercentOutput, power);
-            this.autoIndexer = autoIndexer;
+        this.autoIndexer = autoIndexer;
+        if(autoIndexer){
+            if(!isIndexerBallLoaded())
+                m_IndexerMotor.set(ControlMode.PercentOutput, power);
+            
         }
         else{
-            m_IndexerMotor.set(ControlMode.PercentOutput, 0);
-
+            m_IndexerMotor.set(ControlMode.PercentOutput, power);
         }
+        
     }
     
     boolean autoIntake = false;
     public void setIntakePercentPower(double power, boolean autoIntake) {
-        if(autoIntake && !isIntakeBallLoaded()){
-            m_IntakeMotor.set(ControlMode.PercentOutput, power);
-            this.autoIntake = autoIntake;
+        this.autoIntake = autoIntake;
+
+        if(autoIntake){
+            if(!isIntakeBallLoaded())
+                m_IntakeMotor.set(ControlMode.PercentOutput, power);
         }
         else{            
-            m_IntakeMotor.set(ControlMode.PercentOutput, 0);
+            m_IntakeMotor.set(ControlMode.PercentOutput, power);
         }
     }
 
     public void startAutoIntaking(){
-        setIndexerPercentPower(0.5, true);
-        setIntakePercentPower(0.7, true);
+        setIndexerPercentPower(Constants.indexerUp, true);
+        setIntakePercentPower(Constants.intakeOn, true);
     }
     public void startAutoShooting(){
-        setIntakePercentPower(0.5, false);
-        setIntakePercentPower(0.5, false);
+        setIndexerPercentPower(Constants.indexerUp, false);
+        setIntakePercentPower(Constants.intakeOn, false);
     }
     
     @Override

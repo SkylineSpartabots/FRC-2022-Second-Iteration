@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import frc.robot.Constants;
 import frc.robot.Constants.Ports;
-import frc.robot.commands.CASShootCommand;
 
 public class ShooterSubsystem extends SubsystemBase {
     //get instance
@@ -42,7 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
         talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Coast);
-        talon.config_kF(0, 0.048, Constants.kTimeOutMs);
+        talon.config_kF(0, 0.05, Constants.kTimeOutMs);
         talon.config_kP(0, 0.12, Constants.kTimeOutMs);
         talon.config_kI(0, 0, Constants.kTimeOutMs);
         talon.config_kD(0, 0, Constants.kTimeOutMs);

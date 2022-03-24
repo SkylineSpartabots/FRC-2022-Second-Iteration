@@ -26,8 +26,10 @@ public class AimSequence extends TeleopDriveCommand{
         super(DrivetrainSubsystem.getInstance());
        
         m_targetPosition = Constants.targetHudPosition;
-        odoController = new PIDController(3.0,0,0);
+        odoController = new PIDController(2.0,0,0);
         odoController.enableContinuousInput(-Math.PI, Math.PI);
+        limelightController = new PIDController(2.0,0,0);
+        limelightController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     @Override
@@ -38,28 +40,28 @@ public class AimSequence extends TeleopDriveCommand{
 
         LimelightSubsystem m_limelightSubsystem = LimelightSubsystem.getInstance();
         if(Math.abs(m_limelightSubsystem.getXOffset()) != 0.0){
+            
             rot = limelightController.calculate(Math.toRadians(m_limelightSubsystem.getXOffset()),0.0);
             if(Math.abs(m_limelightSubsystem.getXOffset()) < 3.0){
                 rot = 0;
-            }
+            }            
 
-            if(Math.abs(m_limelightSubsystem.getXOffset()) < 3.0 && m_limelightSubsystem.getXOffset() != 0.0){      
+            if(Math.abs(m_limelightSubsystem.getXOffset()) < 20.0 && m_limelightSubsystem.getXOffset() != 0.0){      
                 double x = 8.23 - (m_limelightSubsystem.getDistance() * 
                     Math.cos(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180 
-                    + m_limelightSubsystem.getXOffset())));
+                    - m_limelightSubsystem.getXOffset())));
                 double y = 4.165 - (m_limelightSubsystem.getDistance() * 
                     Math.sin(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180
-                    + m_limelightSubsystem.getXOffset())));//plus or minus xoffset???
+                    - m_limelightSubsystem.getXOffset())));//plus or minus xoffset???
                 
-                    DrivetrainSubsystem.getInstance().resetOdometryFromPosition(
-                        x,y, DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees());
+                DrivetrainSubsystem.getInstance().resetOdometryFromPosition(x,y);
             }
         }
         else{
             double targetAngle = Math.toRadians(DrivetrainSubsystem.findAngle(m_drivetrainSubsystem.getPose(), m_targetPosition.getX(), m_targetPosition.getY(), 180));
             rot = odoController.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(),targetAngle);
             
-            if(Math.abs(targetAngle) < 3.0){
+            if(Math.abs(Math.toDegrees(m_drivetrainSubsystem.getGyroscopeRotation().getRadians() - targetAngle)) < 3.0){
                 rot = 0;
             }
         }
@@ -70,9 +72,6 @@ public class AimSequence extends TeleopDriveCommand{
     
         m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
                 rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));
-
-        
-
         //corrects odometry using limelight
 
     }
