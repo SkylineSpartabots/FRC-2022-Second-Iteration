@@ -127,6 +127,8 @@ public final class Constants {
         
         public static final int LEFT_CLIMB = 42;
         public static final int RIGHT_CLIMB = 41;
+        public static final int LEFT_PIVOT = 45;
+        public static final int RIGHT_PIVOT = 44;
 
     }
 }

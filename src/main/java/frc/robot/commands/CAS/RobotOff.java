@@ -22,7 +22,6 @@ public class RobotOff extends CommandBase {
     @Override
     public void initialize() {
         ShooterSubsystem.getInstance().setShooterPercentPower(0);
-        HoodSubsystem.getInstance().CASIsInactive();
         HoodSubsystem.getInstance().stopHood();
         IndexerSubsystem.getInstance().setIndexerPercentPower(0, false);
         IndexerSubsystem.getInstance().setIntakePercentPower(0, false);

@@ -23,7 +23,6 @@ public class RobotIdle extends CommandBase {
 
     @Override
     public void initialize() {        
-        HoodSubsystem.getInstance().CASIsInactive();
         HoodSubsystem.getInstance().stopHood();
         //HoodSubsystem.getInstance().moveHoodToPosition(0);
         ShooterSubsystem.getInstance().setShooterVelocity(shooterIdle);
