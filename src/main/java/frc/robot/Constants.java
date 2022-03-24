@@ -34,6 +34,11 @@ public final class Constants {
     public static final double intakeReverse = -0.4;
 
     public static final double waitBetweenShots = 0.25;
+
+    public static final double climbUp = 0.8;
+    public static final double climbDown = -0.8;
+    public static final double pivotUp = 0.5;
+    public static final double pivotDown = -0.5;
     
 
     
