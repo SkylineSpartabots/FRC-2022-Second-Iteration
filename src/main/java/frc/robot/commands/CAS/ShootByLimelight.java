@@ -32,7 +32,6 @@ public class ShootByLimelight extends CommandBase {
     @Override
     public void initialize() {
         m_hood.resetHoodPosition();
-        m_hood.CASIsActive();
     }
 
 
@@ -146,7 +145,6 @@ public class ShootByLimelight extends CommandBase {
 
     @Override
     public void end(boolean interruptable){
-      m_hood.CASIsInactive();
       if(shotBall){
         //if shot, set intake and indexer to automatic
         new RobotIdle().schedule();

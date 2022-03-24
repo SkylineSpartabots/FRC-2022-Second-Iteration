@@ -35,21 +35,85 @@ public class AutonomousCommandFactory {
 
     public static Command fiveBallAuto(){
         return new SequentialCommandGroup(
-            new CalibrationCommand(getPose(7.59, 1.79, -88.42)),            
+            new CalibrationCommand(getPose(7.57, 1.79, -88.42)),            
             new SetIntakeCommand(intakeOn,true),
             new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
-            new SetHoodCommand((int)hoodFixed),
+            //new SetHoodCommand((int)hoodFixed),
             new TrajectoryDriveCommand(getPose(7.58, 0.68, -90.19), List.of(), false,0.5, 2 ,1),
-            new TrajectoryDriveCommand(getPose(5.59, 2.27, -142.05), List.of(new Translation2d(6.03, 1.98)), true, 0.6, 3,1),
+            new TrajectoryDriveCommand(getPose(5.66, 2.33, -142.65), List.of(new Translation2d(6.14, 2.05)), true, 0.7, 3,1),
             new SetIntakeCommand(intakeOn,false),
             new SetIndexerCommand(indexerUp,false),
-            new TrajectoryDriveCommand(getPose(5.48, 2.18, -141.57), List.of(), false, 0.5, 0.3, 0.3),
+            new TrajectoryDriveCommand(getPose(5.43, 2.16, -141.57), List.of(), false, 0.5, 0.8, 0.5),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+250)),
             new WaitCommand(1),
             new SetIntakeCommand(intakeOn,true),
             new SetIndexerCommand(indexerUp,true),
             new TrajectoryDriveCommand(getPose(1.38, 1.41, -137.29), List.of(), false, 0.2, 3, 1.5),
-            new TrajectoryDriveCommand(getPose(5.48, 2.18, -141.57), List.of(), true, 0.4,3,1.5),
+            new TrajectoryDriveCommand(getPose(5.66, 2.33, -142.65), List.of(), true, 0.3,3,1.5),
             new SetIntakeCommand(intakeOn,false),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+    
+    public static Command twoBallAutoBottomBottom(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(7.57, 1.79, -88.42)),            
+            new SetIntakeCommand(intakeOn,true),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(7.66, 0.78, -100.04), List.of(), false,0.5, 2 ,1),
+            new SetIntakeCommand(intakeOn,false),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+    
+    
+    public static Command twoBallAutoBottomTop(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(6.59, 2.52, -134.64)),            
+            new SetIntakeCommand(intakeOn,true),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(5.43, 2.16, -141.57), List.of(), false,0.5, 2 ,1),
+            new SetIntakeCommand(intakeOn,false),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+    
+    
+    public static Command twoBallAutoTopMiddle(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(6.07, 5.19, 135.47)),            
+            new SetIntakeCommand(intakeOn,true),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(5.27, 5.98, 145.05), List.of(), false,0.5, 2 ,1),
+            new SetIntakeCommand(intakeOn,false),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+
+    public static Command oneBallTopBottom(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(5.93, 3.96, -178.05)),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(4.83, 3.86, -175.17), List.of(), false,0.5, 1 ,0.8),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+
+    public static Command oneBallTopTop(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(6.77, 5.77, 114.68)),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(6.28, 6.88, 126.06), List.of(), false,0.5, 1 ,0.8),
             new SetIndexerCommand(indexerUp,false),
             new WaitCommand(3),
             new RobotOff()

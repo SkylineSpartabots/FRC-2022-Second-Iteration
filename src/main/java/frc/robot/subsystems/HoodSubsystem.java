@@ -56,25 +56,14 @@ public class HoodSubsystem extends SubsystemBase {
         m_hoodMotor.setSelectedSensorPosition(0);
     }
 
-    private boolean isCASActive = false;
-    public void CASIsActive(){
-        isCASActive = true;
-    }
-    public void CASIsInactive(){
-        isCASActive = false;
-    }
-
     //move hood using controls for reset
     public void moveHoodUp(){
-        if(!isCASActive)
         m_hoodMotor.set(ControlMode.PercentOutput, -0.1);
     }
     public void moveHoodDown(){
-        if(!isCASActive)
         m_hoodMotor.set(ControlMode.PercentOutput, 0.1);
     }
     public void stopHood(){
-        if(!isCASActive)
         m_hoodMotor.set(ControlMode.PercentOutput, 0);
     }
 

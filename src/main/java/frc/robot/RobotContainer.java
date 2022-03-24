@@ -84,10 +84,18 @@ public class RobotContainer {
     Trigger dpadLeft = new Trigger(() -> {return m_controller.getDpadLeft();});
     Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
 
+    /* //HOOD CALIBRATION CONTROLS : MOVE TO SECOND CONTROLLER OR ELIMINATE FOR FIXED HOOD
     dpadUp.whenActive(m_hoodSubsystem::moveHoodUp).whenInactive(m_hoodSubsystem::stopHood);  //works  
     dpadDown.whenActive(m_hoodSubsystem::moveHoodDown).whenInactive(m_hoodSubsystem::stopHood);   //works
     dpadRight.whenActive(m_hoodSubsystem::resetHoodPosition);
+    dpadLeft.whenActive(m_drivetrainSubsystem::resetFromStart);*/
+
+    //SHOOTER ADJUSTMENT CONTROLS
+    dpadUp.whileActiveContinuous(new InstantCommand(() -> m_shooterSubsystem.increaseShooterVelocity(250)));  //works  
+    dpadDown.whileActiveContinuous(new InstantCommand(() -> m_shooterSubsystem.increaseShooterVelocity(250)));   //works
+    dpadRight.whenActive(m_shooterSubsystem::stopShooter);
     dpadLeft.whenActive(m_drivetrainSubsystem::resetFromStart);
+
     
     m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetFromStart);// resets to 0 -> for testing only
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
@@ -125,8 +133,8 @@ public class RobotContainer {
     Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});
     Trigger rightTriggerAxis = new Trigger(() -> { return m_controller.getRightTriggerAxis() > triggerDeadzone;});
     
-    leftTriggerAxis.whenActive(new ShootByLimelight(false));
-    rightTriggerAxis.whenActive(new ShootByLimelight(true));
+    leftTriggerAxis.whileActiveOnce(new ShootByLimelight(false));
+    rightTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
     
     
 

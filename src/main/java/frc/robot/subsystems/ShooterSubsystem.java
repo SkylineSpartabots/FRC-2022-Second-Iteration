@@ -47,19 +47,24 @@ public class ShooterSubsystem extends SubsystemBase {
         talon.config_kD(0, 0, Constants.kTimeOutMs);
     }
 
+    public void stopShooter(){
+        mMasterShooter.set(ControlMode.PercentOutput, 0);
+    }
     //percent power: -1 through 1. Voltage compensated
     public void setShooterPercentPower(double power) {
         mMasterShooter.set(ControlMode.PercentOutput, power);
     }
 
+    int velocity = 0;
     //unit: rotations per 100 ms. Shooter velocity for against the hub: 10,000 rp100ms
     public void setShooterVelocity(double velocity){        
-        //uses Feed Foward and PID to set to velocity. configured in configureMotor()
+        this.velocity = (int) velocity;
         mMasterShooter.set(ControlMode.Velocity, velocity);
     }
 
-    public void increaseShooterVelocity(double amount){
-        setShooterVelocity(mMasterShooter.getSelectedSensorVelocity() + amount);
+    public void increaseShooterVelocity(double amount){           
+        this.velocity = (int)mMasterShooter.getSelectedSensorVelocity() + (int)amount;
+        setShooterVelocity(velocity);
     }
 
     //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000) [for against the hub]
@@ -71,11 +76,6 @@ public class ShooterSubsystem extends SubsystemBase {
             return false;
         }
     }
-
-    //manual set velocity FOR TESTING PURPOSES
-    private double velocity = 0;
-    public void increaseVelocity(){velocity += 500;setShooterVelocity(velocity);}
-    public void decreaseVelocity(){velocity -= 500;setShooterVelocity(velocity);}
 
 
     @Override
