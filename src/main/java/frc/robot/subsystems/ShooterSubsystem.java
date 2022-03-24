@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import frc.robot.Constants;
 import frc.robot.Constants.Ports;
-import frc.robot.commands.CASShootCommand;
 
 public class ShooterSubsystem extends SubsystemBase {
     //get instance
@@ -42,25 +41,34 @@ public class ShooterSubsystem extends SubsystemBase {
         talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Coast);
-        talon.config_kF(0, 0.047, Constants.kTimeOutMs);
-        talon.config_kP(0, 0.02, Constants.kTimeOutMs);
+        talon.config_kF(0, 0.05, Constants.kTimeOutMs);
+        talon.config_kP(0, 0.12, Constants.kTimeOutMs);
         talon.config_kI(0, 0, Constants.kTimeOutMs);
         talon.config_kD(0, 0, Constants.kTimeOutMs);
     }
 
+    public void stopShooter(){
+        mMasterShooter.set(ControlMode.PercentOutput, 0);
+    }
     //percent power: -1 through 1. Voltage compensated
     public void setShooterPercentPower(double power) {
         mMasterShooter.set(ControlMode.PercentOutput, power);
     }
 
+    int velocity = 0;
     //unit: rotations per 100 ms. Shooter velocity for against the hub: 10,000 rp100ms
     public void setShooterVelocity(double velocity){        
-        //uses Feed Foward and PID to set to velocity. configured in configureMotor()
+        this.velocity = (int) velocity;
         mMasterShooter.set(ControlMode.Velocity, velocity);
     }
 
+    public void increaseShooterVelocity(double amount){           
+        this.velocity = (int)mMasterShooter.getSelectedSensorVelocity() + (int)amount;
+        setShooterVelocity(velocity);
+    }
+
     //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000) [for against the hub]
-    public boolean shooterAtVelocityRPS(double velocity, double threshold){
+    public boolean isShooterAtVelocity(int velocity, int threshold){
         if(mMasterShooter.getSelectedSensorVelocity()> velocity - threshold && mMasterShooter.getSelectedSensorVelocity() < velocity + threshold){
             return true;
         }
@@ -68,11 +76,6 @@ public class ShooterSubsystem extends SubsystemBase {
             return false;
         }
     }
-
-    //manual set velocity FOR TESTING PURPOSES
-    private double velocity = 0;
-    public void increaseVelocity(){velocity += 500;setShooterVelocity(velocity);}
-    public void decreaseVelocity(){velocity -= 500;setShooterVelocity(velocity);}
 
 
     @Override

@@ -7,9 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.CASDriveCommand;
-import frc.robot.commands.CASShootCommand;
 import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.*;
 
@@ -76,7 +73,6 @@ public class Robot extends TimedRobot {
       // cancels auto command
       m_autonomousCommand.cancel();
     }
-    Command CAS = new CASShootCommand();
   }
 
   /** This function is called periodically during operator control. */

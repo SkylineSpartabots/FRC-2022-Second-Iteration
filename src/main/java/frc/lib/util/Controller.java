@@ -26,15 +26,6 @@ public class Controller {
         back = new Button(xbox::getBackButton);
         start = new Button(xbox::getStartButton);
     }
-
-    public Trigger getButtonCombo(Button b1, Button b2){
-        return new Trigger(){
-            @Override
-            public boolean get(){
-                return b1.get() && b2.get();
-            }
-        };
-    }
     
     public boolean getDpadUp(){ return xbox.getPOV() == 0; }
     public boolean getDpadRight(){ return xbox.getPOV() == 90;}

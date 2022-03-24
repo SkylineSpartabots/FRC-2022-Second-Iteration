@@ -8,10 +8,10 @@ public class SetHoodCommand extends CommandBase {
     private final HoodSubsystem m_subsystem;
     private int position;
 
-    public SetHoodCommand(int position) {
+    public SetHoodCommand(int hoodfixed) {
         m_subsystem = HoodSubsystem.getInstance();
         addRequirements(m_subsystem);
-        this.position = position;
+        this.position = hoodfixed;
     }
 
     @Override

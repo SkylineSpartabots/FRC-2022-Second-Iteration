@@ -17,21 +17,30 @@ import edu.wpi.first.wpilibj.util.Color;
 public final class Constants {
     // timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
+
+    public static final double shooterFixed = 10500;
+    public static final double hoodFixed = -15000;
     
+    
+    public static final double shooterIdle = 6000;
+
     public static final double shootVelocityCondition = 10000;// CHANGE THIS VALUE
-    public static final double shooterFire = 0.51;
-    public static final double shooterRamp = 0.5;
-    public static final double shooterIdle = 0.2;
-    public static final double shooterOff = 0.0;
+    public static final double shooterOff = 0;
 
-    public static final double indexerOff = 0.0;
     public static final double indexerUp = 0.5;
-    public static final double indexerDown = -0.2;
-    public static final double indexerFire = 0.6;
+    public static final double indexerDown = -0.4;
 
-    public static final double intakeOn = 0.7;
-    public static final double intakeOff = 0.0;
-    public static final double intakeReverse = -0.5;
+    public static final double intakeOn = 0.51;
+    public static final double intakeReverse = -0.4;
+
+    public static final double waitBetweenShots = 0.25;
+
+    public static final double climbUp = 0.8;
+    public static final double climbDown = -0.8;
+    public static final double pivotUp = 0.5;
+    public static final double pivotDown = -0.5;
+    
+
     
     public static final Translation2d targetHudPosition = new Translation2d(8.23, 4.165);
 
@@ -63,9 +72,9 @@ public final class Constants {
 
         public static final boolean kGyroReversed = false;
         //Calculated via SysId
-        public static final double ksVolts = 0.70541;
-        public static final double kvVoltSecondsPerMeter = 0.33259;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.016433;
+        public static final double ksVolts = 0.74397; //before 3/1: 70541, 33259, 016433
+        public static final double kvVoltSecondsPerMeter = 0.33778;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.016934;
         //Tuned to taste for desired max velocity
         public static final double kVelocityGain = 6;
         // The maximum voltage that will be delivered to the drive motors.
@@ -120,6 +129,11 @@ public final class Constants {
         public static final int INTAKE_MOTOR = 31;
         public static final int INDEXER_MOTOR = 32;
         public static final int HOOD_MOTOR = 23;//CHANGE THIS TO CORRECT PORT
+        
+        public static final int LEFT_CLIMB = 42;
+        public static final int RIGHT_CLIMB = 41;
+        public static final int LEFT_PIVOT = 45;
+        public static final int RIGHT_PIVOT = 44;
 
     }
 }

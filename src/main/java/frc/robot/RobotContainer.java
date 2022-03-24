@@ -4,17 +4,18 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
-import frc.robot.commands.CASDriveCommand;
-import frc.robot.commands.SetSubsystemCommand.SetHoodCommand;
-import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
-import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
-import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
-import frc.robot.commands.WaitUntilCommand.WaitUntilIndexerCommand;
+import frc.robot.commands.*;
+import frc.robot.commands.CAS.AimByLimelight;
+import frc.robot.commands.CAS.AimSequence;
+import frc.robot.commands.CAS.RobotIdle;
+import frc.robot.commands.CAS.RobotOff;
+import frc.robot.commands.CAS.ShootByLimelight;
+import frc.robot.commands.SetSubsystemCommand.*;
 import frc.robot.factories.AutonomousCommandFactory;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import static frc.robot.Constants.*;
@@ -66,6 +67,7 @@ public class RobotContainer {
   }
 
   private static final Controller m_controller = new Controller(new XboxController(0));
+  private static final Controller m_controller2 = new Controller(new XboxController(1));
 
   public static Controller getController(){
     return m_controller;
@@ -73,75 +75,87 @@ public class RobotContainer {
 
   // configures button bindings to controller
   private void configureButtonBindings() {
-    final double triggerDeadzone = 0.8;
 
-    // back button
-    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets odometry and heading
-    m_controller.getXButton().whenPressed(m_drivetrainSubsystem::resetFromStart);// resets odometry and heading
-    //m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetOdometryFromReference);//what does this do????
-    m_controller.getStartButton().whenPressed(new WaitUntilIndexerCommand());
-
-     //left triggers and bumpers
-     Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});//left trigger deadzone 0.8
-     leftTriggerAxis.whenActive(new SetShooterCommand(shooterRamp));//on trigger hold
-     leftTriggerAxis.whenInactive(new SetShooterCommand(shooterIdle));//on trigger release
-     m_controller.getLeftBumper().whenPressed(new SetShooterCommand(shooterOff));//left bumper stops shooter
-     
-     //right triggers and bumpers
-     Trigger rightTriggerAxis = new Trigger(() -> { return m_controller.getRightTriggerAxis() > triggerDeadzone;});//right trigger deadzone 0.8
-     rightTriggerAxis.whenActive(//TO DO: FIGURE OUT CANCELLING COMMAND
-        new SequentialCommandGroup( //on trigger hold, waits for
-          new SetShooterCommand(shooterFire), //ramps up shooter to shooting speeds
-          new WaitUntilCommand(() -> {return ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition, 1000);}), //waits for correct velocity
-          new SetIndexerCommand(indexerFire), new SetIntakeCommand(intakeOn))); //fires indexer
-     rightTriggerAxis.whenInactive(new ParallelCommandGroup(
-        new SetShooterCommand(shooterIdle),
-        new SetIndexerCommand(indexerOff),
-        new SetIntakeCommand(intakeOff)));//on trigger release
-     m_controller.getRightBumper().whenActive(new SetIndexerCommand(indexerUp));//right bumper hold
-     m_controller.getRightBumper().whenInactive(new SetIndexerCommand(indexerOff));//right bumper release
-
-     //joystick buttons     
-    m_controller.getRightStickButton().whenHeld(new CASDriveCommand());
-     
-    // buttons
-    /*
-    m_controller.getYButton().whenPressed(new SetIntakeCommand(intakeReverse));
-    m_controller.getYButton().whenReleased(new SetIntakeCommand(intakeOn));*/
-
-    
-    //m_controller.getAButton().whenPressed(new SetHoodCommand(0));
-    //m_controller.getYButton().whenPressed(new SetHoodCommand(-10000));
     HoodSubsystem m_hoodSubsystem = HoodSubsystem.getInstance();
-    m_controller.getYButton().whenPressed(new InstantCommand(() ->  m_hoodSubsystem.resetHoodPosition(), m_hoodSubsystem));
-    m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn));
-    m_controller.getBButton().whenPressed(new SetIntakeCommand(intakeOff));
+    IndexerSubsystem m_indexerSubsystem = IndexerSubsystem.getInstance();
+    ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
+    final double triggerDeadzone = 0.3;
+
+    //FIRST CONTROLLER
+
     //DPAD
-    
-    //FOR TESTING PURPOSES
-    ShooterSubsystem m_ShooterSubsystem = ShooterSubsystem.getInstance();//sets shooter manually
     Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});
-    dpadUp.whenActive(m_ShooterSubsystem::increaseVelocity);
-    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});
-    dpadDown.whenActive(m_ShooterSubsystem::decreaseVelocity);
-    
-    Trigger dpadLeft = new Trigger(() -> {return m_controller.getDpadLeft();});//sets hood position manually
-    dpadLeft.whenActive(m_hoodSubsystem::increaseTarget);
+    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});    
+    Trigger dpadLeft = new Trigger(() -> {return m_controller.getDpadLeft();});
     Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
-    dpadRight.whenActive(m_hoodSubsystem::decreaseTarget);
+
+    //SHOOTER ADJUSTMENT CONTROLS
+    dpadUp.whileActiveContinuous(new InstantCommand(() -> m_shooterSubsystem.increaseShooterVelocity(250)));  //works  
+    dpadDown.whileActiveContinuous(new InstantCommand(() -> m_shooterSubsystem.increaseShooterVelocity(250)));   //works
+    dpadRight.whenActive(m_shooterSubsystem::stopShooter);
+    dpadLeft.whenActive(m_drivetrainSubsystem::resetFromStart);
+
+    m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetFromStart);// resets to 0 -> for testing only
+    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
+    m_controller.getRightBumper().whenActive(new SetIntakeIndexerCommand(intakeOn, indexerUp));//right bumper hold
+    m_controller.getRightBumper().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
+    m_controller.getLeftBumper().whenActive(new SetIntakeIndexerCommand(intakeReverse, indexerDown));//right bumper hold
+    m_controller.getLeftBumper().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
+
+    m_controller.getAButton().whenActive(new RobotIdle());
+    m_controller.getBButton().whenActive(new RobotOff());
+    m_controller.getXButton().whenHeld(new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)));   
+    m_controller.getXButton().whenHeld(new SetHoodCommand((int)hoodFixed));
+    m_controller.getXButton().whenHeld(new AimSequence());
+    m_controller.getXButton().whenReleased(new RobotIdle());
     
-    /*
-    Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});//hold dpad up for indexer up
-    dpadUp.whenActive(new SetIndexerCommand(indexerUp)).whenInactive(new SetIndexerCommand(indexerOff));
-    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});//hold dpad down for indexer down
-    dpadDown.whenActive(new SetIndexerCommand(indexerDown)).whenInactive(new SetIndexerCommand(indexerOff));
-    */
+    m_controller.getRightStickButton().whenHeld(new AimSequence());
+    m_controller.getLeftStickButton().whenHeld(new AimByLimelight());
+    
+    Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});
+    Trigger rightTriggerAxis = new Trigger(() -> { return m_controller.getRightTriggerAxis() > triggerDeadzone;});
+    
+    leftTriggerAxis.whileActiveOnce(new ShootByLimelight(false));
+    rightTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
+
+
+
+    //SECOND CONTROLLER   
+
+    //DPAD
+    Trigger dpadUp2 = new Trigger(() -> {return m_controller2.getDpadUp();});
+    Trigger dpadDown2 = new Trigger(() -> {return m_controller2.getDpadDown();});    
+    Trigger dpadLeft2 = new Trigger(() -> {return m_controller2.getDpadLeft();});
+    Trigger dpadRight2 = new Trigger(() -> {return m_controller2.getDpadRight();});
+
+    dpadUp2.whenActive(m_hoodSubsystem::moveHoodUp).whenInactive(m_hoodSubsystem::stopHood);  //works  
+    dpadDown2.whenActive(m_hoodSubsystem::moveHoodDown).whenInactive(m_hoodSubsystem::stopHood);   //works
+    dpadRight2.whenActive(m_hoodSubsystem::resetHoodPosition);
+    dpadLeft2.whenActive(m_drivetrainSubsystem::resetFromStart);
+    
+    //second controller controls intake only
+    m_controller2.getAButton().whenActive(new SetIntakeCommand(intakeOn, false)).whenInactive(new SetIntakeCommand(0.0, false));
+    m_controller2.getYButton().whenActive(new SetIntakeCommand(intakeReverse, false)).whenInactive(new SetIntakeCommand(0.0, false));    
+    
+    Trigger leftTriggerAxis2 = new Trigger(() -> { return m_controller2.getLeftTriggerAxis() > triggerDeadzone;});
+    Trigger rightTriggerAxis2 = new Trigger(() -> { return m_controller2.getRightTriggerAxis() > triggerDeadzone;});
+
+    leftTriggerAxis2.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(climbDown)))
+                   .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
+    rightTriggerAxis2.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(climbUp)))
+                    .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
+
+    
+    m_controller2.getLeftBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(pivotDown)))
+                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
+    m_controller2.getRightBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(pivotUp)))
+                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0))); 
   }
 
   public void onRobotDisabled() {
     //called when robot is disabled. Set all subsytems to 0
-    IntakeSubsystem.getInstance().setIntakePercentPower(0.0);
-    IndexerSubsystem.getInstance().setIndexerPercentPower(0.0);
+    IndexerSubsystem.getInstance().setIntakePercentPower(0.0, false);
+    IndexerSubsystem.getInstance().setIndexerPercentPower(0.0, false);
     ShooterSubsystem.getInstance().setShooterVelocity(0);
     HoodSubsystem.getInstance().moveHoodToPosition(0);
   }

@@ -1,5 +1,4 @@
 package frc.robot.factories;
-
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -8,19 +7,21 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.*;
+import frc.robot.commands.CAS.RobotOff;
 import frc.robot.commands.SetSubsystemCommand.*;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import static frc.robot.Constants.*;
+import frc.robot.subsystems.HoodSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
+import static frc.robot.Constants.*;
 import java.util.List;
 
 public class AutonomousCommandFactory {
 
     public static SendableChooser<Command> m_chooser = new SendableChooser<>();
-
     public static void swapAutonomousCommands() {
-        m_chooser.setDefaultOption("Blue Four Ball Auto Bottom Left", blueFourBallAuto());
-
+        m_chooser.setDefaultOption("fiveBallAuto", fiveBallAuto());
+        m_chooser.addOption("PIDTest", PIDTest());
         SmartDashboard.putData(m_chooser);
     }
 
@@ -29,56 +30,111 @@ public class AutonomousCommandFactory {
     }
 
     public static Pose2d getPose(double x, double y, double rot){
-       return new Pose2d(x, y, new Rotation2d(Math.toRadians(rot)));
+            return new Pose2d(x, y, new Rotation2d(Math.toRadians(rot)));
     }
-    public static Command blueFourBallAuto(){
+
+    public static Command fiveBallAuto(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(7.57, 1.79, -88.42)),            
+            new SetIntakeCommand(intakeOn,true),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            //new SetHoodCommand((int)hoodFixed),
+            new TrajectoryDriveCommand(getPose(7.58, 0.68, -90.19), List.of(), false,0.5, 2 ,1),
+            new TrajectoryDriveCommand(getPose(5.66, 2.33, -142.65), List.of(new Translation2d(6.14, 2.05)), true, 0.7, 3,1),
+            new SetIntakeCommand(intakeOn,false),
+            new SetIndexerCommand(indexerUp,false),
+            new TrajectoryDriveCommand(getPose(5.43, 2.16, -141.57), List.of(), false, 0.5, 0.8, 0.5),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+250)),
+            new WaitCommand(1),
+            new SetIntakeCommand(intakeOn,true),
+            new SetIndexerCommand(indexerUp,true),
+            new TrajectoryDriveCommand(getPose(1.38, 1.41, -137.29), List.of(), false, 0.2, 3, 1.5),
+            new TrajectoryDriveCommand(getPose(5.66, 2.33, -142.65), List.of(), true, 0.3,3,1.5),
+            new SetIntakeCommand(intakeOn,false),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+    
+    public static Command twoBallAutoBottomBottom(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(7.57, 1.79, -88.42)),            
+            new SetIntakeCommand(intakeOn,true),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(7.66, 0.78, -100.04), List.of(), false,0.5, 2 ,1),
+            new SetIntakeCommand(intakeOn,false),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+    
+    
+    public static Command twoBallAutoBottomTop(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(6.59, 2.52, -134.64)),            
+            new SetIntakeCommand(intakeOn,true),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(5.43, 2.16, -141.57), List.of(), false,0.5, 2 ,1),
+            new SetIntakeCommand(intakeOn,false),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+    
+    
+    public static Command twoBallAutoTopMiddle(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(6.07, 5.19, 135.47)),            
+            new SetIntakeCommand(intakeOn,true),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(5.27, 5.98, 145.05), List.of(), false,0.5, 2 ,1),
+            new SetIntakeCommand(intakeOn,false),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+
+    public static Command oneBallTopBottom(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(5.93, 3.96, -178.05)),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(4.83, 3.86, -175.17), List.of(), false,0.5, 1 ,0.8),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+
+    public static Command oneBallTopTop(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(6.77, 5.77, 114.68)),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)),
+            new TrajectoryDriveCommand(getPose(6.28, 6.88, 126.06), List.of(), false,0.5, 1 ,0.8),
+            new SetIndexerCommand(indexerUp,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+
+    public static Command PIDTest(){
         DrivetrainSubsystem m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
 
-        Pose2d startPose = getPose(7.72, 2.82, -111);
-        Pose2d ball1 = getPose(5.36, 1.98, -160);
-        Pose2d ball2 = getPose(1.13, 1.33, -137);
-        Pose2d ball3 = getPose(7.63, 0.65, -90);
+        Pose2d position1 = getPose(7.781, 2.937, -110.1519);
+        Pose2d position2 = getPose(7.475, 1.756, -87.28149);
 
-        //SET STARTING POSITION
-        Command resetOdo = new InstantCommand(() ->  m_drivetrainSubsystem.resetOdometryFromPosition(startPose), m_drivetrainSubsystem);
+        Command resetOdo = new InstantCommand(()->m_drivetrainSubsystem.resetOdometryFromPosition(position1), m_drivetrainSubsystem);
 
-        Command turnOnIntake = new SetIntakeCommand(intakeOn);
-        Command rampUpShooter = new SetShooterCommand(shooterRamp);
-        Command driveToFirstBall = new TrajectoryDriveCommand(ball1, List.of(), false);
-        Command driveBackToShoot = new TrajectoryDriveCommand(startPose,List.of(), true);
-        Command fireIndexer = new SetIndexerCommand(indexerFire);
-        Command waitForShooterToFinish = new WaitCommand(2);
-        Command turnOffShooter = new SetShooterCommand(shooterOff);
-        Command driveToSecondBall = new TrajectoryDriveCommand(ball2, List.of(), false);
-        Command driveBackToShootSecondTime = new TrajectoryDriveCommand(startPose,List.of(),true);
-        Command runIndexerDown = new SetIndexerCommand(indexerDown);
-        Command waitForShooterToRamp = new WaitCommand(1);
-        Command fireIndexer2 = new SetIndexerCommand(indexerFire);
-        Command waitForShooterToFinish2 = new WaitCommand(2);
-        Command turnOffIndexer2 = new SetIndexerCommand(indexerOff);
-        Command turnOffShooter2 = new SetShooterCommand(shooterOff);
-        Command driveToThirdBall = new TrajectoryDriveCommand(ball3, List.of(), false);
-        Command turnIntakeOff = new SetIntakeCommand(intakeOff);
+        Command driveToPosition2 = new TrajectoryDriveCommand(position2, List.of(), false);
 
-        return new SequentialCommandGroup(        
+
+        return new SequentialCommandGroup(
             resetOdo,
-            turnOnIntake,
-            rampUpShooter,
-            driveToFirstBall,
-            driveBackToShoot,
-            fireIndexer,
-            waitForShooterToFinish,
-            turnOffShooter,
-            driveToSecondBall,
-            driveBackToShootSecondTime,
-            runIndexerDown,
-            waitForShooterToRamp,
-            fireIndexer2,
-            waitForShooterToFinish2,
-            turnOffIndexer2,
-            turnOffShooter2,
-            driveToThirdBall,
-            turnIntakeOff
-        );
+            driveToPosition2
+            );
     }
+
 }

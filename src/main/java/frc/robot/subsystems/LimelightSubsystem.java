@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -40,7 +41,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
     private LimelightSubsystem(){
         nt = NetworkTableInstance.getDefault().getTable("limelight");
-        nt.getEntry("ledMode").setNumber(LimelightControl.LED_Off.number());
+        nt.getEntry("ledMode").setNumber(LimelightControl.LED_On.number());
         nt.getEntry("camMode").setNumber(LimelightControl.Cam_Vision.number());
     }
 
@@ -69,12 +70,19 @@ public class LimelightSubsystem extends SubsystemBase {
     //post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", getXOffset());
     SmartDashboard.putNumber("LimelightY", getYOffset());
+    SmartDashboard.putNumber("Limelight Distance", getDistance());
   }
 
-    /*public double getDistance() {
-        double x = (Constants.kTargetHeight - Constants.kLensHeight) / 
-            Math.tan(Math.toRadians(Constants.kLensHorizontalAngle + getYOffset()));
-        x /= Math.cos(Math.toRadians(Math.abs(getXOffset())));
-        return x;
-    }*/
+    public double getDistance() {
+        double limelightMountAngleDegrees = 27.0;
+        double limelightLensHeightInches = 35;
+        double goalHeightInches = 104.0;
+        double angleToGoalDegrees = limelightMountAngleDegrees + getYOffset();
+
+        //calculate distance
+        double distanceFromLimelightToGoalInches = 
+            ((goalHeightInches - limelightLensHeightInches)/(Math.tan(Math.toRadians(angleToGoalDegrees))))
+            + 12 + 24;
+        return distanceFromLimelightToGoalInches*0.0254;
+    }
 }

@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 
+import java.sql.Time;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 
@@ -29,6 +31,7 @@ public class HoodSubsystem extends SubsystemBase {
     }
 
     private final LazyTalonFX m_hoodMotor; 
+    private int target = 0; //TARGET IS FOR OUTPUT ONLY
 
     private HoodSubsystem() {
         m_hoodMotor = TalonFXFactory.createDefaultFalcon("Hood Motor", Ports.HOOD_MOTOR);//creates motor
@@ -37,22 +40,33 @@ public class HoodSubsystem extends SubsystemBase {
         m_hoodMotor.enableVoltageCompensation(true);
         m_hoodMotor.setNeutralMode(NeutralMode.Brake);
         m_hoodMotor.config_kF(0, 0.0, Constants.kTimeOutMs);
-        m_hoodMotor.config_kP(0, 0.275, Constants.kTimeOutMs);
+        m_hoodMotor.config_kP(0, 0.28, Constants.kTimeOutMs);
         m_hoodMotor.config_kI(0, 0.0, Constants.kTimeOutMs);
         m_hoodMotor.config_kD(0, 0.0, Constants.kTimeOutMs);
+        resetHoodPosition();
     }
-
     public void moveHoodToPosition(int targetPosition){
         m_hoodMotor.set(ControlMode.Position, targetPosition);
+        target = targetPosition;
     }
 
-    public void resetHoodPosition() {
-        m_hoodMotor.setSelectedSensorPosition(0, 0, Constants.kTimeOutMs);
+    public void resetHoodPosition() {        
+        target = 0;
+        moveHoodToPosition(target);
+        m_hoodMotor.setSelectedSensorPosition(0);
     }
 
-    public void resetHoodPosition(int pos) {
-        m_hoodMotor.setSelectedSensorPosition(pos, 0, Constants.kTimeOutMs);
+    //move hood using controls for reset
+    public void moveHoodUp(){
+        m_hoodMotor.set(ControlMode.PercentOutput, -0.1);
     }
+    public void moveHoodDown(){
+        m_hoodMotor.set(ControlMode.PercentOutput, 0.1);
+    }
+    public void stopHood(){
+        m_hoodMotor.set(ControlMode.PercentOutput, 0);
+    }
+
 
     public double getHoodPosition(){        
         return m_hoodMotor.getSelectedSensorPosition();
@@ -69,11 +83,6 @@ public class HoodSubsystem extends SubsystemBase {
         }
     }
     
-    //manual set target FOR TESTING
-    int target = 0;
-    public void increaseTarget(){target += 1000; moveHoodToPosition(target);}
-    public void decreaseTarget(){target -= 1000; moveHoodToPosition(target);}
-
 
     @Override
     public void periodic(){  

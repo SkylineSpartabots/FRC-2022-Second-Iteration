@@ -36,8 +36,10 @@ public class TrajectoryDriveCommand extends CommandBase {
   private HolonomicDriveController m_controller;
 
   //SET MAX SPEED AND MAX ACCELERATION
-  private final double maxSpeed = 2;
-  private final double maxAcceleration = 1;
+  private double maxSpeed = 2;
+  private double maxAcceleration = 1;
+
+  private double timeOffset = 0.5;
   
 
   double endX, endY, endRotation;
@@ -52,6 +54,18 @@ public class TrajectoryDriveCommand extends CommandBase {
     this.interiorPoints = interiorPoints;
     this.reverse = reverse;
   }
+  
+  public TrajectoryDriveCommand(Pose2d endPose, List<Translation2d> interiorPoints, boolean reverse, double timeOffset, double maxSpeed, double maxAcceleration){
+    this();
+    this.endX = endPose.getX();
+    this.endY = endPose.getY();
+    this.endRotation = endPose.getRotation().getDegrees();
+    this.interiorPoints = interiorPoints;
+    this.maxSpeed = maxSpeed;
+    this.maxAcceleration = maxAcceleration;
+    this.timeOffset = timeOffset;
+    this.reverse = reverse;
+  }
 
   private TrajectoryDriveCommand(){
     m_subsystem = DrivetrainSubsystem.getInstance();
@@ -62,9 +76,9 @@ public class TrajectoryDriveCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    PIDController xController = new PIDController(5, 0, 0);
-    PIDController yController = new PIDController(5, 0, 0);
-    ProfiledPIDController thetaController = new ProfiledPIDController(4, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
+    PIDController xController = new PIDController(5.0, 0, 0);
+    PIDController yController = new PIDController(5.0, 0, 0);
+    ProfiledPIDController thetaController = new ProfiledPIDController(2.0, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_controller = new HolonomicDriveController(xController, yController, thetaController);
@@ -89,6 +103,7 @@ public class TrajectoryDriveCommand extends CommandBase {
     ChassisSpeeds targetChassisSpeeds = m_controller.calculate(
       new Pose2d(m_subsystem.getPose().getX(), m_subsystem.getPose().getY(), m_subsystem.getGyroscopeRotation()), desiredSpeed , m_endRotation);
     m_subsystem.drive(targetChassisSpeeds);
+    //STOP TRAJECTORY HALF A SECOND EARLY
 
     /*SmartDashboard.putNumber("Elapsed Time", m_timer.get());
     SmartDashboard.putNumber("Desired acceleration", desiredSpeed.accelerationMetersPerSecondSq);
@@ -113,6 +128,6 @@ public class TrajectoryDriveCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_timer.hasElapsed(m_trajectory.getTotalTimeSeconds());
+    return m_timer.hasElapsed(m_trajectory.getTotalTimeSeconds() - timeOffset);
   }
 }

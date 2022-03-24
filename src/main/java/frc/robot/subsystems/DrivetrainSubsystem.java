@@ -104,7 +104,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    return Rotation2d.fromDegrees(normalize(-m_navx.getAngle()));
   }
 
-  public double normalize(double deg){    
+  public static double normalize(double deg){    
     double angle = deg % 360;
     if(angle < -180){
         angle = 180-(Math.abs(angle)-180);
@@ -141,6 +141,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rot));
   }
   
+  //resets from offset
+  public void resetOdometryFromPosition(double x, double y) {
+    m_odometry.resetPosition(new Pose2d(x,y,getGyroscopeRotation()), getGyroscopeRotation());
+  }
+
   public void resetOdometryFromPosition(Pose2d pose) {
     m_navx.reset();    
     m_navx.setAngleAdjustment(-pose.getRotation().getDegrees());
@@ -173,6 +178,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
     SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
+    SmartDashboard.putNumber("Distance", calculateDistance(
+      getPose().getX(), getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY()));
     SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
     SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
      
@@ -188,6 +195,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_backLeftModule.set(getVoltageByVelocity(states[2].speedMetersPerSecond), states[2].angle.getRadians());
     m_backRightModule.set(getVoltageByVelocity(states[3].speedMetersPerSecond), states[3].angle.getRadians());
 
+    // m_frontLeftModule.set(states[0].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE , states[0].angle.getRadians());
+    // m_frontRightModule.set(states[1].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[1].angle.getRadians());
+    // m_backLeftModule.set(states[2].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[2].angle.getRadians());
+    // m_backRightModule.set(states[3].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[3].angle.getRadians());
+
     m_odometry.update(getGyroscopeRotation(), 
         new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
         new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),
@@ -197,5 +209,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
   
   public double getVoltageByVelocity(double targetVelocity){
     return m_feedforward.calculate(targetVelocity * DriveConstants.kVelocityGain);
+  }
+  public static double distanceFromHub(){
+    return calculateDistance(
+      DrivetrainSubsystem.getInstance().getPose().getX(), DrivetrainSubsystem.getInstance().getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY());
+  }
+  public static double calculateDistance(double x1, double y1, double x2, double y2){
+    return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+  }
+
+  public static double findAngle(Pose2d currentPose, double toX, double toY, double offsetDeg){
+      double deltaY = (toY - currentPose.getY());
+      double deltaX = (toX - currentPose.getX());
+
+      double absolute = Math.toDegrees(Math.atan2(deltaY, deltaX));
+      return normalize(absolute + offsetDeg);
   }
 }
