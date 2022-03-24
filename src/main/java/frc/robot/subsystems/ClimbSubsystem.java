@@ -66,19 +66,19 @@ public class ClimbSubsystem extends SubsystemBase {
 
 
     public void setPercentPower(LazyTalonFX talon, double power){
-        talon.set(ControlMode.PercentOutput, 0.5);
+        talon.set(ControlMode.PercentOutput, power);
     } 
 
     public void setPercentPower(LazyTalonSRX talon, double power){
-        talon.set(ControlMode.PercentOutput, 0.5);
+        talon.set(ControlMode.PercentOutput, power);
     }    
 
     public void moveToPosition(LazyTalonFX talon, double position){
-        talon.set(ControlMode.PercentOutput, 0.5);
+        talon.set(ControlMode.PercentOutput, position);
     } 
 
     public void moveToPosition(LazyTalonSRX talon, double position){
-        talon.set(ControlMode.PercentOutput, 0.5);
+        talon.set(ControlMode.PercentOutput, position);
     }
 
 
