@@ -10,12 +10,12 @@ public class CalibrationCommand extends CommandBase {
     Pose2d position;
     public CalibrationCommand(Pose2d pos) {
         position = pos;
-        addRequirements(HoodSubsystem.getInstance(),DrivetrainSubsystem.getInstance());
+        addRequirements(DrivetrainSubsystem.getInstance());
     }
 
     @Override
     public void initialize() {
-        HoodSubsystem.getInstance().resetHoodPosition();
+        //HoodSubsystem.getInstance().resetHoodPosition();
         DrivetrainSubsystem.getInstance().resetOdometryFromPosition(position);
     }
 

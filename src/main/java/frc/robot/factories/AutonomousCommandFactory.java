@@ -31,7 +31,7 @@ public class AutonomousCommandFactory {
 
     public static Pose2d getPose(double x, double y, double rot){
             return new Pose2d(x, y, new Rotation2d(Math.toRadians(rot)));
-        }
+    }
 
     public static Command fiveBallAuto(){
         return new SequentialCommandGroup(

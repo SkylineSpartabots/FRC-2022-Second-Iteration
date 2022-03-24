@@ -25,9 +25,7 @@ public final class Constants {
     public static final double shooterIdle = 6000;
 
     public static final double shootVelocityCondition = 10000;// CHANGE THIS VALUE
-    public static final double shooterFire = 0.40;
-    public static final double shooterRamp = 0.4;
-    public static final double shooterOff = 0.0;
+    public static final double shooterOff = 0;
 
     public static final double indexerUp = 0.5;
     public static final double indexerDown = -0.4;
@@ -126,6 +124,9 @@ public final class Constants {
         public static final int INTAKE_MOTOR = 31;
         public static final int INDEXER_MOTOR = 32;
         public static final int HOOD_MOTOR = 23;//CHANGE THIS TO CORRECT PORT
+        
+        public static final int LEFT_CLIMB = 42;
+        public static final int RIGHT_CLIMB = 41;
 
     }
 }
