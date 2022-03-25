@@ -59,8 +59,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public LazyTalonFX getLeftClimb(){return mLeftClimb;}
     public LazyTalonFX getRightClimb(){return mRightClimb;}
-    public TalonSRX getLeftPivot(){return mLeftPivot;}
-    public TalonSRX getRightPivot(){return mRightPivot;}
+    public LazyTalonSRX getLeftPivot(){return mLeftPivot;}
+    public LazyTalonSRX getRightPivot(){return mRightPivot;}
 
 
     public void setPercentPower(LazyTalonFX talon, double power){
