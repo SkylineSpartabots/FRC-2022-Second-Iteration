@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.commands.SetSubsystemCommand.SetHoodCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeIndexerCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -36,7 +37,8 @@ public class ShootByLimelight extends CommandBase {
         m_hood.resetHoodPosition();
     }
 
-
+    double targetShooterVelocity = 0;
+    int threshold = 200;
     @Override
     public void execute(){
       LimelightSubsystem m_limelightSubsystem = LimelightSubsystem.getInstance();
@@ -59,9 +61,8 @@ public class ShootByLimelight extends CommandBase {
       double minVelocity = 10000;
       double maxVelocity = 13000;
 
-      int shooterThreshold = 300;
       
-      double targetShooterVelocity = shooterSlope * distance + shooterIntercept;
+      targetShooterVelocity = shooterSlope * distance + shooterIntercept;
 
       if(targetShooterVelocity > maxVelocity) {
         targetShooterVelocity = maxVelocity;
@@ -71,15 +72,6 @@ public class ShootByLimelight extends CommandBase {
       }
       
 
-      //CHECKS IF WE CAN SHOOT
-      if(moveIndexer){//checks if we want to move indexer, then if we are shootable, then if we have not shot ball yet
-        if(m_shooter.isShooterAtVelocity((int)targetShooterVelocity, shooterThreshold) && Math.abs(LimelightSubsystem.getInstance().getXOffset()) <5){               
-              IndexerSubsystem.getInstance().setIndexerPercentPower(Constants.indexerUp, false);               
-              IndexerSubsystem.getInstance().setIntakePercentPower(Constants.intakeOn, false);    
-        }
-      }
-
-
       SmartDashboard.putNumber("Shooter Target", targetShooterVelocity);
       SmartDashboard.putNumber("Distance Away", distance);
 
@@ -87,8 +79,16 @@ public class ShootByLimelight extends CommandBase {
     }
 
     @Override
-    public void end(boolean interruptable){
-        new RobotIdle().schedule();
+    public boolean isFinished(){
+      //return ShooterSubsystem.getInstance().isShooterAtVelocity((int)targetShooterVelocity, threshold) && 
+      return Math.abs(LimelightSubsystem.getInstance().getXOffset()) <5;               
+    }
+    @Override
+    public void end(boolean interruptable){   
+      if(moveIndexer){
+        IndexerSubsystem.getInstance().setIndexerPercentPower(Constants.indexerUp, false);               
+        IndexerSubsystem.getInstance().setIntakePercentPower(Constants.intakeOn, false);
+      }   
     }
 
     class DistanceShooter{

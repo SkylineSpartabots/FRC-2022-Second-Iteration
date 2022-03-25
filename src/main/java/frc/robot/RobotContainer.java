@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
@@ -117,8 +118,10 @@ public class RobotContainer {
 
     leftTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
     leftTriggerAxis.whileActiveOnce(new AimByLimelight(false));
+    leftTriggerAxis.whenInactive(new SequentialCommandGroup(new WaitCommand(1), new RobotIdle()));
     rightTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
     rightTriggerAxis.whileActiveOnce(new AimByLimelight(true));
+    rightTriggerAxis.whenInactive(new SequentialCommandGroup(new WaitCommand(1), new RobotIdle()));
 
 
     //SECOND CONTROLLER   

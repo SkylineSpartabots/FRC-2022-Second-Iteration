@@ -26,7 +26,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     //left motor handles the side closer to the shooter, right handles the side closer to intake
     private final LazyTalonFX mLeftClimb, mRightClimb;
-    private final TalonSRX mLeftPivot, mRightPivot;
+    private final LazyTalonSRX mLeftPivot, mRightPivot;
 
     private ClimbSubsystem(){
         mLeftClimb = TalonFXFactory.createDefaultFalcon("Left Climb Motor", Ports.LEFT_CLIMB);
@@ -67,7 +67,7 @@ public class ClimbSubsystem extends SubsystemBase {
         talon.set(ControlMode.PercentOutput, power);
     } 
 
-    public void setPercentPower(TalonSRX talon, double power){
+    public void setPercentPower(LazyTalonSRX talon, double power){
         talon.set(ControlMode.PercentOutput, power);
     }    
 
