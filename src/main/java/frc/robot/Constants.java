@@ -21,6 +21,7 @@ public final class Constants {
     public static final double shooterFixed = 10500;
     public static final double hoodFixed = -15000;
     
+    public static final double shooterRamped = 11000;
     
     public static final double shooterIdle = 10000;
 

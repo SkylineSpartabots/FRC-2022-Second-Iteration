@@ -44,7 +44,7 @@ public class ShootByLimelight extends CommandBase {
       LimelightSubsystem m_limelightSubsystem = LimelightSubsystem.getInstance();
       int shooterSpeed = 0;
       if(m_limelightSubsystem.getXOffset() == 0.000000){
-        shooterSpeed = 9000;
+        shooterSpeed = (int) Constants.shooterRamped;
       }
       else{
         shooterSpeed = calculateShooterSpeed(LimelightSubsystem.getInstance().getDistance());
@@ -58,7 +58,7 @@ public class ShootByLimelight extends CommandBase {
       double shooterSlope = 1099;
       double shooterIntercept = 7000.0;
 
-      double minVelocity = 10000;
+      double minVelocity = 9500;
       double maxVelocity = 13000;
 
       
@@ -80,8 +80,7 @@ public class ShootByLimelight extends CommandBase {
 
     @Override
     public boolean isFinished(){
-      //return ShooterSubsystem.getInstance().isShooterAtVelocity((int)targetShooterVelocity, threshold) && 
-      return Math.abs(LimelightSubsystem.getInstance().getXOffset()) <5;               
+      return Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;               
     }
     @Override
     public void end(boolean interruptable){   

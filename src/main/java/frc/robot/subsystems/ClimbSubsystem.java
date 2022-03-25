@@ -70,9 +70,6 @@ public class ClimbSubsystem extends SubsystemBase {
     public void setPercentPower(LazyTalonSRX talon, double power){
         talon.set(ControlMode.PercentOutput, power);
     }    
-
-
-
     public void climbPower(double power){
         setPercentPower(mLeftClimb, power);
         setPercentPower(mRightClimb, power);
@@ -82,13 +79,4 @@ public class ClimbSubsystem extends SubsystemBase {
         setPercentPower(mLeftPivot, power);
         setPercentPower(mRightPivot, power);
     }
-    
-    @Override
-    public void periodic(){  
-        SmartDashboard.putNumber("Climb Right Position", mRightClimb.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Climb Left Position", mLeftClimb.getSelectedSensorPosition());
-    }
-
 }
-
-//left is 42, right 41
