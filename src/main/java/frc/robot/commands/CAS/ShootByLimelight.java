@@ -1,5 +1,7 @@
 package frc.robot.commands.CAS;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,117 +40,64 @@ public class ShootByLimelight extends CommandBase {
     @Override
     public void execute(){
       LimelightSubsystem m_limelightSubsystem = LimelightSubsystem.getInstance();
-      if(m_limelightSubsystem.getXOffset() == 0){
-        calculateShooterHood(DrivetrainSubsystem.distanceFromHub());
+      int shooterSpeed = 0;
+      if(m_limelightSubsystem.getXOffset() == 0.000000){
+        shooterSpeed = 9000;
       }
       else{
-        calculateShooterHood(LimelightSubsystem.getInstance().getDistance());
+        shooterSpeed = calculateShooterSpeed(LimelightSubsystem.getInstance().getDistance());
       }
-    }
-
-    //hood position formula, y = hood position, x = distance away:
-    //y = -6316 * x + 7317
-    //limit: hood cannot be greater than 0 or less than -37,000
-
-    //shooter velocity formula, y = shooter velocity, x = distance away:
-    //y = 735.8 * x + 6157.0
-    //limit: hood velocity cannot be less than 7,000 or more than 11,000
-
-    //CALIBRATE THESE VALUES
-    //shooter limits: cannot shoot if greater than 5 meters away
-    //if greater than 5 meters away, reset hood position and turn off shooter
-    
-    private void calculateShooterHood(double distance){
-
-      double hoodSlope = -10309.0;
-      double hoodIntercept = 21041.0;
-
-      double shooterSlope = 735.8;
-      double shooterIntercept = 6157.0;
-
-      double minVelocity = 7500;
-      double maxVelocity = 10500;
-
-      double minHood = 0;
-      double maxHood = -32000;
-
-      int shooterThreshold = 200;
-      int hoodThreshold = 250;
       
+      m_shooter.setShooterVelocity(shooterSpeed);
+    }
+    
+    private int calculateShooterSpeed(double distance){
 
-      double targetHoodPosition = hoodSlope * distance + hoodIntercept;
+      double shooterSlope = 1099;
+      double shooterIntercept = 7000.0;
+
+      double minVelocity = 10000;
+      double maxVelocity = 13000;
+
+      int shooterThreshold = 300;
+      
       double targetShooterVelocity = shooterSlope * distance + shooterIntercept;
-      boolean shootable = true;
 
       if(targetShooterVelocity > maxVelocity) {
         targetShooterVelocity = maxVelocity;
-        shootable = false;
       }
       else if(targetShooterVelocity < minVelocity){
         targetShooterVelocity = minVelocity;
-        shootable = false;
-      }      
-      if(targetHoodPosition > minHood) {
-        targetHoodPosition = minHood;
-        shootable = false;
-      }
-      else if(targetHoodPosition < maxHood) {
-        targetHoodPosition = maxHood;
-        shootable = false;
-      }
-
-      //SET HOOD TO 0 WHEN OUT OF RANGE????
-      if(!shootable){
-        targetHoodPosition = 0;
       }
       
-      m_hood.moveHoodToPosition((int)targetHoodPosition);
-      m_shooter.setShooterVelocity((int)targetShooterVelocity);
 
       //CHECKS IF WE CAN SHOOT
-      if(moveIndexer && shootable && !shotBall){//checks if we want to move indexer, then if we are shootable, then if we have not shot ball yet
-        if(m_shooter.isShooterAtVelocity((int)targetShooterVelocity, shooterThreshold)//is shooter at velocity?
-            && m_hood.getIsHoodAtPosition((int)targetHoodPosition, hoodThreshold)){ //is hood at position?
-              boolean withinRange = false;
-
-              if(LimelightSubsystem.getInstance().getXOffset() == 0){//do we use limelight or odo angle to hub?
-                if(Math.abs(Math.toRadians(
-                  DrivetrainSubsystem.findAngle(DrivetrainSubsystem.getInstance().getPose(), Constants.targetHudPosition.getX(), Constants.targetHudPosition.getY(), 180))) 
-                  < 3){
-                    //checks if we are within angle of hub using odo
-                    withinRange = true;
-                }
-              }
-              else{
-                if(Math.abs(LimelightSubsystem.getInstance().getXOffset()) <3){
-                  //checks if we are within angle of hub using limelight
-                  withinRange = true;
-                }
-              }
-              if(withinRange){
-                new SequentialCommandGroup(
-                  new SetIndexerCommand(Constants.indexerUp, false), 
-                  new WaitCommand(0.25),
-                  new SetIndexerCommand(Constants.intakeOn, false)).schedule();                   
-                shotBall = true;
-              }
+      if(moveIndexer){//checks if we want to move indexer, then if we are shootable, then if we have not shot ball yet
+        if(m_shooter.isShooterAtVelocity((int)targetShooterVelocity, shooterThreshold) && Math.abs(LimelightSubsystem.getInstance().getXOffset()) <5){               
+              IndexerSubsystem.getInstance().setIndexerPercentPower(Constants.indexerUp, false);               
+              IndexerSubsystem.getInstance().setIntakePercentPower(Constants.intakeOn, false);    
         }
       }
 
 
-      SmartDashboard.putNumber("Hood Target", targetHoodPosition);
       SmartDashboard.putNumber("Shooter Target", targetShooterVelocity);
       SmartDashboard.putNumber("Distance Away", distance);
-      SmartDashboard.putBoolean("IN RANGE?", shootable);
 
+      return (int)targetShooterVelocity;
     }
 
     @Override
     public void end(boolean interruptable){
-      if(shotBall){
-        //if shot, set intake and indexer to automatic
         new RobotIdle().schedule();
-      }
     }
 
+    class DistanceShooter{
+      public double distance;
+      public double shooter;
+      public DistanceShooter(double distance, double shooter){
+          this.distance = distance;
+          this.shooter = shooter;
+      }
+    }
 }
+

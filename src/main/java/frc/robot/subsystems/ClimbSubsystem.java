@@ -26,7 +26,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     //left motor handles the side closer to the shooter, right handles the side closer to intake
     private final LazyTalonFX mLeftClimb, mRightClimb;
-    private final LazyTalonSRX mLeftPivot, mRightPivot;
+    private final TalonSRX mLeftPivot, mRightPivot;
 
     private ClimbSubsystem(){
         mLeftClimb = TalonFXFactory.createDefaultFalcon("Left Climb Motor", Ports.LEFT_CLIMB);
@@ -35,8 +35,8 @@ public class ClimbSubsystem extends SubsystemBase {
         configureMotor(mRightClimb, false);
         mLeftPivot = TalonSRXFactory.createDefaultTalon("Left Pivot Motor", Ports.LEFT_PIVOT);
         configureMotor(mLeftPivot, false);
-        mRightPivot = TalonSRXFactory.createDefaultTalon("Left Pivot Motor", Ports.RIGHT_PIVOT);
-        configureMotor(mRightPivot, false);
+        mRightPivot = TalonSRXFactory.createDefaultTalon("Right Pivot Motor", Ports.RIGHT_PIVOT);
+        configureMotor(mRightPivot, true);
     }
 
     private void configureMotor(LazyTalonFX talon, boolean b){
@@ -52,34 +52,25 @@ public class ClimbSubsystem extends SubsystemBase {
         */
     }
 
-    private void configureMotor(LazyTalonSRX talon, boolean b){
+    private void configureMotor(TalonSRX talon, boolean b){
         talon.setInverted(b);
-        talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
-        talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Brake);
     }
 
     public LazyTalonFX getLeftClimb(){return mLeftClimb;}
     public LazyTalonFX getRightClimb(){return mRightClimb;}
-    public LazyTalonSRX getLeftPivot(){return mLeftPivot;}
-    public LazyTalonSRX getRightPivot(){return mRightPivot;}
+    public TalonSRX getLeftPivot(){return mLeftPivot;}
+    public TalonSRX getRightPivot(){return mRightPivot;}
 
 
     public void setPercentPower(LazyTalonFX talon, double power){
         talon.set(ControlMode.PercentOutput, power);
     } 
 
-    public void setPercentPower(LazyTalonSRX talon, double power){
+    public void setPercentPower(TalonSRX talon, double power){
         talon.set(ControlMode.PercentOutput, power);
     }    
 
-    public void moveToPosition(LazyTalonFX talon, double position){
-        talon.set(ControlMode.PercentOutput, position);
-    } 
-
-    public void moveToPosition(LazyTalonSRX talon, double position){
-        talon.set(ControlMode.PercentOutput, position);
-    }
 
 
     public void climbPower(double power){
@@ -92,28 +83,8 @@ public class ClimbSubsystem extends SubsystemBase {
         setPercentPower(mRightPivot, power);
     }
     
-    public void climbToPosition(int position){
-        moveToPosition(mLeftClimb, position);
-        moveToPosition(mRightClimb, position);
-    }
-
-    public void pivotToPosition(int position){
-        moveToPosition(mLeftPivot, position);
-        moveToPosition(mRightPivot, position);
-    }
-
-    public void resetAllPositions(){
-        mLeftClimb.setSelectedSensorPosition(0);
-        mRightClimb.setSelectedSensorPosition(0);
-        mLeftPivot.setSelectedSensorPosition(0);
-        mRightPivot.setSelectedSensorPosition(0);
-    }
-
-    
     @Override
     public void periodic(){  
-        SmartDashboard.putNumber("Pivot Right Position", mRightPivot.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Pivot Left Position", mLeftPivot.getSelectedSensorPosition());
         SmartDashboard.putNumber("Climb Right Position", mRightClimb.getSelectedSensorPosition());
         SmartDashboard.putNumber("Climb Left Position", mLeftClimb.getSelectedSensorPosition());
     }

@@ -6,7 +6,6 @@ package frc.robot;
 import frc.lib.util.Controller;
 import frc.robot.commands.*;
 import frc.robot.commands.CAS.AimByLimelight;
-import frc.robot.commands.CAS.AimSequence;
 import frc.robot.commands.CAS.RobotIdle;
 import frc.robot.commands.CAS.RobotOff;
 import frc.robot.commands.CAS.ShootByLimelight;
@@ -91,7 +90,7 @@ public class RobotContainer {
 
     //SHOOTER ADJUSTMENT CONTROLS
     dpadUp.whileActiveContinuous(new InstantCommand(() -> m_shooterSubsystem.increaseShooterVelocity(250)));  //works  
-    dpadDown.whileActiveContinuous(new InstantCommand(() -> m_shooterSubsystem.increaseShooterVelocity(250)));   //works
+    dpadDown.whileActiveContinuous(new InstantCommand(() -> m_shooterSubsystem.increaseShooterVelocity(-250)));   //works
     dpadRight.whenActive(m_shooterSubsystem::stopShooter);
     dpadLeft.whenActive(m_drivetrainSubsystem::resetFromStart);
 
@@ -103,21 +102,23 @@ public class RobotContainer {
     m_controller.getLeftBumper().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
 
     m_controller.getAButton().whenActive(new RobotIdle());
-    m_controller.getBButton().whenActive(new RobotOff());
-    m_controller.getXButton().whenHeld(new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)));   
-    m_controller.getXButton().whenHeld(new SetHoodCommand((int)hoodFixed));
-    m_controller.getXButton().whenHeld(new AimSequence());
-    m_controller.getXButton().whenReleased(new RobotIdle());
+    m_controller.getYButton().whenActive(new RobotOff());
+
+    m_controller.getXButton().whenHeld(new ShootByLimelight(false));
+    m_controller.getXButton().whenHeld(new AimByLimelight(false));
+    m_controller.getBButton().whenHeld(new ShootByLimelight(false));
+    m_controller.getBButton().whenHeld(new AimByLimelight(true));
     
-    m_controller.getRightStickButton().whenHeld(new AimSequence());
-    m_controller.getLeftStickButton().whenHeld(new AimByLimelight());
+    m_controller.getRightStickButton().whenHeld(new ShootByLimelight(true));
+    m_controller.getLeftStickButton().whenHeld(new AimByLimelight(false));
     
     Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});
     Trigger rightTriggerAxis = new Trigger(() -> { return m_controller.getRightTriggerAxis() > triggerDeadzone;});
-    
-    leftTriggerAxis.whileActiveOnce(new ShootByLimelight(false));
-    rightTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
 
+    leftTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
+    leftTriggerAxis.whileActiveOnce(new AimByLimelight(false));
+    rightTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
+    rightTriggerAxis.whileActiveOnce(new AimByLimelight(true));
 
 
     //SECOND CONTROLLER   
@@ -131,7 +132,7 @@ public class RobotContainer {
     dpadUp2.whenActive(m_hoodSubsystem::moveHoodUp).whenInactive(m_hoodSubsystem::stopHood);  //works  
     dpadDown2.whenActive(m_hoodSubsystem::moveHoodDown).whenInactive(m_hoodSubsystem::stopHood);   //works
     dpadRight2.whenActive(m_hoodSubsystem::resetHoodPosition);
-    dpadLeft2.whenActive(m_drivetrainSubsystem::resetFromStart);
+    dpadLeft2.whenActive(new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)));
     
     //second controller controls intake only
     m_controller2.getAButton().whenActive(new SetIntakeCommand(intakeOn, false)).whenInactive(new SetIntakeCommand(0.0, false));
@@ -146,10 +147,23 @@ public class RobotContainer {
                     .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
 
     
-    m_controller2.getLeftBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(pivotDown)))
-                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
-    m_controller2.getRightBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(pivotUp)))
-                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0))); 
+    m_controller2.getLeftBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotDown)))
+                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0)));
+    m_controller2.getRightBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotUp)))
+                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0))); 
+
+    //have operator have fixed shooter controls
+    
+    m_controller2.getXButton().whenHeld(new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)));
+    m_controller2.getXButton().whenHeld(new AimByLimelight(false));
+    m_controller2.getXButton().whenReleased(new RobotIdle());
+    
+    m_controller2.getBButton().whenHeld(new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)));
+    m_controller2.getBButton().whenHeld(new AimByLimelight(true));
+    m_controller2.getBButton().whenReleased(new RobotIdle());
+    
+    m_controller2.getAButton().whenActive(new RobotIdle());
+    m_controller2.getYButton().whenActive(new RobotOff());
   }
 
   public void onRobotDisabled() {

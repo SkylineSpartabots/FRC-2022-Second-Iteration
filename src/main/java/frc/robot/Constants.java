@@ -22,7 +22,7 @@ public final class Constants {
     public static final double hoodFixed = -15000;
     
     
-    public static final double shooterIdle = 6000;
+    public static final double shooterIdle = 9000;
 
     public static final double shootVelocityCondition = 10000;// CHANGE THIS VALUE
     public static final double shooterOff = 0;
@@ -37,8 +37,8 @@ public final class Constants {
 
     public static final double climbUp = 0.8;
     public static final double climbDown = -0.8;
-    public static final double pivotUp = 0.5;
-    public static final double pivotDown = -0.5;
+    public static final double pivotUp = 0.8;
+    public static final double pivotDown = -0.8;
     
 
     
@@ -132,8 +132,8 @@ public final class Constants {
         
         public static final int LEFT_CLIMB = 42;
         public static final int RIGHT_CLIMB = 41;
-        public static final int LEFT_PIVOT = 45;
-        public static final int RIGHT_PIVOT = 44;
+        public static final int LEFT_PIVOT = 44;
+        public static final int RIGHT_PIVOT = 43;
 
     }
 }
