@@ -19,6 +19,8 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import static frc.robot.Constants.*;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -147,8 +149,8 @@ public class RobotContainer {
                     .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
 
     
-    m_controller2.getLeftBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotDown)))
-                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0)));
+    m_controller2.getLeftBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().getLeftPivot().set(ControlMode.PercentOutput, pivotDown)))
+                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().getLeftPivot().set(ControlMode.PercentOutput, pivotUp)));
     m_controller2.getRightBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotUp)))
                               .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0))); 
 
