@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
@@ -76,10 +77,9 @@ public class RobotContainer {
 
   // configures button bindings to controller
   private void configureButtonBindings() {
-
-    HoodSubsystem m_hoodSubsystem = HoodSubsystem.getInstance();
     IndexerSubsystem m_indexerSubsystem = IndexerSubsystem.getInstance();
     ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
+    ShooterSubsystem m_climbSubsystem = ShooterSubsystem.getInstance();
     final double triggerDeadzone = 0.3;
 
     //FIRST CONTROLLER
@@ -111,7 +111,7 @@ public class RobotContainer {
     m_controller.getBButton().whenHeld(new ShootByLimelight(false));
     m_controller.getBButton().whenHeld(new AimByLimelight(true));
     
-    m_controller.getRightStickButton().whenHeld(new ShootByLimelight(true));
+    m_controller.getRightStickButton().whenHeld(new ShootByLimelight(false));
     m_controller.getLeftStickButton().whenHeld(new AimByLimelight(false));
     
     Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});
@@ -119,8 +119,10 @@ public class RobotContainer {
 
     leftTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
     leftTriggerAxis.whileActiveOnce(new AimByLimelight(false));
+    leftTriggerAxis.whenInactive(new SequentialCommandGroup(new WaitCommand(1), new RobotIdle()));
     rightTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
     rightTriggerAxis.whileActiveOnce(new AimByLimelight(true));
+    rightTriggerAxis.whenInactive(new SequentialCommandGroup(new WaitCommand(1), new RobotIdle()));
 
 
     //SECOND CONTROLLER   
@@ -131,10 +133,10 @@ public class RobotContainer {
     Trigger dpadLeft2 = new Trigger(() -> {return m_controller2.getDpadLeft();});
     Trigger dpadRight2 = new Trigger(() -> {return m_controller2.getDpadRight();});
 
-    dpadUp2.whenActive(m_hoodSubsystem::moveHoodUp).whenInactive(m_hoodSubsystem::stopHood);  //works  
-    dpadDown2.whenActive(m_hoodSubsystem::moveHoodDown).whenInactive(m_hoodSubsystem::stopHood);   //works
-    dpadRight2.whenActive(m_hoodSubsystem::resetHoodPosition);
-    dpadLeft2.whenActive(new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)));
+    dpadUp2.whileActiveContinuous(new InstantCommand(() -> m_shooterSubsystem.increaseShooterVelocity(250)));  //works  
+    dpadDown2.whileActiveContinuous(new InstantCommand(() -> m_shooterSubsystem.increaseShooterVelocity(-250)));   //works
+    dpadRight2.whenActive(m_shooterSubsystem::stopShooter);
+    dpadLeft2.whenActive(m_drivetrainSubsystem::resetFromStart);
     
     //second controller controls intake only
     m_controller2.getAButton().whenActive(new SetIntakeCommand(intakeOn, false)).whenInactive(new SetIntakeCommand(0.0, false));
