@@ -145,14 +145,18 @@ public class RobotContainer {
 
     leftTriggerAxis2.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(climbDown)))
                    .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
+                   
     rightTriggerAxis2.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(climbUp)))
                     .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
+                    
 
     
-    m_controller2.getLeftBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().getLeftPivot().set(ControlMode.PercentOutput, pivotDown)))
-                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().getLeftPivot().set(ControlMode.PercentOutput, pivotUp)));
+    m_controller2.getLeftBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotDown)))
+                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0)));
+                              /*
     m_controller2.getRightBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotUp)))
                               .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0))); 
+                              */
 
     //have operator have fixed shooter controls
     

@@ -37,8 +37,8 @@ public final class Constants {
 
     public static final double climbUp = 0.8;
     public static final double climbDown = -0.8;
-    public static final double pivotUp = 0.8;
-    public static final double pivotDown = -0.8;
+    public static final double pivotUp = 0.3;
+    public static final double pivotDown = -0.4;
     
 
     
