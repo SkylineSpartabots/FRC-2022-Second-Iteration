@@ -13,7 +13,6 @@ import frc.robot.commands.SetSubsystemCommand.*;
 import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -186,6 +185,5 @@ public class RobotContainer {
     IndexerSubsystem.getInstance().setIntakePercentPower(0.0, false);
     IndexerSubsystem.getInstance().setIndexerPercentPower(0.0, false);
     ShooterSubsystem.getInstance().setShooterVelocity(0);
-    HoodSubsystem.getInstance().moveHoodToPosition(0);
   }
 }

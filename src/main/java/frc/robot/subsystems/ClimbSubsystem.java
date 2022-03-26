@@ -44,24 +44,12 @@ public class ClimbSubsystem extends SubsystemBase {
         talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Brake);
-        /*
-        talon.config_kF(0, 0.047, Constants.kTimeOutMs);
-        talon.config_kP(0, 0.02, Constants.kTimeOutMs);
-        talon.config_kI(0, 0, Constants.kTimeOutMs);
-        talon.config_kD(0, 0, Constants.kTimeOutMs);
-        */
     }
 
     private void configureMotor(TalonSRX talon, boolean b){
         talon.setInverted(b);
         talon.setNeutralMode(NeutralMode.Brake);
     }
-
-    public LazyTalonFX getLeftClimb(){return mLeftClimb;}
-    public LazyTalonFX getRightClimb(){return mRightClimb;}
-    public LazyTalonSRX getLeftPivot(){return mLeftPivot;}
-    public LazyTalonSRX getRightPivot(){return mRightPivot;}
-
 
     public void setPercentPower(LazyTalonFX talon, double power){
         talon.set(ControlMode.PercentOutput, power);
