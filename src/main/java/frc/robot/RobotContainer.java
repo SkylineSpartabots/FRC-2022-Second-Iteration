@@ -145,16 +145,27 @@ public class RobotContainer {
     Trigger leftTriggerAxis2 = new Trigger(() -> { return m_controller2.getLeftTriggerAxis() > triggerDeadzone;});
     Trigger rightTriggerAxis2 = new Trigger(() -> { return m_controller2.getRightTriggerAxis() > triggerDeadzone;});
 
+    /*
     leftTriggerAxis2.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(climbDown)))
                    .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
+                   
     rightTriggerAxis2.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(climbUp)))
                     .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().climbPower(0)));
+                    */
+                    
+    Trigger leftJoyStickTrigger = new Trigger(() -> { return m_controller2.getLeftY() > triggerDeadzone;});
+    Trigger rightJoyStickTrigger = new Trigger(() -> { return m_controller2.getRightY() > triggerDeadzone;});
+    leftJoyStickTrigger.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(climbUp*m_controller2.getLeftY())))
+    .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(0)));
+    rightJoyStickTrigger.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(climbUp*m_controller2.getRightY())))
+    .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(0)));
 
-    
-    m_controller2.getLeftBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().getLeftPivot().set(ControlMode.PercentOutput, pivotDown)))
-                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().getLeftPivot().set(ControlMode.PercentOutput, pivotUp)));
+    m_controller2.getLeftBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotDown)))
+                              .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0)));
+                              /*
     m_controller2.getRightBumper().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotUp)))
                               .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0))); 
+                              */
 
     //have operator have fixed shooter controls
     

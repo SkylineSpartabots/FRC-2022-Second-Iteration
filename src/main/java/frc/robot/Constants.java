@@ -36,10 +36,10 @@ public final class Constants {
 
     public static final double waitBetweenShots = 0.25;
 
-    public static final double climbUp = 0.8;
-    public static final double climbDown = -0.8;
-    public static final double pivotUp = 0.8;
-    public static final double pivotDown = -0.8;
+    public static final double climbUp = 0.9;
+    public static final double climbDown = -0.9; //usually 0.8, but potential issues having joystick moved to a full position
+    //public static final double pivotUp = 0.3;
+    public static final double pivotDown = -0.4;
     
 
     
