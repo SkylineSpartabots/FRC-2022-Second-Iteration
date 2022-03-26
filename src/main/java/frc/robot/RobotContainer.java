@@ -86,7 +86,7 @@ public class RobotContainer {
 
     //DPAD
     Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});
-    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});    
+    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});
     Trigger dpadLeft = new Trigger(() -> {return m_controller.getDpadLeft();});
     Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
 
@@ -107,25 +107,25 @@ public class RobotContainer {
     m_controller.getYButton().whenActive(new RobotOff());
 
     m_controller.getXButton().whenHeld(new ShootByLimelight(false));
-    m_controller.getXButton().whenHeld(new AimByLimelight(false));
+    m_controller.getXButton().whenHeld(new AimByLimelight("left"));
     m_controller.getBButton().whenHeld(new ShootByLimelight(false));
-    m_controller.getBButton().whenHeld(new AimByLimelight(true));
+    m_controller.getBButton().whenHeld(new AimByLimelight("right"));
     
     m_controller.getRightStickButton().whenHeld(new ShootByLimelight(false));
-    m_controller.getLeftStickButton().whenHeld(new AimByLimelight(false));
+    m_controller.getLeftStickButton().whenHeld(new AimByLimelight());
     
     Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});
     Trigger rightTriggerAxis = new Trigger(() -> { return m_controller.getRightTriggerAxis() > triggerDeadzone;});
 
     leftTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
-    leftTriggerAxis.whileActiveOnce(new AimByLimelight(false));
+    leftTriggerAxis.whileActiveOnce(new AimByLimelight("left"));
     leftTriggerAxis.whenInactive(new SequentialCommandGroup(new WaitCommand(1), new RobotIdle()));
     rightTriggerAxis.whileActiveOnce(new ShootByLimelight(true));
-    rightTriggerAxis.whileActiveOnce(new AimByLimelight(true));
+    rightTriggerAxis.whileActiveOnce(new AimByLimelight("right"));
     rightTriggerAxis.whenInactive(new SequentialCommandGroup(new WaitCommand(1), new RobotIdle()));
 
 
-    //SECOND CONTROLLER   
+    //SECOND CONTROLLER   : TODO ADD MANUAL OVERRIDE FOR INTAKING AND INDEXING INDIVIDUALLY
 
     //DPAD
     Trigger dpadUp2 = new Trigger(() -> {return m_controller2.getDpadUp();});
@@ -159,11 +159,11 @@ public class RobotContainer {
     //have operator have fixed shooter controls
     
     m_controller2.getXButton().whenHeld(new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)));
-    m_controller2.getXButton().whenHeld(new AimByLimelight(false));
+    m_controller2.getXButton().whenHeld(new AimByLimelight("left"));
     m_controller2.getXButton().whenReleased(new RobotIdle());
     
     m_controller2.getBButton().whenHeld(new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed)));
-    m_controller2.getBButton().whenHeld(new AimByLimelight(true));
+    m_controller2.getBButton().whenHeld(new AimByLimelight("right"));
     m_controller2.getBButton().whenReleased(new RobotIdle());
     
     m_controller2.getAButton().whenActive(new RobotIdle());

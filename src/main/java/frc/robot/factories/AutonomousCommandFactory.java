@@ -4,10 +4,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.*;
+import frc.robot.commands.CAS.AimByLimelight;
 import frc.robot.commands.CAS.RobotOff;
+import frc.robot.commands.CAS.ShootByLimelight;
 import frc.robot.commands.SetSubsystemCommand.*;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -21,11 +24,12 @@ public class AutonomousCommandFactory {
     public static SendableChooser<Command> m_chooser = new SendableChooser<>();
     public static void swapAutonomousCommands() {
         m_chooser.setDefaultOption("fiveBallAuto", fiveBallAuto());
-        /*m_chooser.addOption("twoBallAutoBottomBottom", twoBallAutoBottomBottom());
+        m_chooser.addOption("fiveBallAutoLimelight", fiveBallAutoLimelight());
+        m_chooser.addOption("twoBallAutoBottomBottom", twoBallAutoBottomBottom());
         m_chooser.addOption("twoBallAutoBottomTop", twoBallAutoBottomTop());
         m_chooser.addOption("twoBallAutoTopMiddle", twoBallAutoTopMiddle());
         m_chooser.addOption("oneBallTopBottom", oneBallTopBottom());
-        m_chooser.addOption("oneBallTopTop", oneBallTopTop());*/
+        m_chooser.addOption("oneBallTopTop", oneBallTopTop());
 
 
         
@@ -40,7 +44,37 @@ public class AutonomousCommandFactory {
             return new Pose2d(x, y, new Rotation2d(Math.toRadians(rot)));
     }
 
-    public static Command fiveBallAuto(){
+    public static Command fiveBallAutoLimelight(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose(7.57, 1.79, -89.18)),            
+            new SetIntakeCommand(intakeOn,false),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+150)),
+            new TrajectoryDriveCommand(getPose(7.59, 0.80, -90.42), List.of(), false,0.3, 1 ,0.8),
+            new WaitCommand(0.2),            
+            new SetIntakeCommand(0.0,false),
+            new TrajectoryDriveCommand(getPose(5.59, 2.58, -142.65), List.of(new Translation2d(6.14, 2.05)), true, 0.7, 4,1.4),
+            new ShootByLimelight(false),
+            new AimByLimelight(),
+            new WaitCommand(0.25),
+            new SetIndexerCommand(indexerUp,false),
+            new SetIntakeCommand(intakeOn,false),
+            new TrajectoryDriveCommand(getPose(5.18, 2.28, DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees()), List.of(), false, 0.8, 0.8, 0.3),
+            new WaitCommand(0.7),
+            new SetIntakeCommand(intakeOn,true),
+            new SetIndexerCommand(indexerUp,true),
+            new TrajectoryDriveCommand(getPose(1.15, 1.42, -137.29), List.of(), false, 0.2, 5, 2.0),
+            new WaitCommand(0.6),
+            new TrajectoryDriveCommand(getPose(5.18, 1.95, -141.57), List.of(), true, 0.5,5,2.0),
+            new ShootByLimelight(false),
+            new AimByLimelight(),
+            new WaitCommand(0.25),
+            new SetIndexerCommand(indexerUp,false),
+            new SetIntakeCommand(intakeOn,false),
+            new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+    public static Command fiveBallAuto(){                
         return new SequentialCommandGroup(
             new CalibrationCommand(getPose(7.57, 1.79, -89.18)),            
             new SetIntakeCommand(intakeOn,false),

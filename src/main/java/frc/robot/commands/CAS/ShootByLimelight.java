@@ -22,7 +22,6 @@ public class ShootByLimelight extends CommandBase {
     private final HoodSubsystem m_hood;
     private final ShooterSubsystem m_shooter;
     private boolean moveIndexer;
-    private boolean shotBall = false;;
 
 
     public ShootByLimelight(boolean moveIndexer) {
@@ -43,7 +42,7 @@ public class ShootByLimelight extends CommandBase {
     public void execute(){
       LimelightSubsystem m_limelightSubsystem = LimelightSubsystem.getInstance();
       int shooterSpeed = 0;
-      if(m_limelightSubsystem.getXOffset() == 0.000000){
+      if(!m_limelightSubsystem.hasTarget()){
         shooterSpeed = (int) Constants.shooterRamped;
       }
       else{
@@ -59,7 +58,7 @@ public class ShootByLimelight extends CommandBase {
       double shooterIntercept = 7000.0;
 
       double minVelocity = 9500;
-      double maxVelocity = 13000;
+      double maxVelocity = 12500;
 
       
       targetShooterVelocity = shooterSlope * distance + shooterIntercept;
@@ -80,7 +79,7 @@ public class ShootByLimelight extends CommandBase {
 
     @Override
     public boolean isFinished(){
-      return Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;               
+      return LimelightSubsystem.getInstance().hasTarget() && Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;               
     }
     @Override
     public void end(boolean interruptable){   

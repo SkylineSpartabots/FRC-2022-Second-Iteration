@@ -20,15 +20,23 @@ import frc.robot.subsystems.LimelightSubsystem;
 public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQUENCE
     private PIDController m_thetaController;
     private LimelightSubsystem m_limelightSubsystem;
-    boolean moveRight;
+    String direction = "";
 
-    public AimByLimelight(boolean moveRight) {
+    public AimByLimelight(String direction) {
         super(DrivetrainSubsystem.getInstance());
        
         m_thetaController = new PIDController(2.0,0,0);
         m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
         m_limelightSubsystem = LimelightSubsystem.getInstance();
-        this.moveRight = moveRight;
+        this.direction = direction;
+    }
+    
+    public AimByLimelight() {
+        super(DrivetrainSubsystem.getInstance());
+       
+        m_thetaController = new PIDController(2.0,0,0);
+        m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        m_limelightSubsystem = LimelightSubsystem.getInstance();
     }
 
     @Override
@@ -36,18 +44,21 @@ public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQU
         var xSpeed = -modifyAxis(m_controller.getLeftY()) * DriveConstants.kMaxSpeedMetersPerSecond;
         var ySpeed = -modifyAxis(m_controller.getLeftX()) * DriveConstants.kMaxSpeedMetersPerSecond;
         double rot;
-        if(LimelightSubsystem.getInstance().getXOffset() != 0){
+        if(LimelightSubsystem.getInstance().hasTarget()){
             rot = m_thetaController.calculate(Math.toRadians(LimelightSubsystem.getInstance().getXOffset()),0.0);
             if(Math.abs(m_limelightSubsystem.getXOffset()) < 3.0){
                 rot = 0;
             }
         }
         else{
-            if(moveRight){                
+            if(direction.equals("right")){    //lol too lazy to use enums does anyone want to change this            
                 rot = Math.toRadians(-180);
             }
-            else{                
+            else if (direction.equals("left")){                
                 rot = Math.toRadians(180);
+            }
+            else{
+                rot = 0;
             }
         }       
 
