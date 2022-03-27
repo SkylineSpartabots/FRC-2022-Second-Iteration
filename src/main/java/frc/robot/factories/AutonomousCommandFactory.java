@@ -23,8 +23,8 @@ public class AutonomousCommandFactory {
 
     public static SendableChooser<Command> m_chooser = new SendableChooser<>();
     public static void swapAutonomousCommands() {
-        m_chooser.setDefaultOption("oneBallAuto", oneBallAuto());
-        //m_chooser.setDefaultOption("fiveBallAuto", fiveBallAuto());
+        //m_chooser.setDefaultOption("oneBallAuto", oneBallAuto());
+        m_chooser.setDefaultOption("fiveBallAuto", fiveBallAuto());
         //m_chooser.setDefaultOption("twoBallAutoTopMiddle", twoBallAutoTopMiddle());
         /*m_chooser.addOption("fiveBallAutoLimelight", fiveBallAutoLimelight());
         m_chooser.addOption("twoBallAutoBottomBottom", twoBallAutoBottomBottom());

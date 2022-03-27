@@ -45,10 +45,10 @@ public class TeleopDriveCommand extends CommandBase {
         
         
         //rotFilter.calculate
-        /*m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
-            rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));*/
-        m_drivetrainSubsystem.drive(new ChassisSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
-        rotFilter.calculate(rot)));
+        m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
+            rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));
+        /*m_drivetrainSubsystem.drive(new ChassisSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
+        rotFilter.calculate(rot)));*/
     }
 
     public static double applyDeadband(double value, double deadband) {
