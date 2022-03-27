@@ -69,6 +69,12 @@ public class ClimbSubsystem extends SubsystemBase {
         setPercentPower(mLeftPivot, power);
         setPercentPower(mRightPivot, power);
     }
+    public void leftPivotPower(double power){
+        setPercentPower(mLeftPivot, power);
+    }
+    public void rightPivotPower(double power){
+        setPercentPower(mRightPivot, power);
+    }
     @Override
     public void periodic(){        
         SmartDashboard.putNumber("L Climb Voltage", mLeftClimb.getMotorOutputVoltage());

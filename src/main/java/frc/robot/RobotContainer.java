@@ -152,14 +152,19 @@ public class RobotContainer {
     Trigger leftTriggerAxis2 = new Trigger(() -> { return m_controller2.getLeftTriggerAxis() > triggerDeadzone;});
     Trigger rightTriggerAxis2 = new Trigger(() -> { return m_controller2.getRightTriggerAxis() > triggerDeadzone;});
 
-    leftTriggerAxis2.whenActive(new SetIndexerCommand(indexerDown,false))
+    /*leftTriggerAxis2.whenActive(new SetIndexerCommand(indexerDown,false))
                     .whenInactive(new SetIndexerCommand(0.0, false));
     rightTriggerAxis2.whenActive(new SetIndexerCommand(indexerUp,false))
                      .whenInactive(new SetIndexerCommand(0.0, false));
     m_controller2.getLeftBumper().whenPressed(new SetIntakeCommand(intakeReverse,false))
                     .whenReleased(new SetIndexerCommand(0.0, false));
     m_controller2.getRightBumper().whenPressed(new SetIntakeCommand(intakeOn,false))
-                     .whenReleased(new SetIntakeCommand(0.0, false));
+                     .whenReleased(new SetIntakeCommand(0.0, false));*/
+                     
+    leftTriggerAxis2.whileActiveContinuous(new InstantCommand(() -> ClimbSubsystem.getInstance().leftPivotPower(pivotDown*m_controller2.getLeftY())))
+      .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(0)));
+    rightTriggerAxis2.whileActiveContinuous(new InstantCommand(() -> ClimbSubsystem.getInstance().rightPivotPower(pivotDown*m_controller2.getRightY())))
+      .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(0)));
                     
                     
     Trigger leftJoyStick = new Trigger(() -> { return Math.abs(m_controller2.getLeftY()) > triggerDeadzone;});
