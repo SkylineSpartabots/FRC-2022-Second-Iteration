@@ -61,7 +61,6 @@ public class ClimbSubsystem extends SubsystemBase {
     public void leftClimbPower(double power){
         setPercentPower(mLeftClimb, power);
     }
-
     public void rightClimbPower(double power){
         setPercentPower(mRightClimb, power);
     }
@@ -70,4 +69,20 @@ public class ClimbSubsystem extends SubsystemBase {
         setPercentPower(mLeftPivot, power);
         setPercentPower(mRightPivot, power);
     }
+    @Override
+    public void periodic(){        
+        SmartDashboard.putNumber("L Climb Voltage", mLeftClimb.getMotorOutputVoltage());
+        SmartDashboard.putNumber("L Climb Output Current", mLeftClimb.getStatorCurrent());
+        SmartDashboard.putNumber("l Climb Input Current", mLeftClimb.getSupplyCurrent());
+        SmartDashboard.putNumber("R Climb Voltage", mRightClimb.getMotorOutputVoltage());
+        SmartDashboard.putNumber("R Climb Output Current", mRightClimb.getStatorCurrent());
+        SmartDashboard.putNumber("R Climb Input Current", mRightClimb.getSupplyCurrent());
+        SmartDashboard.putNumber("L Pivot Voltage", mLeftPivot.getMotorOutputVoltage());
+        SmartDashboard.putNumber("L Pivot Output Current", mLeftPivot.getStatorCurrent());
+        SmartDashboard.putNumber("L Pivot Input Current", mLeftPivot.getSupplyCurrent());
+        SmartDashboard.putNumber("R Pivot Voltage", mRightPivot.getMotorOutputVoltage());
+        SmartDashboard.putNumber("R Pivot Output Current", mRightPivot.getStatorCurrent());
+        SmartDashboard.putNumber("R Pivot Input Current", mRightPivot.getSupplyCurrent());
+    }
+
 }

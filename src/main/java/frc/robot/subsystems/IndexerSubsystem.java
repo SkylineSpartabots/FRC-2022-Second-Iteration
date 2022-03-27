@@ -104,11 +104,17 @@ public class IndexerSubsystem extends SubsystemBase{
         SmartDashboard.putBoolean("intake loaded", isIntakeBallLoaded());
         SmartDashboard.putBoolean("intake autoIntake", autoIntake);
         SmartDashboard.putNumber("Intake speed", m_IntakeMotor.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Intake Voltage", m_IntakeMotor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Intake Output Current", m_IntakeMotor.getStatorCurrent());
+        SmartDashboard.putNumber("Intake Input Current", m_IntakeMotor.getSupplyCurrent());
 
         SmartDashboard.putNumber("indexer proximity", m_indexerSensor.colorSensor.getProximity());
         SmartDashboard.putBoolean("indexer loaded", isIndexerBallLoaded());
         SmartDashboard.putBoolean("indexer autoIntake", autoIndexer);
         SmartDashboard.putNumber("indexer speed", m_IndexerMotor.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("indexer Voltage", m_IndexerMotor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("indexer Output Current", m_IndexerMotor.getStatorCurrent());
+        SmartDashboard.putNumber("indexer Input Current", m_IndexerMotor.getSupplyCurrent());
 
         if(autoIndexer && isIndexerBallLoaded()){                
             m_IndexerMotor.set(ControlMode.PercentOutput, 0);

@@ -9,31 +9,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.commands.SetSubsystemCommand.SetHoodCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeIndexerCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootByLimelight extends CommandBase {
-    private final HoodSubsystem m_hood;
     private final ShooterSubsystem m_shooter;
     private boolean moveIndexer;
 
 
     public ShootByLimelight(boolean moveIndexer) {
-        m_hood = HoodSubsystem.getInstance();
         m_shooter = ShooterSubsystem.getInstance();
-        addRequirements(m_shooter, m_hood);
+        addRequirements(m_shooter);
         this.moveIndexer = moveIndexer;
     }
 
     @Override
     public void initialize() {
-        m_hood.resetHoodPosition();
     }
 
     double targetShooterVelocity = 0;
@@ -79,7 +74,8 @@ public class ShootByLimelight extends CommandBase {
 
     @Override
     public boolean isFinished(){
-      return LimelightSubsystem.getInstance().hasTarget() && Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;               
+      return Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;
+      //return LimelightSubsystem.getInstance().hasTarget() && Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;               
     }
     @Override
     public void end(boolean interruptable){   

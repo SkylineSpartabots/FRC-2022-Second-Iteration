@@ -45,13 +45,6 @@ public class LimelightSubsystem extends SubsystemBase {
         nt.getEntry("camMode").setNumber(LimelightControl.Cam_Vision.number());
     }
 
-    public void toggleDriveCam(){
-        if(driverMode)
-            nt.getEntry("camMode").setNumber(LimelightControl.Cam_Vision.number());
-        else
-            nt.getEntry("camMode").setNumber(LimelightControl.Cam_Vision.number());
-        driverMode = !driverMode;
-    }
 
     public boolean hasTarget(){
         return nt.getEntry("tv").getDouble(0.0) == 1.0;

@@ -29,8 +29,8 @@ public class TeleopDriveCommand extends CommandBase {
     protected final Controller m_controller;
 
     //limit accel/deccel
-    protected SlewRateLimiter driveXFilter = new SlewRateLimiter(7);
-    protected SlewRateLimiter driveYFilter = new SlewRateLimiter(7);
+    protected SlewRateLimiter driveXFilter = new SlewRateLimiter(6);
+    protected SlewRateLimiter driveYFilter = new SlewRateLimiter(6);
     protected SlewRateLimiter rotFilter = new SlewRateLimiter(20);
     
     public void driveWithJoystick() {
@@ -45,8 +45,10 @@ public class TeleopDriveCommand extends CommandBase {
         
         
         //rotFilter.calculate
-        m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
-            rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));
+        /*m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
+            rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));*/
+        m_drivetrainSubsystem.drive(new ChassisSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
+        rotFilter.calculate(rot)));
     }
 
     public static double applyDeadband(double value, double deadband) {

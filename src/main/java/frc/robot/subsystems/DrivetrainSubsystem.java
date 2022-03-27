@@ -182,7 +182,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       getPose().getX(), getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY()));
     SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
     SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
-     
+  
     m_field.setRobotPose(pose);
   }
 

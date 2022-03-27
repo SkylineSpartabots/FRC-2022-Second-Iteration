@@ -85,5 +85,11 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
         SmartDashboard.putNumber("Shooter Target", velocity);
         SmartDashboard.putNumber("Shooter Vel", mMasterShooter.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Shooter Voltage", mMasterShooter.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Shooter Output Current", mMasterShooter.getStatorCurrent());
+        SmartDashboard.putNumber("Shooter Input Current", mMasterShooter.getSupplyCurrent());
+        SmartDashboard.putNumber("Slave Shooter Voltage", mSlaveShooter.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
+        SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
     }
 }
