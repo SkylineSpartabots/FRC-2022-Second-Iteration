@@ -52,10 +52,10 @@ public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQU
         }
         else{
             if(direction.equals("right")){    //lol too lazy to use enums does anyone want to change this            
-                rot = Math.toRadians(-180);
+                rot = Math.toRadians(-150);
             }
             else if (direction.equals("left")){                
-                rot = Math.toRadians(180);
+                rot = Math.toRadians(150);
             }
             else{
                 rot = 0;

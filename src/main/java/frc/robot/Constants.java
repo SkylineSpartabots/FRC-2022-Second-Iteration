@@ -29,7 +29,7 @@ public final class Constants {
     public static final double indexerUp = 0.5;
     public static final double indexerDown = -0.4;
 
-    public static final double intakeOn = 0.75;
+    public static final double intakeOn = 0.7;
     public static final double intakeReverse = -0.4;
 
     public static final double waitBetweenShots = 0.25;

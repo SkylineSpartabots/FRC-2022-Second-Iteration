@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -74,14 +75,16 @@ public class ShootByLimelight extends CommandBase {
 
     @Override
     public boolean isFinished(){
-      return Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;
-      //return LimelightSubsystem.getInstance().hasTarget() && Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;               
+      //return Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;
+      return LimelightSubsystem.getInstance().hasTarget() && Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;               
     }
     @Override
     public void end(boolean interruptable){   
       if(moveIndexer){
-        IndexerSubsystem.getInstance().setIndexerPercentPower(Constants.indexerUp, false);               
-        IndexerSubsystem.getInstance().setIntakePercentPower(Constants.intakeOn, false);
+        new SequentialCommandGroup(
+          new WaitCommand(0.5),
+          new SetIntakeIndexerCommand(Constants.intakeOn, Constants.indexerUp)
+        ).schedule();
       }   
     }
 
