@@ -4,6 +4,7 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
+import frc.lib.util.DeviceFinder;
 import frc.robot.commands.*;
 import frc.robot.commands.CAS.AimByLimelight;
 import frc.robot.commands.CAS.RobotIdle;
@@ -20,6 +21,8 @@ import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -30,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -44,13 +48,20 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private DrivetrainSubsystem m_drivetrainSubsystem;
-
+  private LimelightSubsystem m_limelight;
+  private IndexerSubsystem m_indexerSubsystem;
+  private ShooterSubsystem m_shooterSubsystem;
+  private ClimbSubsystem m_climbSubsystem;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
-    LimelightSubsystem m_limelight = LimelightSubsystem.getInstance();
+    m_limelight = LimelightSubsystem.getInstance();
+    m_indexerSubsystem = IndexerSubsystem.getInstance();
+    m_shooterSubsystem = ShooterSubsystem.getInstance();
+    m_climbSubsystem = ClimbSubsystem.getInstance();
+
     // Set the scheduler to log Shuffleboard events for command initialize,
     // interrupt, finish
     CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker(
@@ -65,6 +76,8 @@ public class RobotContainer {
 
     // initialize Shuffleboard swapping of autonomous commands
     AutonomousCommandFactory.swapAutonomousCommands();
+    
+    printDiagnostics();
   }
 
   private static final Controller m_controller = new Controller(new XboxController(0));
@@ -74,11 +87,22 @@ public class RobotContainer {
     return m_controller;
   }
 
+  private void printDiagnostics(){
+    SmartDashboard.putBoolean("NavX Connected?", m_drivetrainSubsystem.getNavxConnected());
+    SmartDashboard.putBoolean("Limelight Connected?", m_limelight.isConnected());
+    SmartDashboard.putBoolean("Can Bus Connected?", isCanConnected());
+    SmartDashboard.putBoolean("Battery Charged?", isBatteryCharged());
+  }
+
+  private boolean isBatteryCharged(){
+    return RobotController.getBatteryVoltage() >= Constants.kMinimumBatteryVoltage;
+  }
+
+  private boolean isCanConnected(){
+    return DeviceFinder.Find().size() == Constants.kCanDeviceCount;
+  }
   // configures button bindings to controller
   private void configureButtonBindings() {
-    IndexerSubsystem m_indexerSubsystem = IndexerSubsystem.getInstance();
-    ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
-    ShooterSubsystem m_climbSubsystem = ShooterSubsystem.getInstance();
     final double triggerDeadzone = 0.2;
 
     //FIRST CONTROLLER

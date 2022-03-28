@@ -172,6 +172,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_chassisSpeeds = chassisSpeeds;
   }
 
+  public boolean getNavxConnected(){
+    return m_navx.isConnected();
+  }
   @Override
   public void periodic() {    
     var pose = m_odometry.getPoseMeters();   

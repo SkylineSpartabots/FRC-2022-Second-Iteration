@@ -45,7 +45,9 @@ public class LimelightSubsystem extends SubsystemBase {
         nt.getEntry("camMode").setNumber(LimelightControl.Cam_Vision.number());
     }
 
-
+    public boolean isConnected(){
+        return NetworkTableInstance.getDefault().getTable("limelight").containsKey("ledMode");
+    }
     public boolean hasTarget(){
         return nt.getEntry("tv").getDouble(0.0) == 1.0;
     }
