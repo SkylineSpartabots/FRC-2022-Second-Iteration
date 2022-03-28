@@ -36,7 +36,7 @@ public class ClimbSubsystem extends SubsystemBase {
         mLeftPivot = TalonSRXFactory.createDefaultTalon("Left Pivot Motor", Ports.LEFT_PIVOT);
         configureMotor(mLeftPivot, false);
         mRightPivot = TalonSRXFactory.createDefaultTalon("Right Pivot Motor", Ports.RIGHT_PIVOT);
-        configureMotor(mRightPivot, true);
+        configureMotor(mRightPivot, false);
     }
 
     private void configureMotor(LazyTalonFX talon, boolean b){

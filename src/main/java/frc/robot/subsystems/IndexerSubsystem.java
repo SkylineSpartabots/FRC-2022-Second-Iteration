@@ -48,7 +48,7 @@ public class IndexerSubsystem extends SubsystemBase{
         m_IntakeMotor = TalonFXFactory.createDefaultFalcon("Intake Motor", Ports.INTAKE_MOTOR);//creates motor
         m_IntakeMotor.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         m_IntakeMotor.enableVoltageCompensation(true);        
-        m_IntakeMotor.setNeutralMode(NeutralMode.Brake);
+        m_IntakeMotor.setNeutralMode(NeutralMode.Coast);
         m_intakeSensor = new TunedColorSensor(Constants.kColorSensorLoadingDistance, onboardI2C);
     }
     

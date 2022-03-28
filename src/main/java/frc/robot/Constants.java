@@ -23,21 +23,18 @@ public final class Constants {
     public static final double shooterIdle = 10000;
     public static final double shooterEjection = 8000;
 
-    public static final double shootVelocityCondition = 10000;// CHANGE THIS VALUE
-    public static final double shooterOff = 0;
-
     public static final double indexerUp = 0.5;
-    public static final double indexerDown = -0.4;
+    public static final double indexerDown = -0.5;
 
-    public static final double intakeOn = 0.7;
-    public static final double intakeReverse = -0.4;
+    public static final double intakeOn = 0.51;
+    public static final double intakeReverse = -0.5;
 
     public static final double waitBetweenShots = 0.25;
 
-    public static final double climbUp = 0.9;
-    public static final double climbDown = -0.9; //usually 0.8, but potential issues having joystick moved to a full position
-    //public static final double pivotUp = 0.3;
-    public static final double pivotDown = -0.4;
+    public static final double climbUp = 0.99;
+    public static final double climbDown = -0.99; //usually 0.8, but potential issues having joystick moved to a full position
+    public static final double pivotUp = 0.4;
+    public static final double pivotDown = -0.5;
     
 
     
@@ -81,7 +78,7 @@ public final class Constants {
         public static final double kMaxVoltage = 12.0;
         // The maximum velocity of the robot in meters per second.
         // This is a measure of how fast the robot should be able to drive in a straight line.
-        public static final double kMaxSpeedMetersPerSecond =  0.85 * //speed decreased to 0.6
+        public static final double kMaxSpeedMetersPerSecond =  0.81 * //speed decreased to 0.6
         6380.0 / 60.0 *
                SdsModuleConfigurations.MK4_L2.getDriveReduction() *
                SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
