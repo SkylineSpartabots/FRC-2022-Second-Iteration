@@ -62,12 +62,14 @@ public class ShooterSubsystem extends SubsystemBase {
         mMasterShooter.set(ControlMode.Velocity, velocity);
     }
 
-    public void increaseShooterVelocity(double amount){           
+    public void increaseShooterVelocity(double speed){    
+        int amount = (int)speed;
+        if(mMasterShooter.getSelectedSensorVelocity()< 1000) amount = 1000;
         this.velocity = (int)mMasterShooter.getSelectedSensorVelocity() + (int)amount;
         setShooterVelocity(velocity);
     }
 
-    //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000) [for against the hub]
+    //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000)
     public boolean isShooterAtVelocity(int velocity, int threshold){
         if(mMasterShooter.getSelectedSensorVelocity()> velocity - threshold && mMasterShooter.getSelectedSensorVelocity() < velocity + threshold){
             return true;
@@ -83,5 +85,11 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
         SmartDashboard.putNumber("Shooter Target", velocity);
         SmartDashboard.putNumber("Shooter Vel", mMasterShooter.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Shooter Voltage", mMasterShooter.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Shooter Output Current", mMasterShooter.getStatorCurrent());
+        SmartDashboard.putNumber("Shooter Input Current", mMasterShooter.getSupplyCurrent());
+        SmartDashboard.putNumber("Slave Shooter Voltage", mSlaveShooter.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
+        SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
     }
 }

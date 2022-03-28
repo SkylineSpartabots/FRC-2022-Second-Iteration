@@ -20,7 +20,17 @@ import frc.robot.subsystems.LimelightSubsystem;
 public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQUENCE
     private PIDController m_thetaController;
     private LimelightSubsystem m_limelightSubsystem;
+    String direction = "";
 
+    public AimByLimelight(String direction) {
+        super(DrivetrainSubsystem.getInstance());
+       
+        m_thetaController = new PIDController(2.0,0,0);
+        m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        m_limelightSubsystem = LimelightSubsystem.getInstance();
+        this.direction = direction;
+    }
+    
     public AimByLimelight() {
         super(DrivetrainSubsystem.getInstance());
        
@@ -33,31 +43,30 @@ public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQU
     public void driveWithJoystick() {
         var xSpeed = -modifyAxis(m_controller.getLeftY()) * DriveConstants.kMaxSpeedMetersPerSecond;
         var ySpeed = -modifyAxis(m_controller.getLeftX()) * DriveConstants.kMaxSpeedMetersPerSecond;
-        var rot = m_thetaController.calculate(Math.toRadians(LimelightSubsystem.getInstance().getXOffset()),0.0);
-        
-        if(Math.abs(m_limelightSubsystem.getXOffset()) < 3.0){
-            rot = 0;
+        double rot;
+        if(LimelightSubsystem.getInstance().hasTarget()){
+            rot = m_thetaController.calculate(Math.toRadians(LimelightSubsystem.getInstance().getXOffset()),0.0);
+            if(Math.abs(m_limelightSubsystem.getXOffset()) < 3.0){
+                rot = 0;
+            }
         }
+        else{
+            if(direction.equals("right")){    //lol too lazy to use enums does anyone want to change this            
+                rot = Math.toRadians(-150);
+            }
+            else if (direction.equals("left")){                
+                rot = Math.toRadians(150);
+            }
+            else{
+                rot = 0;
+            }
+        }       
 
         SmartDashboard.putNumber("xSpeed", xSpeed);
         SmartDashboard.putNumber("ySpeed", ySpeed);
         SmartDashboard.putNumber("rotSpeed", rot);
-
-        
-        if(Math.abs(m_limelightSubsystem.getXOffset()) < 3.0 && m_limelightSubsystem.getXOffset() != 0.0){      
-            double x = 8.23 - (m_limelightSubsystem.getDistance() * 
-                Math.cos(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180 
-                - m_limelightSubsystem.getXOffset())));
-            double y = 4.165 - (m_limelightSubsystem.getDistance() * 
-                Math.sin(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180
-                - m_limelightSubsystem.getXOffset())));//plus or minus xoffset???
-            
-                DrivetrainSubsystem.getInstance().resetOdometryFromPosition(x,y);
-        }
     
         m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
                 rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));
-
-        
     }
 }

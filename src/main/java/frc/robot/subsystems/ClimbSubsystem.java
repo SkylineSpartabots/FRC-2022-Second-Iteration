@@ -35,7 +35,7 @@ public class ClimbSubsystem extends SubsystemBase {
         configureMotor(mRightClimb, false);
         mLeftPivot = TalonSRXFactory.createDefaultTalon("Left Pivot Motor", Ports.LEFT_PIVOT);
         configureMotor(mLeftPivot, false);
-        mRightPivot = TalonSRXFactory.createDefaultTalon("Left Pivot Motor", Ports.RIGHT_PIVOT);
+        mRightPivot = TalonSRXFactory.createDefaultTalon("Right Pivot Motor", Ports.RIGHT_PIVOT);
         configureMotor(mRightPivot, false);
     }
 
@@ -44,26 +44,12 @@ public class ClimbSubsystem extends SubsystemBase {
         talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Brake);
-        /*
-        talon.config_kF(0, 0.047, Constants.kTimeOutMs);
-        talon.config_kP(0, 0.02, Constants.kTimeOutMs);
-        talon.config_kI(0, 0, Constants.kTimeOutMs);
-        talon.config_kD(0, 0, Constants.kTimeOutMs);
-        */
     }
 
-    private void configureMotor(LazyTalonSRX talon, boolean b){
+    private void configureMotor(TalonSRX talon, boolean b){
         talon.setInverted(b);
-        talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
-        talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Brake);
     }
-
-    public LazyTalonFX getLeftClimb(){return mLeftClimb;}
-    public LazyTalonFX getRightClimb(){return mRightClimb;}
-    public LazyTalonSRX getLeftPivot(){return mLeftPivot;}
-    public LazyTalonSRX getRightPivot(){return mRightPivot;}
-
 
     public void setPercentPower(LazyTalonFX talon, double power){
         talon.set(ControlMode.PercentOutput, power);
@@ -72,18 +58,10 @@ public class ClimbSubsystem extends SubsystemBase {
     public void setPercentPower(LazyTalonSRX talon, double power){
         talon.set(ControlMode.PercentOutput, power);
     }    
-
-    public void moveToPosition(LazyTalonFX talon, double position){
-        talon.set(ControlMode.PercentOutput, position);
-    } 
-
-    public void moveToPosition(LazyTalonSRX talon, double position){
-        talon.set(ControlMode.PercentOutput, position);
-    }
-
-
-    public void climbPower(double power){
+    public void leftClimbPower(double power){
         setPercentPower(mLeftClimb, power);
+    }
+    public void rightClimbPower(double power){
         setPercentPower(mRightClimb, power);
     }
 
@@ -91,33 +69,26 @@ public class ClimbSubsystem extends SubsystemBase {
         setPercentPower(mLeftPivot, power);
         setPercentPower(mRightPivot, power);
     }
-    
-    public void climbToPosition(int position){
-        moveToPosition(mLeftClimb, position);
-        moveToPosition(mRightClimb, position);
+    public void leftPivotPower(double power){
+        setPercentPower(mLeftPivot, power);
     }
-
-    public void pivotToPosition(int position){
-        moveToPosition(mLeftPivot, position);
-        moveToPosition(mRightPivot, position);
+    public void rightPivotPower(double power){
+        setPercentPower(mRightPivot, power);
     }
-
-    public void resetAllPositions(){
-        mLeftClimb.setSelectedSensorPosition(0);
-        mRightClimb.setSelectedSensorPosition(0);
-        mLeftPivot.setSelectedSensorPosition(0);
-        mRightPivot.setSelectedSensorPosition(0);
-    }
-
-    
     @Override
-    public void periodic(){  
-        SmartDashboard.putNumber("Pivot Right Position", mRightPivot.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Pivot Left Position", mLeftPivot.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Climb Right Position", mRightClimb.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Climb Left Position", mLeftClimb.getSelectedSensorPosition());
+    public void periodic(){        
+        SmartDashboard.putNumber("L Climb Voltage", mLeftClimb.getMotorOutputVoltage());
+        SmartDashboard.putNumber("L Climb Output Current", mLeftClimb.getStatorCurrent());
+        SmartDashboard.putNumber("l Climb Input Current", mLeftClimb.getSupplyCurrent());
+        SmartDashboard.putNumber("R Climb Voltage", mRightClimb.getMotorOutputVoltage());
+        SmartDashboard.putNumber("R Climb Output Current", mRightClimb.getStatorCurrent());
+        SmartDashboard.putNumber("R Climb Input Current", mRightClimb.getSupplyCurrent());
+        SmartDashboard.putNumber("L Pivot Voltage", mLeftPivot.getMotorOutputVoltage());
+        SmartDashboard.putNumber("L Pivot Output Current", mLeftPivot.getStatorCurrent());
+        SmartDashboard.putNumber("L Pivot Input Current", mLeftPivot.getSupplyCurrent());
+        SmartDashboard.putNumber("R Pivot Voltage", mRightPivot.getMotorOutputVoltage());
+        SmartDashboard.putNumber("R Pivot Output Current", mRightPivot.getStatorCurrent());
+        SmartDashboard.putNumber("R Pivot Input Current", mRightPivot.getSupplyCurrent());
     }
 
 }
-
-//left is 42, right 41
