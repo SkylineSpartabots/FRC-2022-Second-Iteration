@@ -96,7 +96,12 @@ public class IndexerSubsystem extends SubsystemBase{
         setIndexerPercentPower(Constants.indexerUp, false);
         setIntakePercentPower(Constants.intakeOn, false);
     }
-    
+    public double getIntakeVelocity(){
+        return m_IntakeMotor.getSelectedSensorVelocity();
+    }
+    public double getIndexerVelocity(){
+        return m_IndexerMotor.getSelectedSensorVelocity();
+    }
     @Override
     public void periodic() {
         

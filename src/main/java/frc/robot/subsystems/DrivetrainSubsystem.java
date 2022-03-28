@@ -175,6 +175,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public boolean getNavxConnected(){
     return m_navx.isConnected();
   }
+  public double getVelocity(){
+    //FIND BETTER WAY TO DO THIS
+    //averaging module speeds
+    return (m_frontLeftModule.getDriveVelocity() + m_frontRightModule.getDriveVelocity() + 
+    m_backLeftModule.getDriveVelocity() + m_backRightModule.getDriveVelocity()) / 4;
+  }
   @Override
   public void periodic() {    
     var pose = m_odometry.getPoseMeters();   
