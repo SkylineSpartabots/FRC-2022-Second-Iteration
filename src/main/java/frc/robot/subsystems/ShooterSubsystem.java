@@ -71,14 +71,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000)
     public boolean isShooterAtVelocity(int velocity, int threshold){
-        if(mMasterShooter.getSelectedSensorVelocity()> velocity - threshold && mMasterShooter.getSelectedSensorVelocity() < velocity + threshold){
-            return true;
-        }
-        else{
-            return false;
-        }
+        double actual = mMasterShooter.getSelectedSensorVelocity();
+        return actual >= velocity - threshold && actual <= velocity + threshold;
     }
-
 
     @Override
     public void periodic(){
@@ -91,6 +86,7 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Slave Shooter Voltage", mSlaveShooter.getMotorOutputVoltage());
         SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
         SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
+        SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));
     }
 
     public double getVelocity() {
