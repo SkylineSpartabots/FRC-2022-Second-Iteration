@@ -92,4 +92,8 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
         SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
     }
+
+    public double getVelocity() {
+        return (mMasterShooter.getSelectedSensorVelocity() + mSlaveShooter.getSelectedSensorPosition())/2; 
+    }
 }

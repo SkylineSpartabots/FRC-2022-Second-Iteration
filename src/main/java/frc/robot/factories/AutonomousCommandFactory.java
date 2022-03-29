@@ -101,6 +101,20 @@ public class AutonomousCommandFactory {
             new RobotOff()
             );
     }
+
+    public static Command fiveBallAutoDiagnostics(){
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+200)),
+            new SetIntakeCommand(0.5,false),
+            new CalibrationCommand(getPose(7.57, 1.79, -89.18)),            
+            new TrajectoryDriveCommand(getPose(7.59, 0.80, -90.42), List.of(), false,0.3, 1 ,0.8),
+            new TrajectoryDriveCommand(getPose(5.59, 2.58, -145.65), List.of(new Translation2d(6.14, 2.05)), true, 0.7, 4,1.4),
+            new TrajectoryDriveCommand(getPose(5.18, 2.28, -145.57), List.of(), false, 1.0, 0.5, 0.3),
+            new TrajectoryDriveCommand(getPose(1.22, 1.48, -137.29), List.of(), false, 0.2, 5, 2.0),
+            new TrajectoryDriveCommand(getPose(5.18, 1.95, -145.57), List.of(), true, 0.5,5,2.0),
+            new RobotOff()
+            );
+    }
     
     public static Command twoBallAutoBottomBottom(){
         return new SequentialCommandGroup(

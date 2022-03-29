@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -35,6 +36,7 @@ public class DiagnosticTestCommand extends CommandBase{
     public void initialize() {
         m_timer.reset();
         m_timer.start();
+        AutonomousCommandFactory.fiveBallAutoDiagnostics().schedule();
     }
     @Override
     public void execute() {
@@ -53,6 +55,6 @@ public class DiagnosticTestCommand extends CommandBase{
     }
     @Override
     public boolean isFinished() {
-        return m_timer.hasElapsed(testingTime);
+        return m_timer.hasElapsed(10); //15 because the entire auto command is scheduled
     }
 }

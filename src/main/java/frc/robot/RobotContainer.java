@@ -87,7 +87,7 @@ public class RobotContainer {
     return m_controller;
   }
 
-  private void printDiagnostics(){
+  public void printDiagnostics(){
     SmartDashboard.putBoolean("NavX Connected?", m_drivetrainSubsystem.getNavxConnected());
     SmartDashboard.putBoolean("Limelight Connected?", m_limelight.isConnected());
     SmartDashboard.putBoolean("Can Bus Connected?", isCanConnected());
