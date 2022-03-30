@@ -30,7 +30,7 @@ public class DiagnosticTestCommand extends CommandBase{
         m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
         m_indexerSubsystem = IndexerSubsystem.getInstance();
         m_shooterSubsystem = ShooterSubsystem.getInstance();
-        addRequirements(m_drivetrainSubsystem, m_indexerSubsystem, m_shooterSubsystem);
+        //addRequirements(m_drivetrainSubsystem, m_indexerSubsystem, m_shooterSubsystem);
     }
     @Override
     public void initialize() {

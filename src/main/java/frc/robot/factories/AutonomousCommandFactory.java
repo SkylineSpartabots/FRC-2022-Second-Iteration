@@ -72,11 +72,11 @@ public class AutonomousCommandFactory {
             new SetIntakeCommand(intakeOn,false),
             new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+200)),
             new TrajectoryDriveCommand(getPose(5.18, 2.28, -145.57), List.of(), false, 1.0, 0.5, 0.3),
-            new WaitCommand(0.75),
+            new WaitCommand(1),
             new SetIntakeCommand(intakeOn+0.15,true),
             new SetIndexerCommand(indexerUp,true),
             new TrajectoryDriveCommand(getPose(1.22, 1.48, -137.29), List.of(), false, 0.2, 5, 2.0),
-            new WaitCommand(1.2),
+            new WaitCommand(1),
             new TrajectoryDriveCommand(getPose(5.18, 1.95, -145.57), List.of(), true, 0.5,5,2.0),
             new SetIntakeCommand(intakeOn,false),
             new SetIndexerCommand(indexerUp,false),
@@ -163,7 +163,7 @@ public class AutonomousCommandFactory {
             );
     }
 
-    public static Command oneBallAuto(){
+    public static Command oneBallAuto(){//no navx auto
         return new SequentialCommandGroup(  
             new CalibrationCommand(getPose(0, 0, 0)),    
             new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+180)),
@@ -175,7 +175,7 @@ public class AutonomousCommandFactory {
             );
     }
 
-    public static Command twoBallAuto(){        
+    public static Command twoBallAuto(){    //no navx auto     
         return new SequentialCommandGroup(  
             new CalibrationCommand(getPose(0, 0, 0)),      
             new SetIntakeCommand(intakeOn,true),

@@ -187,16 +187,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        //CAN UTILIZATION??
-        /*Pose2d pose = m_odometry.getPoseMeters();
+        //can only read odo during auto
+        if (!DriverStation.isTeleop()) {
+            Pose2d pose = m_odometry.getPoseMeters();
 
-        SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
-        SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
-        SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
-        SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
-
-        m_field.setRobotPose(pose);*/
-        
+            SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
+            SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
+    
+            m_field.setRobotPose(pose);
+        }        
         SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
         applyDrive();
@@ -215,8 +214,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_backLeftModule.set(getVoltageByVelocity(states[2].speedMetersPerSecond), states[2].angle.getRadians());
         m_backRightModule.set(getVoltageByVelocity(states[3].speedMetersPerSecond), states[3].angle.getRadians());
 
-        //Only polling odo in auto, check if there are any references during teleop tho, bc this would cause errors
-        if (DriverStation.isTeleop()) {
+        if (!DriverStation.isTeleop()) {
             m_odometry.update(getGyroscopeRotation(),
                     new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
                     new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),
