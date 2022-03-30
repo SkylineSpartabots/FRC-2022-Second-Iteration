@@ -40,7 +40,7 @@ public class DiagnosticTestCommand extends CommandBase{
     }
     @Override
     public void execute() {
-        actualPeakDriveVelocity = Math.max(actualPeakDriveVelocity, m_drivetrainSubsystem.getVelocity());
+        actualPeakDriveVelocity = Math.max(actualPeakDriveVelocity, m_drivetrainSubsystem.getRealVelocity());
         actualPeakIndexerVelocity = Math.max(actualPeakIndexerVelocity, m_indexerSubsystem.getIndexerVelocity());
         actualPeakIntakeVelocity = Math.max(actualPeakIntakeVelocity, m_indexerSubsystem.getIntakeVelocity());
         actualPeakShooterVelocity = Math.max(actualPeakShooterVelocity, m_shooterSubsystem.getVelocity());
@@ -52,6 +52,8 @@ public class DiagnosticTestCommand extends CommandBase{
         SmartDashboard.putBoolean("Indexing?", actualPeakIndexerVelocity >= expectedPeakIndexerVelocity);
         SmartDashboard.putBoolean("Intaking?", actualPeakIntakeVelocity >= expectedPeakIntakeVelocity);
         SmartDashboard.putBoolean("Shooting?", actualPeakShooterVelocity >= expectedPeakShooterVelocity);
+        SmartDashboard.putNumber("Expected Velocity", m_drivetrainSubsystem.getExpectedVelocity());
+        SmartDashboard.putNumber("Actual Velocity", m_drivetrainSubsystem.getRealVelocity());
     }
     @Override
     public boolean isFinished() {
