@@ -9,6 +9,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -215,28 +217,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_backLeftModule.set(getVoltageByVelocity(states[2].speedMetersPerSecond), states[2].angle.getRadians());
         m_backRightModule.set(getVoltageByVelocity(states[3].speedMetersPerSecond), states[3].angle.getRadians());
 
-        // m_frontLeftModule.set(states[0].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE , states[0].angle.getRadians());
-        // m_frontRightModule.set(states[1].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[1].angle.getRadians());
-        // m_backLeftModule.set(states[2].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[2].angle.getRadians());
-        // m_backRightModule.set(states[3].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[3].angle.getRadians());
-
-        m_odometry.update(getGyroscopeRotation(),
-                new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
-                new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),
-                new SwerveModuleState(m_backLeftModule.getDriveVelocity(), new Rotation2d(m_backLeftModule.getSteerAngle())),
-                new SwerveModuleState(m_backRightModule.getDriveVelocity(), new Rotation2d(m_backRightModule.getSteerAngle())));
+    //Only polling odo in auto, check if there are any references during teleop tho, bc this would cause errors
+    if(DriverStation.isTeleop()) {
+      m_odometry.update(getGyroscopeRotation(),
+        new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
+        new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),
+        new SwerveModuleState(m_backLeftModule.getDriveVelocity(), new Rotation2d(m_backLeftModule.getSteerAngle())),
+        new SwerveModuleState(m_backRightModule.getDriveVelocity(), new Rotation2d(m_backRightModule.getSteerAngle())));
     }
-
-    public double getVoltageByVelocity(double targetVelocity){
-        return m_feedforward.calculate(targetVelocity * DriveConstants.kVelocityGain);
-    }
-    public static double distanceFromHub(){
-        return calculateDistance(
-                DrivetrainSubsystem.getInstance().getPose().getX(), DrivetrainSubsystem.getInstance().getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY());
-    }
-    public static double calculateDistance(double x1, double y1, double x2, double y2){
-        return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
-    }
+  }
+  
+  public double getVoltageByVelocity(double targetVelocity){
+    return m_feedforward.calculate(targetVelocity * DriveConstants.kVelocityGain);
+  }
+  public static double distanceFromHub(){
+    return calculateDistance(
+      DrivetrainSubsystem.getInstance().getPose().getX(), DrivetrainSubsystem.getInstance().getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY());
+  }
+  public static double calculateDistance(double x1, double y1, double x2, double y2){
+    return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+  }
 
     public static double findAngle(Pose2d currentPose, double toX, double toY, double offsetDeg){
         double deltaY = (toY - currentPose.getY());
