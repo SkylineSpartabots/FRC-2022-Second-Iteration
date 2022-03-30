@@ -21,25 +21,8 @@ import java.util.List;
 
 public class AutonomousCommandFactory {
 
-    public static SendableChooser<Command> m_chooser = new SendableChooser<>();
-    public static void swapAutonomousCommands() {
-        //m_chooser.setDefaultOption("oneBallAuto", oneBallAuto());
-        m_chooser.setDefaultOption("fiveBallAuto", fiveBallAuto());
-        //m_chooser.setDefaultOption("twoBallAutoTopMiddle", twoBallAutoTopMiddle());
-        /*m_chooser.addOption("fiveBallAutoLimelight", fiveBallAutoLimelight());
-        m_chooser.addOption("twoBallAutoBottomBottom", twoBallAutoBottomBottom());
-        m_chooser.addOption("twoBallAutoBottomTop", twoBallAutoBottomTop());
-        m_chooser.addOption("twoBallAutoTopMiddle", twoBallAutoTopMiddle());
-        m_chooser.addOption("oneBallTopBottom", oneBallTopBottom());
-        m_chooser.addOption("oneBallTopTop", oneBallTopTop());*/
-
-
-        
-        SmartDashboard.putData(m_chooser);
-    }
-
     public static Command getAutonomousCommand() {
-        return m_chooser.getSelected();
+        return fiveBallAuto();
     }
 
     public static Pose2d getPose(double x, double y, double rot){
@@ -105,7 +88,7 @@ public class AutonomousCommandFactory {
     public static Command fiveBallAutoDiagnostics(){
         return new SequentialCommandGroup(
             new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+200)),
-            new SetIntakeCommand(0.5,false),
+            new SetIntakeIndexerCommand(0.5,0.5),
             new CalibrationCommand(getPose(7.57, 1.79, -89.18)),            
             new TrajectoryDriveCommand(getPose(7.59, 0.80, -90.42), List.of(), false,0.3, 1 ,0.8),
             new TrajectoryDriveCommand(getPose(5.59, 2.58, -145.65), List.of(new Translation2d(6.14, 2.05)), true, 0.7, 4,1.4),

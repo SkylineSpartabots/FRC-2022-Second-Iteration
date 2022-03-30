@@ -69,6 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
         setShooterVelocity(velocity);
     }
 
+    //THROWS ERROR DO NOT USE
     //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000)
     public boolean isShooterAtVelocity(int velocity, int threshold){
         double actual = mMasterShooter.getSelectedSensorVelocity();

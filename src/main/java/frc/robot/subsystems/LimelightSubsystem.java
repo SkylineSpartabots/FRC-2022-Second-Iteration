@@ -66,18 +66,6 @@ public class LimelightSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("LimelightX", getXOffset());
     SmartDashboard.putNumber("LimelightY", getYOffset());
     SmartDashboard.putNumber("Limelight Distance", getDistance());
-    
-        /*
-    if(Math.abs(getXOffset()) < 20.0 && getXOffset() != 0.0){      
-        double x = 8.23 - (getDistance() * 
-            Math.cos(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180 
-            - getXOffset())));
-        double y = 4.165 - (getDistance() * 
-            Math.sin(Math.toRadians(DrivetrainSubsystem.getInstance().getGyroscopeRotation().getDegrees() + 180
-            - getXOffset())));//plus or minus xoffset???
-        
-        DrivetrainSubsystem.getInstance().resetOdometryFromPosition(x,y);*/
-   // }
   }
 
     public double getDistance() {

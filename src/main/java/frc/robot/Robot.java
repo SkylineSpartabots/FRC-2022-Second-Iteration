@@ -27,13 +27,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-
-    addPeriodic(
-        () -> {
-          DrivetrainSubsystem.getInstance().applyDrive();
-        },
-        0.02, // drive at higher frequency
-        0.000);
   }
 
   @Override
@@ -94,5 +87,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
+    RobotContainer.printDiagnostics();
   }
 }

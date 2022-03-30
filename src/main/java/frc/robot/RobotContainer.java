@@ -74,9 +74,6 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // initialize Shuffleboard swapping of autonomous commands
-    AutonomousCommandFactory.swapAutonomousCommands();
-    
     printDiagnostics();
   }
 
@@ -87,18 +84,18 @@ public class RobotContainer {
     return m_controller;
   }
 
-  public void printDiagnostics(){
-    SmartDashboard.putBoolean("NavX Connected?", m_drivetrainSubsystem.getNavxConnected());
-    SmartDashboard.putBoolean("Limelight Connected?", m_limelight.isConnected());
+  public static void printDiagnostics(){
+    SmartDashboard.putBoolean("NavX Connected?", DrivetrainSubsystem.getInstance().getNavxConnected());
+    SmartDashboard.putBoolean("Limelight Connected?", LimelightSubsystem.getInstance().isConnected());
     SmartDashboard.putBoolean("Can Bus Connected?", isCanConnected());
     SmartDashboard.putBoolean("Battery Charged?", isBatteryCharged());
   }
 
-  private boolean isBatteryCharged(){
+  private static boolean isBatteryCharged(){
     return RobotController.getBatteryVoltage() >= Constants.kMinimumBatteryVoltage;
   }
 
-  private boolean isCanConnected(){
+  private static boolean isCanConnected(){
     return DeviceFinder.Find().size() == Constants.kCanDeviceCount;
   }
   // configures button bindings to controller
@@ -115,7 +112,7 @@ public class RobotContainer {
     Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
   
     //dpad up and dpad right controls left and right climb. press both to move at the same time
-    dpadUp.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(climbUp)))
+    /*dpadUp.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(climbUp)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(0)));
     dpadRight.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(climbUp)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(0)));
@@ -129,7 +126,7 @@ public class RobotContainer {
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(0)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(0)));   
     m_controller.getYButton().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotDown)))
-      .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0)));
+      .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0)));*/
 
     m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
@@ -139,7 +136,7 @@ public class RobotContainer {
     m_controller.getBButton().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
 
     m_controller.getAButton().whenActive(new RobotIdle());
-    dpadLeft.whenActive(new RobotOff());
+    m_controller.getYButton().whenActive(new RobotOff());
 
     m_controller.getLeftBumper().whenHeld(new ShootByLimelight(false));
     m_controller.getLeftBumper().whenHeld(new AimByLimelight("left"));
@@ -160,7 +157,7 @@ public class RobotContainer {
     rightTriggerAxis.whenInactive(new SequentialCommandGroup(new WaitCommand(0.6), new RobotIdle()));
 
 
-    //SECOND CONTROLLER: TODO ADD MANUAL OVERRIDE FOR INTAKING AND INDEXING INDIVIDUALLY AND EJECTION
+    //SECOND CONTROLLER
 
     //DPAD
     Trigger dpadUp2 = new Trigger(() -> {return m_controller2.getDpadUp();});
