@@ -1,36 +1,34 @@
-
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.*;
-
-
 import com.kauailabs.navx.frc.AHRS;
-
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
-import frc.robot.commands.TeleopDriveCommand;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.commands.TeleopDriveCommand;
+
+import static frc.robot.Constants.DriveConstants;
+import static frc.robot.Constants.Ports;
 
 
 public class DrivetrainSubsystem extends SubsystemBase {
+    private static DrivetrainSubsystem m_instance = null;
+    private static double expectedVelocity;
     // FIXME Measure the drivetrain's maximum velocity or calculate the theoretical.
     //  The formula for calculating the theoretical maximum velocity is:
     //   <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> * pi
@@ -39,28 +37,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //   5880.0 / 60.0 / SdsModuleConfigurations.MK4_L2.getDriveReduction() * SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI
     private final SwerveDriveOdometry m_odometry;
     private final SimpleMotorFeedforward m_feedforward;
-
     private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
-
     // These are our modules. We initialize them in the constructor.
     private final SwerveModule m_frontLeftModule;
     private final SwerveModule m_frontRightModule;
     private final SwerveModule m_backLeftModule;
     private final SwerveModule m_backRightModule;
-
     private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
     private Field2d m_field = new Field2d();
-    public Field2d getField(){return m_field;}
-
-    private static DrivetrainSubsystem m_instance = null;
-    private static double expectedVelocity;
-    public static DrivetrainSubsystem getInstance(){
-        if (m_instance == null) {
-            m_instance = new DrivetrainSubsystem();
-        }
-        return m_instance;
-    }
-
     public DrivetrainSubsystem() {
         setDefaultCommand(new TeleopDriveCommand(this));
 
@@ -98,6 +82,44 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
     }
 
+    public static DrivetrainSubsystem getInstance() {
+        if (m_instance == null) {
+            m_instance = new DrivetrainSubsystem();
+        }
+        return m_instance;
+    }
+
+    public static double normalize(double deg) {
+        double angle = deg % 360;
+        if (angle < -180) {
+            angle = 180 - (Math.abs(angle) - 180);
+        } else if (angle > 180) {
+            angle = -180 + (Math.abs(angle) - 180);
+        }
+        return angle;
+    }
+
+    public static double distanceFromHub() {
+        return calculateDistance(
+                DrivetrainSubsystem.getInstance().getPose().getX(), DrivetrainSubsystem.getInstance().getPose().getY(), Constants.targetHudPosition.getX(), Constants.targetHudPosition.getY());
+    }
+
+    public static double calculateDistance(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    public static double findAngle(Pose2d currentPose, double toX, double toY, double offsetDeg) {
+        double deltaY = (toY - currentPose.getY());
+        double deltaX = (toX - currentPose.getX());
+
+        double absolute = Math.toDegrees(Math.atan2(deltaY, deltaX));
+        return normalize(absolute + offsetDeg);
+    }
+
+    public Field2d getField() {
+        return m_field;
+    }
+
     //sets Gyroscope to 0
     public void zeroGyroscope() {
         m_navx.zeroYaw();
@@ -107,18 +129,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return Rotation2d.fromDegrees(normalize(-m_navx.getAngle()));
     }
 
-    public static double normalize(double deg){
-        double angle = deg % 360;
-        if(angle < -180){
-            angle = 180-(Math.abs(angle)-180);
-        }
-        else if (angle > 180){
-            angle = -180+(Math.abs(angle)-180);
-        }
-        return angle;
-    }
-
-    public Pose2d getPose(){
+    public Pose2d getPose() {
         return m_odometry.getPoseMeters();
     }
 
@@ -141,12 +152,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     public void resetOdometryFromPosition(double x, double y, double rot) {
         m_navx.reset();
         m_navx.setAngleAdjustment(-rot);
-        m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rot));
+        m_odometry.resetPosition(new Pose2d(x, y, new Rotation2d(rot)), new Rotation2d(rot));
     }
 
     //resets from offset
     public void resetOdometryFromPosition(double x, double y) {
-        m_odometry.resetPosition(new Pose2d(x,y,getGyroscopeRotation()), getGyroscopeRotation());
+        m_odometry.resetPosition(new Pose2d(x, y, getGyroscopeRotation()), getGyroscopeRotation());
     }
 
     public void resetOdometryFromPosition(Pose2d pose) {
@@ -155,15 +166,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_odometry.resetPosition(pose, pose.getRotation());
     }
 
-    public void resetOdometryFromReference(){
+    public void resetOdometryFromReference() {
         Translation2d current = getPose().getTranslation();
         double minError = 100d;
         Translation2d newPos = null;
-        for(Translation2d ref : Constants.kReferenceTranslations){
+        for (Translation2d ref : Constants.kReferenceTranslations) {
             double errorX = Math.abs(ref.getX() - current.getX());
             double errorY = Math.abs(ref.getY() - current.getY());
             double error = Math.sqrt(Math.pow(errorX, 2) + Math.pow(errorY, 2));
-            if(error < minError){
+            if (error < minError) {
                 newPos = ref;
                 minError = error;
             }
@@ -178,6 +189,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     public boolean getNavxConnected() {
         return m_navx.isConnected();
     }
+
     public double getRealVelocity() {
         //FIND BETTER WAY TO DO THIS
         //averaging module speeds
@@ -189,7 +201,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return expectedVelocity;
     }
 
-
     @Override
     public void periodic() {
         Pose2d pose = m_odometry.getPoseMeters();
@@ -197,7 +208,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
         SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
         SmartDashboard.putNumber("Distance", calculateDistance(
-                getPose().getX(), getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY()));
+                getPose().getX(), getPose().getY(), Constants.targetHudPosition.getX(), Constants.targetHudPosition.getY()));
         SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
 
@@ -217,32 +228,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_backLeftModule.set(getVoltageByVelocity(states[2].speedMetersPerSecond), states[2].angle.getRadians());
         m_backRightModule.set(getVoltageByVelocity(states[3].speedMetersPerSecond), states[3].angle.getRadians());
 
-    //Only polling odo in auto, check if there are any references during teleop tho, bc this would cause errors
-    if(DriverStation.isTeleop()) {
-      m_odometry.update(getGyroscopeRotation(),
-        new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
-        new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),
-        new SwerveModuleState(m_backLeftModule.getDriveVelocity(), new Rotation2d(m_backLeftModule.getSteerAngle())),
-        new SwerveModuleState(m_backRightModule.getDriveVelocity(), new Rotation2d(m_backRightModule.getSteerAngle())));
+        //Only polling odo in auto, check if there are any references during teleop tho, bc this would cause errors
+        if (DriverStation.isTeleop()) {
+            m_odometry.update(getGyroscopeRotation(),
+                    new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
+                    new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),
+                    new SwerveModuleState(m_backLeftModule.getDriveVelocity(), new Rotation2d(m_backLeftModule.getSteerAngle())),
+                    new SwerveModuleState(m_backRightModule.getDriveVelocity(), new Rotation2d(m_backRightModule.getSteerAngle())));
+        }
     }
-  }
-  
-  public double getVoltageByVelocity(double targetVelocity){
-    return m_feedforward.calculate(targetVelocity * DriveConstants.kVelocityGain);
-  }
-  public static double distanceFromHub(){
-    return calculateDistance(
-      DrivetrainSubsystem.getInstance().getPose().getX(), DrivetrainSubsystem.getInstance().getPose().getY(), Constants.targetHudPosition.getX(),Constants.targetHudPosition.getY());
-  }
-  public static double calculateDistance(double x1, double y1, double x2, double y2){
-    return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
-  }
 
-    public static double findAngle(Pose2d currentPose, double toX, double toY, double offsetDeg){
-        double deltaY = (toY - currentPose.getY());
-        double deltaX = (toX - currentPose.getX());
-
-        double absolute = Math.toDegrees(Math.atan2(deltaY, deltaX));
-        return normalize(absolute + offsetDeg);
+    public double getVoltageByVelocity(double targetVelocity) {
+        return m_feedforward.calculate(targetVelocity * DriveConstants.kVelocityGain);
     }
 }
