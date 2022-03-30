@@ -25,6 +25,15 @@ public class DiagnosticTestCommand extends CommandBase{
 
     private final Timer m_timer = new Timer();
     private final double testingTime = 3;
+
+    public double getTotalVoltage() {
+        double voltage = 0;
+        voltage += m_shooterSubsystem.getVelocity(); //shooter voltage
+        voltage += m_indexerSubsystem.getIndexerVelocity(); //indexer
+        voltage += m_indexerSubsystem.getIndexerVelocity(); //intake
+        voltage += m_drivetrainSubsystem.getRealVelocity(); //drivetrain
+        return voltage;
+    }
     
     public DiagnosticTestCommand(){
         m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
@@ -52,8 +61,9 @@ public class DiagnosticTestCommand extends CommandBase{
         SmartDashboard.putBoolean("Indexing?", actualPeakIndexerVelocity >= expectedPeakIndexerVelocity);
         SmartDashboard.putBoolean("Intaking?", actualPeakIntakeVelocity >= expectedPeakIntakeVelocity);
         SmartDashboard.putBoolean("Shooting?", actualPeakShooterVelocity >= expectedPeakShooterVelocity);
-        SmartDashboard.putNumber("Expected Velocity", m_drivetrainSubsystem.getExpectedVelocity());
-        SmartDashboard.putNumber("Actual Velocity", m_drivetrainSubsystem.getRealVelocity());
+        SmartDashboard.putNumber("Total Voltage", getTotalVoltage());
+        SmartDashboard.putNumber("Drivetrain Expected Velocity", m_drivetrainSubsystem.getExpectedVelocity());
+        SmartDashboard.putNumber("Drivetrain Actual Velocity", m_drivetrainSubsystem.getRealVelocity());
     }
     @Override
     public boolean isFinished() {
