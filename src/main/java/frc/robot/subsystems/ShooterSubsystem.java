@@ -90,6 +90,8 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
         SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
         SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));
+
+        SmartDashboard.putNumber("Shooter total current from PDP", RobotContainer.getPDP().getCurrent(10) + RobotContainer.getPDP().getCurrent(11));
     }
 
     public double getVelocity() {
