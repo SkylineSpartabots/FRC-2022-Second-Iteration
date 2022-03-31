@@ -15,6 +15,7 @@ public class DiagnosticTestCommand extends CommandBase{
     private DrivetrainSubsystem m_drivetrainSubsystem;
     private IndexerSubsystem m_indexerSubsystem;
     private ShooterSubsystem m_shooterSubsystem;
+    private static PowerDistribution m_pd = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
     private final double expectedPeakDriveVelocity = 0;
     private final double expectedPeakIndexerVelocity = 0;
@@ -29,15 +30,6 @@ public class DiagnosticTestCommand extends CommandBase{
     private final Timer m_timer = new Timer();
     private final double testingTime = 3;
 
-    public double getTotalVoltage() {
-        double voltage = 0;
-        voltage += m_shooterSubsystem.getVelocity(); //shooter voltage
-        voltage += m_indexerSubsystem.getIndexerVelocity(); //indexer
-        voltage += m_indexerSubsystem.getIndexerVelocity(); //intake
-        voltage += m_drivetrainSubsystem.getRealVelocity(); //drivetrain
-        return voltage;
-    }
-    
     public DiagnosticTestCommand(){
         m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
         m_indexerSubsystem = IndexerSubsystem.getInstance();
@@ -65,7 +57,7 @@ public class DiagnosticTestCommand extends CommandBase{
         SmartDashboard.putBoolean("Indexing?", actualPeakIndexerVelocity >= expectedPeakIndexerVelocity);
         SmartDashboard.putBoolean("Intaking?", actualPeakIntakeVelocity >= expectedPeakIntakeVelocity);
         SmartDashboard.putBoolean("Shooting?", actualPeakShooterVelocity >= expectedPeakShooterVelocity);
-        SmartDashboard.putNumber("Total Voltage", getTotalVoltage());
+        SmartDashboard.putNumber("Total Voltage", m_pd.getVoltage());
         SmartDashboard.putNumber("Drivetrain Expected Velocity", m_drivetrainSubsystem.getExpectedVelocity());
         SmartDashboard.putNumber("Drivetrain Actual Velocity", m_drivetrainSubsystem.getRealVelocity());
     }
