@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+import javax.lang.model.element.ModuleElement;
+
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -54,6 +57,7 @@ public class DiagnosticTestCommand extends CommandBase{
         actualPeakIntakeVelocity = Math.max(actualPeakIntakeVelocity, m_indexerSubsystem.getIntakeVelocity());
         actualPeakShooterVelocity = Math.max(actualPeakShooterVelocity, m_shooterSubsystem.getVelocity());
     }
+    
     @Override
     public void end(boolean interrupted) {
         m_timer.stop();
