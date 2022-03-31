@@ -12,6 +12,8 @@ import frc.lib.drivers.TalonFXFactory;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -88,6 +90,8 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
         SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
         SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));
+
+        SmartDashboard.putNumber("Shooter total draw", RobotContainer.getPDP().getCurrent(10) + RobotContainer.getPDP().getCurrent(11));
     }
 
     public double getVelocity() {

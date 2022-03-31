@@ -12,7 +12,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.commands.TeleopDriveCommand;
 
 import static frc.robot.Constants.DriveConstants;
@@ -198,6 +201,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
         }        
         SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
+
+        SmartDashboard.putNumber("Front left steer (channel 4)", RobotContainer.getPDP().getCurrent(4));
+        SmartDashboard.putNumber("Front left drive (channel 6)", RobotContainer.getPDP().getCurrent(6));
+        SmartDashboard.putNumber("Back left steer (channel 5)", RobotContainer.getPDP().getCurrent(5));
+        SmartDashboard.putNumber("Back left drive (channel 7)", RobotContainer.getPDP().getCurrent(7));
+        SmartDashboard.putNumber("Back right drive (channel 12)", RobotContainer.getPDP().getCurrent(12));
+        SmartDashboard.putNumber("Front right drive (channel 13)", RobotContainer.getPDP().getCurrent(13));
+        SmartDashboard.putNumber("Back right steer (channel 14)", RobotContainer.getPDP().getCurrent(14));
+        SmartDashboard.putNumber("Front right steer (channel 15)", RobotContainer.getPDP().getCurrent(15));
+
         applyDrive();
 
     }
@@ -214,7 +227,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_backLeftModule.set(getVoltageByVelocity(states[2].speedMetersPerSecond), states[2].angle.getRadians());
         m_backRightModule.set(getVoltageByVelocity(states[3].speedMetersPerSecond), states[3].angle.getRadians());
 
-        if (!DriverStation.isTeleop()) {
+        if (DriverStation.isAutonomousEnabled()) {
             m_odometry.update(getGyroscopeRotation(),
                     new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
                     new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),

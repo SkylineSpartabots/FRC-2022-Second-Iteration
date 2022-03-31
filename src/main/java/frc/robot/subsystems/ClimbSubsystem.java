@@ -12,6 +12,7 @@ import frc.lib.drivers.LazyTalonSRX;
 import frc.lib.drivers.TalonFXFactory;
 import frc.lib.drivers.TalonSRXFactory;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
 
 public class ClimbSubsystem extends SubsystemBase {
@@ -89,6 +90,10 @@ public class ClimbSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("R Pivot Voltage", mRightPivot.getMotorOutputVoltage());
         SmartDashboard.putNumber("R Pivot Output Current", mRightPivot.getStatorCurrent());
         SmartDashboard.putNumber("R Pivot Input Current", mRightPivot.getSupplyCurrent());
+
+        SmartDashboard.putNumber("Right climb (channel 8)", RobotContainer.getPDP().getCurrent(8));        
+        SmartDashboard.putNumber("Left climb (channel 9)", RobotContainer.getPDP().getCurrent(9));
+
     }
 
 }
