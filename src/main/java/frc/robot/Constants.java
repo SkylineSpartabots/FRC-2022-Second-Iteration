@@ -80,7 +80,7 @@ public final class Constants {
         public static final double kMaxVoltage = 12.0;
         // The maximum velocity of the robot in meters per second.
         // This is a measure of how fast the robot should be able to drive in a straight line.
-        public static final double kMaxSpeedMetersPerSecond =  0.81 * //speed decreased to 0.6
+        public static final double kMaxSpeedMetersPerSecond =  0.85 * //speed decreased
         6380.0 / 60.0 *
                SdsModuleConfigurations.MK4_L2.getDriveReduction() *
                SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;

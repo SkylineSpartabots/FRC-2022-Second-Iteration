@@ -78,7 +78,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
+        SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
+        SmartDashboard.putNumber("Shooter Input Current", mMasterShooter.getSupplyCurrent());
+        /*SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
         SmartDashboard.putNumber("Shooter Target", velocity);
         SmartDashboard.putNumber("Shooter Vel", mMasterShooter.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Shooter Voltage", mMasterShooter.getMotorOutputVoltage());
@@ -87,7 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Slave Shooter Voltage", mSlaveShooter.getMotorOutputVoltage());
         SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
         SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
-        SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));
+        SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));*/
     }
 
     public double getVelocity() {

@@ -198,16 +198,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
         }        
         SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
-        applyDrive();
+        
+        
 
     }
 
     public void applyDrive() {
         SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(m_chassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.kMaxSpeedMetersPerSecond);
-
-        expectedVelocity = getVoltageByVelocity(( //average of all of them
-                states[0].speedMetersPerSecond + states[1].speedMetersPerSecond + states[2].speedMetersPerSecond + states[3].speedMetersPerSecond) / 4);
 
         m_frontLeftModule.set(getVoltageByVelocity(states[0].speedMetersPerSecond), states[0].angle.getRadians());
         m_frontRightModule.set(getVoltageByVelocity(states[1].speedMetersPerSecond), states[1].angle.getRadians());
