@@ -108,18 +108,18 @@ public class IndexerSubsystem extends SubsystemBase{
         
         SmartDashboard.putNumber("intake proximity", m_intakeSensor.colorSensor.getProximity());
         SmartDashboard.putBoolean("intake loaded", isIntakeBallLoaded());
-        SmartDashboard.putBoolean("intake autoIntake", autoIntake);
-        SmartDashboard.putNumber("Intake speed", m_IntakeMotor.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Intake Voltage", m_IntakeMotor.getMotorOutputVoltage());
-        SmartDashboard.putNumber("Intake Output Current", m_IntakeMotor.getStatorCurrent());
+        //SmartDashboard.putBoolean("intake autoIntake", autoIntake);
+        //SmartDashboard.putNumber("Intake speed", m_IntakeMotor.getSelectedSensorVelocity());
+        //SmartDashboard.putNumber("Intake Voltage", m_IntakeMotor.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("Intake Output Current", m_IntakeMotor.getStatorCurrent());
         SmartDashboard.putNumber("Intake Input Current", m_IntakeMotor.getSupplyCurrent());
 
         SmartDashboard.putNumber("indexer proximity", m_indexerSensor.colorSensor.getProximity());
         SmartDashboard.putBoolean("indexer loaded", isIndexerBallLoaded());
-        SmartDashboard.putBoolean("indexer autoIntake", autoIndexer);
-        SmartDashboard.putNumber("indexer speed", m_IndexerMotor.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("indexer Voltage", m_IndexerMotor.getMotorOutputVoltage());
-        SmartDashboard.putNumber("indexer Output Current", m_IndexerMotor.getStatorCurrent());
+        //SmartDashboard.putBoolean("indexer autoIntake", autoIndexer);
+        //SmartDashboard.putNumber("indexer speed", m_IndexerMotor.getSelectedSensorVelocity());
+        //SmartDashboard.putNumber("indexer Voltage", m_IndexerMotor.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("indexer Output Current", m_IndexerMotor.getStatorCurrent());
         SmartDashboard.putNumber("indexer Input Current", m_IndexerMotor.getSupplyCurrent());
 
         SmartDashboard.putNumber("Indexer current from PDP", RobotContainer.getPDP().getCurrent(16));
@@ -139,7 +139,7 @@ public class IndexerSubsystem extends SubsystemBase{
         return m_indexerSensor.colorSensor.getProximity() >= m_indexerSensor.distanceThreshold;
     }
     public boolean isIntakeBallLoaded(){
-        return m_intakeSensor.colorSensor.getProximity() >= 50;
+        return m_intakeSensor.colorSensor.getProximity() >= m_intakeSensor.distanceThreshold;
     }
     
 }

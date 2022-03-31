@@ -119,7 +119,7 @@ public class RobotContainer {
     Trigger dpadRight = new Trigger(() -> {return m_controller.getDpadRight();});
   
     //dpad up and dpad right controls left and right climb. press both to move at the same time
-    /*dpadUp.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(climbUp)))
+    dpadUp.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(climbUp)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(0)));
     dpadRight.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(climbUp)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(0)));
@@ -132,8 +132,8 @@ public class RobotContainer {
       .whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(climbDown)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(0)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(0)));   
-    m_controller.getYButton().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotDown)))
-      .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0)));*/
+    dpadLeft.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotDown)))
+      .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0)));
 
     m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
