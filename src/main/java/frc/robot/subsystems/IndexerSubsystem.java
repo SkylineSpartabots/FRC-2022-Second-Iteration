@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.drivers.LazyTalonFX;
 import frc.lib.drivers.TalonFXFactory;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.I2C;
@@ -120,6 +121,9 @@ public class IndexerSubsystem extends SubsystemBase{
         //SmartDashboard.putNumber("indexer Voltage", m_IndexerMotor.getMotorOutputVoltage());
         //SmartDashboard.putNumber("indexer Output Current", m_IndexerMotor.getStatorCurrent());
         SmartDashboard.putNumber("indexer Input Current", m_IndexerMotor.getSupplyCurrent());
+
+        SmartDashboard.putNumber("Indexer current from PDP", RobotContainer.getPDP().getCurrent(16));
+        SmartDashboard.putNumber("Intake current from PDP", RobotContainer.getPDP().getCurrent(3));
 
         if(autoIndexer && isIndexerBallLoaded()){                
             m_IndexerMotor.set(ControlMode.PercentOutput, 0);

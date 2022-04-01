@@ -12,6 +12,8 @@ import frc.lib.drivers.TalonFXFactory;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -78,9 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
-        SmartDashboard.putNumber("Shooter Input Current", mMasterShooter.getSupplyCurrent());
-        /*SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
+        SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
         SmartDashboard.putNumber("Shooter Target", velocity);
         SmartDashboard.putNumber("Shooter Vel", mMasterShooter.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Shooter Voltage", mMasterShooter.getMotorOutputVoltage());
@@ -89,7 +89,9 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Slave Shooter Voltage", mSlaveShooter.getMotorOutputVoltage());
         SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
         SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
-        SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));*/
+        SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));
+
+        SmartDashboard.putNumber("Shooter total current from PDP", RobotContainer.getPDP().getCurrent(10) + RobotContainer.getPDP().getCurrent(11));
     }
 
     public double getVelocity() {
