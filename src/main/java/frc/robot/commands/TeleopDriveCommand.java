@@ -65,10 +65,10 @@ public class TeleopDriveCommand extends CommandBase {
 
     protected static double modifyAxis(double value) {
         // Deadband
-        value = applyDeadband(value, 0.1);
+        value = applyDeadband(value, 0.2);
 
         // Square the axis
-        value = Math.copySign(value * value * value, value);
+        value = Math.copySign(value, value);
 
         return value;
     }

@@ -188,6 +188,15 @@ public class AutonomousCommandFactory {
             new RobotOff()
             );
     }
+/*
+    public static Command ejectionAuto(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose((10.40, 3.05, -44.21)),
+            new SetIntakeCommand(intakeOn,true),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed + 180)),
+            )
+        );
+    }*/
 
     
 

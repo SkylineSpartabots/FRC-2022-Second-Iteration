@@ -74,7 +74,6 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    printDiagnostics();
   }
 
   private static final Controller m_controller = new Controller(new XboxController(0));
