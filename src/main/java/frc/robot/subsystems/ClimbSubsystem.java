@@ -12,6 +12,8 @@ import frc.lib.drivers.LazyTalonSRX;
 import frc.lib.drivers.TalonFXFactory;
 import frc.lib.drivers.TalonSRXFactory;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
 
 public class ClimbSubsystem extends SubsystemBase {
@@ -77,7 +79,9 @@ public class ClimbSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic(){        
-        SmartDashboard.putNumber("L Climb Voltage", mLeftClimb.getMotorOutputVoltage());
+        SmartDashboard.putNumber("R Climb Input Current", mRightClimb.getSupplyCurrent());
+        SmartDashboard.putNumber("l Climb Input Current", mLeftClimb.getSupplyCurrent());
+       /* SmartDashboard.putNumber("L Climb Voltage", mLeftClimb.getMotorOutputVoltage());
         SmartDashboard.putNumber("L Climb Output Current", mLeftClimb.getStatorCurrent());
         SmartDashboard.putNumber("l Climb Input Current", mLeftClimb.getSupplyCurrent());
         SmartDashboard.putNumber("R Climb Voltage", mRightClimb.getMotorOutputVoltage());
@@ -88,7 +92,10 @@ public class ClimbSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("L Pivot Input Current", mLeftPivot.getSupplyCurrent());
         SmartDashboard.putNumber("R Pivot Voltage", mRightPivot.getMotorOutputVoltage());
         SmartDashboard.putNumber("R Pivot Output Current", mRightPivot.getStatorCurrent());
-        SmartDashboard.putNumber("R Pivot Input Current", mRightPivot.getSupplyCurrent());
+        SmartDashboard.putNumber("R Pivot Input Current", mRightPivot.getSupplyCurrent());*/
+
+        //SmartDashboard.putNumber("LClimb", RobotContainer.getPDP().getCurrent(9));
+        //SmartDashboard.putNumber("RClimb", RobotContainer.getPDP().getCurrent(8));
     }
 
 }

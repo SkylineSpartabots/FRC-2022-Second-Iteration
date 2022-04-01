@@ -105,8 +105,8 @@ public class TrajectoryDriveCommand extends CommandBase {
     m_subsystem.drive(targetChassisSpeeds);
     //STOP TRAJECTORY HALF A SECOND EARLY
 
-    SmartDashboard.putNumber("Elapsed Time", m_timer.get());
-    SmartDashboard.putNumber("Desired acceleration", desiredSpeed.accelerationMetersPerSecondSq);
+    //SmartDashboard.putNumber("Elapsed Time", m_timer.get());
+    /*SmartDashboard.putNumber("Desired acceleration", desiredSpeed.accelerationMetersPerSecondSq);
     SmartDashboard.putNumber("Desired velocity", desiredSpeed.velocityMetersPerSecond);
     SmartDashboard.putNumber("DesiredX", desiredSpeed.poseMeters.getX());
     SmartDashboard.putNumber("DesiredY", desiredSpeed.poseMeters.getY());
@@ -115,7 +115,7 @@ public class TrajectoryDriveCommand extends CommandBase {
     SmartDashboard.putNumber("End Rotation", m_endRotation.getDegrees());
     SmartDashboard.putNumber("Auto X Speed", targetChassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("Auto Y Speed", targetChassisSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("Auto Rot Speed", targetChassisSpeeds.omegaRadiansPerSecond);
+    SmartDashboard.putNumber("Auto Rot Speed", targetChassisSpeeds.omegaRadiansPerSecond);*/
   }
 
   // Called once the command ends or is interrupted.

@@ -4,6 +4,7 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
+import frc.lib.util.DeviceFinder;
 import frc.robot.commands.*;
 import frc.robot.commands.CAS.AimByLimelight;
 import frc.robot.commands.CAS.RobotIdle;
@@ -20,7 +21,11 @@ import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -30,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -44,27 +50,38 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private DrivetrainSubsystem m_drivetrainSubsystem;
+  private LimelightSubsystem m_limelight;
+  private IndexerSubsystem m_indexerSubsystem;
+  private ShooterSubsystem m_shooterSubsystem;
+  private ClimbSubsystem m_climbSubsystem;
+  
+  /*private static PowerDistribution powerModule = new PowerDistribution(1, ModuleType.kRev);
 
+  public static PowerDistribution getPDP(){
+    return powerModule;
+  }*/
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
-    LimelightSubsystem m_limelight = LimelightSubsystem.getInstance();
+    m_limelight = LimelightSubsystem.getInstance();
+    m_indexerSubsystem = IndexerSubsystem.getInstance();
+    m_shooterSubsystem = ShooterSubsystem.getInstance();
+    m_climbSubsystem = ClimbSubsystem.getInstance();
+
     // Set the scheduler to log Shuffleboard events for command initialize,
     // interrupt, finish
-    CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker(
+    /*CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker(
         "Command initialized", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker(
         "Command interrupted", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker(
         "Command finished", command.getName(), EventImportance.kNormal));
-
+*/
     // Configure the button bindings
     configureButtonBindings();
 
-    // initialize Shuffleboard swapping of autonomous commands
-    AutonomousCommandFactory.swapAutonomousCommands();
   }
 
   private static final Controller m_controller = new Controller(new XboxController(0));
@@ -74,11 +91,22 @@ public class RobotContainer {
     return m_controller;
   }
 
+  public static void printDiagnostics(){
+    SmartDashboard.putBoolean("NavX Connected?", DrivetrainSubsystem.getInstance().getNavxConnected());
+    SmartDashboard.putBoolean("Limelight Connected?", LimelightSubsystem.getInstance().isConnected());
+    SmartDashboard.putBoolean("Can Bus Connected?", isCanConnected());
+    SmartDashboard.putBoolean("Battery Charged?", isBatteryCharged());
+  }
+
+  private static boolean isBatteryCharged(){
+    return RobotController.getBatteryVoltage() >= Constants.kMinimumBatteryVoltage;
+  }
+
+  private static boolean isCanConnected(){
+    return DeviceFinder.Find().size() == Constants.kCanDeviceCount;
+  }
   // configures button bindings to controller
   private void configureButtonBindings() {
-    IndexerSubsystem m_indexerSubsystem = IndexerSubsystem.getInstance();
-    ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
-    ShooterSubsystem m_climbSubsystem = ShooterSubsystem.getInstance();
     final double triggerDeadzone = 0.2;
 
     //FIRST CONTROLLER
@@ -104,7 +132,7 @@ public class RobotContainer {
       .whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(climbDown)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().leftClimbPower(0)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().rightClimbPower(0)));   
-    m_controller.getYButton().whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotDown)))
+    dpadLeft.whenActive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(pivotDown)))
       .whenInactive(new InstantCommand(() -> ClimbSubsystem.getInstance().pivotPower(0)));
 
     m_controller.getStartButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets to 0 -> for testing only
@@ -115,7 +143,7 @@ public class RobotContainer {
     m_controller.getBButton().whenInactive(new SetIntakeIndexerCommand(0, 0));//right bumper release
 
     m_controller.getAButton().whenActive(new RobotIdle());
-    dpadLeft.whenActive(new RobotOff());
+    m_controller.getYButton().whenActive(new RobotOff());
 
     m_controller.getLeftBumper().whenHeld(new ShootByLimelight(false));
     m_controller.getLeftBumper().whenHeld(new AimByLimelight("left"));
@@ -136,7 +164,7 @@ public class RobotContainer {
     rightTriggerAxis.whenInactive(new SequentialCommandGroup(new WaitCommand(0.6), new RobotIdle()));
 
 
-    //SECOND CONTROLLER: TODO ADD MANUAL OVERRIDE FOR INTAKING AND INDEXING INDIVIDUALLY AND EJECTION
+    //SECOND CONTROLLER
 
     //DPAD
     Trigger dpadUp2 = new Trigger(() -> {return m_controller2.getDpadUp();});

@@ -29,15 +29,15 @@ public class TeleopDriveCommand extends CommandBase {
     protected final Controller m_controller;
 
     //limit accel/deccel
-    protected SlewRateLimiter driveXFilter = new SlewRateLimiter(7);
-    protected SlewRateLimiter driveYFilter = new SlewRateLimiter(7);
-    protected SlewRateLimiter rotFilter = new SlewRateLimiter(20);
+    protected SlewRateLimiter driveXFilter = new SlewRateLimiter(5);
+    protected SlewRateLimiter driveYFilter = new SlewRateLimiter(5);
+    protected SlewRateLimiter rotFilter = new SlewRateLimiter(18);
     
     public void driveWithJoystick() {
         // get joystick input for drive
         var xSpeed = -modifyAxis(m_controller.getLeftY()) * DriveConstants.kMaxSpeedMetersPerSecond;
         var ySpeed = -modifyAxis(m_controller.getLeftX()) * DriveConstants.kMaxSpeedMetersPerSecond;
-        var rot = -modifyAxis(m_controller.getRightX()) * DriveConstants.kMaxAngularSpeedRadiansPerSecond;
+        var rot = -modifyAxis(m_controller.getRightX()*0.5) * DriveConstants.kMaxAngularSpeedRadiansPerSecond;
 
         SmartDashboard.putNumber("xSpeed", xSpeed);
         SmartDashboard.putNumber("ySpeed", ySpeed);
@@ -68,7 +68,7 @@ public class TeleopDriveCommand extends CommandBase {
         value = applyDeadband(value, 0.1);
 
         // Square the axis
-        value = Math.copySign(value * value, value);
+        value = Math.copySign(value, value);
 
         return value;
     }

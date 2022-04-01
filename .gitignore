@@ -136,8 +136,8 @@ $RECYCLE.BIN/
 *.lnk
 
 ### Gradle ###
-.gradle
-/build/
+.gradle/
+build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -158,5 +158,13 @@ gradle-app.setting
 .settings/
 bin/
 
-# Simulation GUI and other tools window save file
+# Simulation GUI and other tools winlow save file
 *-window.json
+
+#Intellij
+.idea/
+
+
+.SysId/
+.Glass/
+.envrc

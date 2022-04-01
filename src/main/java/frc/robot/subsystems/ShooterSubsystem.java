@@ -12,6 +12,8 @@ import frc.lib.drivers.TalonFXFactory;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -69,27 +71,31 @@ public class ShooterSubsystem extends SubsystemBase {
         setShooterVelocity(velocity);
     }
 
+    //THROWS ERROR DO NOT USE
     //detects if shooter is at a RPS. Ex: shooterAtVelocityRPS(10000)
     public boolean isShooterAtVelocity(int velocity, int threshold){
-        if(mMasterShooter.getSelectedSensorVelocity()> velocity - threshold && mMasterShooter.getSelectedSensorVelocity() < velocity + threshold){
-            return true;
-        }
-        else{
-            return false;
-        }
+        double actual = mMasterShooter.getSelectedSensorVelocity();
+        return actual >= velocity - threshold && actual <= velocity + threshold;
     }
-
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
-        SmartDashboard.putNumber("Shooter Target", velocity);
-        SmartDashboard.putNumber("Shooter Vel", mMasterShooter.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Shooter Voltage", mMasterShooter.getMotorOutputVoltage());
-        SmartDashboard.putNumber("Shooter Output Current", mMasterShooter.getStatorCurrent());
-        SmartDashboard.putNumber("Shooter Input Current", mMasterShooter.getSupplyCurrent());
-        SmartDashboard.putNumber("Slave Shooter Voltage", mSlaveShooter.getMotorOutputVoltage());
-        SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
-        SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
+        SmartDashboard.putNumber("S%", mMasterShooter.getMotorOutputPercent());
+        SmartDashboard.putNumber("STarg", velocity);
+        SmartDashboard.putNumber("SVel", mMasterShooter.getSelectedSensorVelocity());
+        //SmartDashboard.putNumber("Shooter Voltage", mMasterShooter.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("Shooter Output Current", mMasterShooter.getStatorCurrent());
+        SmartDashboard.putNumber("SInput", mMasterShooter.getSupplyCurrent());
+        SmartDashboard.putNumber("SVoltage", mSlaveShooter.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
+        SmartDashboard.putNumber("Slave Input", mSlaveShooter.getSupplyCurrent());
+        //SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));
+
+        //SmartDashboard.putNumber("S2", RobotContainer.getPDP().getCurrent(10));
+        //SmartDashboard.putNumber("S1", RobotContainer.getPDP().getCurrent(11));
+    }
+
+    public double getVelocity() {
+        return (mMasterShooter.getSelectedSensorVelocity() + mSlaveShooter.getSelectedSensorPosition())/2; 
     }
 }

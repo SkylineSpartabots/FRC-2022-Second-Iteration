@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.drivers.LazyTalonFX;
 import frc.lib.drivers.TalonFXFactory;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.I2C;
@@ -96,25 +97,33 @@ public class IndexerSubsystem extends SubsystemBase{
         setIndexerPercentPower(Constants.indexerUp, false);
         setIntakePercentPower(Constants.intakeOn, false);
     }
-    
+    public double getIntakeVelocity(){
+        return m_IntakeMotor.getSelectedSensorVelocity();
+    }
+    public double getIndexerVelocity(){
+        return m_IndexerMotor.getSelectedSensorVelocity();
+    }
     @Override
     public void periodic() {
         
         SmartDashboard.putNumber("intake proximity", m_intakeSensor.colorSensor.getProximity());
         SmartDashboard.putBoolean("intake loaded", isIntakeBallLoaded());
-        SmartDashboard.putBoolean("intake autoIntake", autoIntake);
-        SmartDashboard.putNumber("Intake speed", m_IntakeMotor.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Intake Voltage", m_IntakeMotor.getMotorOutputVoltage());
-        SmartDashboard.putNumber("Intake Output Current", m_IntakeMotor.getStatorCurrent());
+        //SmartDashboard.putBoolean("intake autoIntake", autoIntake);
+        //SmartDashboard.putNumber("Intake speed", m_IntakeMotor.getSelectedSensorVelocity());
+        //SmartDashboard.putNumber("Intake Voltage", m_IntakeMotor.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("Intake Output Current", m_IntakeMotor.getStatorCurrent());
         SmartDashboard.putNumber("Intake Input Current", m_IntakeMotor.getSupplyCurrent());
 
         SmartDashboard.putNumber("indexer proximity", m_indexerSensor.colorSensor.getProximity());
         SmartDashboard.putBoolean("indexer loaded", isIndexerBallLoaded());
-        SmartDashboard.putBoolean("indexer autoIntake", autoIndexer);
-        SmartDashboard.putNumber("indexer speed", m_IndexerMotor.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("indexer Voltage", m_IndexerMotor.getMotorOutputVoltage());
-        SmartDashboard.putNumber("indexer Output Current", m_IndexerMotor.getStatorCurrent());
+        //SmartDashboard.putBoolean("indexer autoIntake", autoIndexer);
+        //SmartDashboard.putNumber("indexer speed", m_IndexerMotor.getSelectedSensorVelocity());
+        //SmartDashboard.putNumber("indexer Voltage", m_IndexerMotor.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("indexer Output Current", m_IndexerMotor.getStatorCurrent());
         SmartDashboard.putNumber("indexer Input Current", m_IndexerMotor.getSupplyCurrent());
+
+        //SmartDashboard.putNumber("Indexer current from PDP", RobotContainer.getPDP().getCurrent(16));
+        //SmartDashboard.putNumber("Intake current from PDP", RobotContainer.getPDP().getCurrent(3));
 
         if(autoIndexer && isIndexerBallLoaded()){                
             m_IndexerMotor.set(ControlMode.PercentOutput, 0);
@@ -130,7 +139,7 @@ public class IndexerSubsystem extends SubsystemBase{
         return m_indexerSensor.colorSensor.getProximity() >= m_indexerSensor.distanceThreshold;
     }
     public boolean isIntakeBallLoaded(){
-        return m_intakeSensor.colorSensor.getProximity() >= 50;
+        return m_intakeSensor.colorSensor.getProximity() >= m_intakeSensor.distanceThreshold;
     }
     
 }

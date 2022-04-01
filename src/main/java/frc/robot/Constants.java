@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.util.Color;
 public final class Constants {
     // timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
+    public static final double kMinimumBatteryVoltage = 12.5;
+    public static final int kCanDeviceCount = 0;
     
     public static final double shooterFixed = 10500;
     public static final double shooterRamped = 11000;
@@ -33,8 +35,8 @@ public final class Constants {
 
     public static final double climbUp = 0.99;
     public static final double climbDown = -0.99; //usually 0.8, but potential issues having joystick moved to a full position
-    public static final double pivotUp = 0.4;
-    public static final double pivotDown = -0.5;
+    public static final double pivotUp = -0.4;
+    public static final double pivotDown = 0.4;
     
 
     
@@ -78,7 +80,7 @@ public final class Constants {
         public static final double kMaxVoltage = 12.0;
         // The maximum velocity of the robot in meters per second.
         // This is a measure of how fast the robot should be able to drive in a straight line.
-        public static final double kMaxSpeedMetersPerSecond =  0.81 * //speed decreased to 0.6
+        public static final double kMaxSpeedMetersPerSecond =  
         6380.0 / 60.0 *
                SdsModuleConfigurations.MK4_L2.getDriveReduction() *
                SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
@@ -127,8 +129,8 @@ public final class Constants {
         public static final int INDEXER_MOTOR = 32;
         public static final int HOOD_MOTOR = 23;//CHANGE THIS TO CORRECT PORT
         
-        public static final int LEFT_CLIMB = 42;
-        public static final int RIGHT_CLIMB = 41;
+        public static final int LEFT_CLIMB = 41;
+        public static final int RIGHT_CLIMB = 42;
         public static final int LEFT_PIVOT = 44;
         public static final int RIGHT_PIVOT = 43;
 

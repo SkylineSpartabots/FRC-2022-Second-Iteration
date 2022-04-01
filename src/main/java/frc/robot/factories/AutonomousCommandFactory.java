@@ -21,25 +21,8 @@ import java.util.List;
 
 public class AutonomousCommandFactory {
 
-    public static SendableChooser<Command> m_chooser = new SendableChooser<>();
-    public static void swapAutonomousCommands() {
-        //m_chooser.setDefaultOption("oneBallAuto", oneBallAuto());
-        m_chooser.setDefaultOption("fiveBallAuto", fiveBallAuto());
-        //m_chooser.setDefaultOption("twoBallAutoTopMiddle", twoBallAutoTopMiddle());
-        /*m_chooser.addOption("fiveBallAutoLimelight", fiveBallAutoLimelight());
-        m_chooser.addOption("twoBallAutoBottomBottom", twoBallAutoBottomBottom());
-        m_chooser.addOption("twoBallAutoBottomTop", twoBallAutoBottomTop());
-        m_chooser.addOption("twoBallAutoTopMiddle", twoBallAutoTopMiddle());
-        m_chooser.addOption("oneBallTopBottom", oneBallTopBottom());
-        m_chooser.addOption("oneBallTopTop", oneBallTopTop());*/
-
-
-        
-        SmartDashboard.putData(m_chooser);
-    }
-
     public static Command getAutonomousCommand() {
-        return m_chooser.getSelected();
+        return fiveBallAuto();
     }
 
     public static Pose2d getPose(double x, double y, double rot){
@@ -81,23 +64,37 @@ public class AutonomousCommandFactory {
             new CalibrationCommand(getPose(7.57, 1.79, -89.18)),            
             new SetIntakeCommand(intakeOn,false),
             new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+180)),
-            new TrajectoryDriveCommand(getPose(7.59, 0.80, -90.42), List.of(), false,0.3, 1 ,0.8),
+            new TrajectoryDriveCommand(getPose(7.59, 0.80, -90.42), List.of(), false,0.3, 1.2 ,1),
             new WaitCommand(0.2),            
             new SetIntakeCommand(0.0,false),
-            new TrajectoryDriveCommand(getPose(5.59, 2.58, -145.65), List.of(new Translation2d(6.14, 2.05)), true, 0.7, 4,1.4),
+            new TrajectoryDriveCommand(getPose(5.59, 2.58, -145.65), List.of(new Translation2d(6.14, 2.05)), true, 0.6, 4,1.4),
             new SetIndexerCommand(indexerUp,false),
             new SetIntakeCommand(intakeOn,false),
             new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+200)),
             new TrajectoryDriveCommand(getPose(5.18, 2.28, -145.57), List.of(), false, 1.0, 0.5, 0.3),
-            new WaitCommand(0.75),
+            new WaitCommand(1),
             new SetIntakeCommand(intakeOn+0.15,true),
             new SetIndexerCommand(indexerUp,true),
             new TrajectoryDriveCommand(getPose(1.22, 1.48, -137.29), List.of(), false, 0.2, 5, 2.0),
-            new WaitCommand(1.2),
+            new WaitCommand(1),
             new TrajectoryDriveCommand(getPose(5.18, 1.95, -145.57), List.of(), true, 0.5,5,2.0),
             new SetIntakeCommand(intakeOn,false),
             new SetIndexerCommand(indexerUp,false),
             new WaitCommand(3),
+            new RobotOff()
+            );
+    }
+
+    public static Command fiveBallAutoDiagnostics(){
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+200)),
+            new SetIntakeIndexerCommand(0.5,0.5),
+            new CalibrationCommand(getPose(7.57, 1.79, -89.18)),            
+            new TrajectoryDriveCommand(getPose(7.59, 0.80, -90.42), List.of(), false,0.3, 1 ,0.8),
+            new TrajectoryDriveCommand(getPose(5.59, 2.58, -145.65), List.of(new Translation2d(6.14, 2.05)), true, 0.7, 4,1.4),
+            new TrajectoryDriveCommand(getPose(5.18, 2.28, -145.57), List.of(), false, 1.0, 0.5, 0.3),
+            new TrajectoryDriveCommand(getPose(1.22, 1.48, -137.29), List.of(), false, 0.2, 5, 2.0),
+            new TrajectoryDriveCommand(getPose(5.18, 1.95, -145.57), List.of(), true, 0.5,5,2.0),
             new RobotOff()
             );
     }
@@ -166,7 +163,7 @@ public class AutonomousCommandFactory {
             );
     }
 
-    public static Command oneBallAuto(){
+    public static Command oneBallAuto(){//no navx auto
         return new SequentialCommandGroup(  
             new CalibrationCommand(getPose(0, 0, 0)),    
             new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed+180)),
@@ -178,7 +175,7 @@ public class AutonomousCommandFactory {
             );
     }
 
-    public static Command twoBallAuto(){        
+    public static Command twoBallAuto(){    //no navx auto     
         return new SequentialCommandGroup(  
             new CalibrationCommand(getPose(0, 0, 0)),      
             new SetIntakeCommand(intakeOn,true),
@@ -191,6 +188,15 @@ public class AutonomousCommandFactory {
             new RobotOff()
             );
     }
+/*
+    public static Command ejectionAuto(){
+        return new SequentialCommandGroup(
+            new CalibrationCommand(getPose((10.40, 3.05, -44.21)),
+            new SetIntakeCommand(intakeOn,true),
+            new InstantCommand(() -> ShooterSubsystem.getInstance().setShooterVelocity(shooterFixed + 180)),
+            )
+        );
+    }*/
 
     
 
