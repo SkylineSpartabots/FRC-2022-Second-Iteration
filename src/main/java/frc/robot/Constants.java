@@ -35,8 +35,8 @@ public final class Constants {
 
     public static final double climbUp = 0.99;
     public static final double climbDown = -0.99; //usually 0.8, but potential issues having joystick moved to a full position
-    public static final double pivotUp = 0.4;
-    public static final double pivotDown = -0.5;
+    public static final double pivotUp = -0.4;
+    public static final double pivotDown = 0.4;
     
 
     
@@ -129,8 +129,8 @@ public final class Constants {
         public static final int INDEXER_MOTOR = 32;
         public static final int HOOD_MOTOR = 23;//CHANGE THIS TO CORRECT PORT
         
-        public static final int LEFT_CLIMB = 42;
-        public static final int RIGHT_CLIMB = 41;
+        public static final int LEFT_CLIMB = 41;
+        public static final int RIGHT_CLIMB = 42;
         public static final int LEFT_PIVOT = 44;
         public static final int RIGHT_PIVOT = 43;
 

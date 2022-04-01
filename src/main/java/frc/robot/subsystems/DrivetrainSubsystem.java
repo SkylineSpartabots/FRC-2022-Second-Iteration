@@ -194,6 +194,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         applyDrive();
+        SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
         //can only read odo during auto
         /*if (!DriverStation.isTeleop()) {
             Pose2d pose = m_odometry.getPoseMeters();
@@ -205,16 +206,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
         }        
         SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
-
-        SmartDashboard.putNumber("FLSteer", RobotContainer.getPDP().getCurrent(4));
+*/
+        /*SmartDashboard.putNumber("FLSteer", RobotContainer.getPDP().getCurrent(4));
         SmartDashboard.putNumber("FLDrive", RobotContainer.getPDP().getCurrent(6));
         SmartDashboard.putNumber("BLSteer", RobotContainer.getPDP().getCurrent(5));
         SmartDashboard.putNumber("BLDrive", RobotContainer.getPDP().getCurrent(7));
         SmartDashboard.putNumber("FRSteer", RobotContainer.getPDP().getCurrent(15));
         SmartDashboard.putNumber("FRDrive", RobotContainer.getPDP().getCurrent(13));
         SmartDashboard.putNumber("BRDrive", RobotContainer.getPDP().getCurrent(12));
-        SmartDashboard.putNumber("BRDrive", RobotContainer.getPDP().getCurrent(14));
-*/
+        SmartDashboard.putNumber("BRSteer", RobotContainer.getPDP().getCurrent(14));*/
+
     }
 
     public void applyDrive() {

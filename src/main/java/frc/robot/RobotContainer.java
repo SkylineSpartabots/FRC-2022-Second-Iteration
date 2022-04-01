@@ -54,9 +54,10 @@ public class RobotContainer {
   private IndexerSubsystem m_indexerSubsystem;
   private ShooterSubsystem m_shooterSubsystem;
   private ClimbSubsystem m_climbSubsystem;
-  //private static PowerDistribution powerModule = new PowerDistribution(1, ModuleType.kRev);
+  
+  /*private static PowerDistribution powerModule = new PowerDistribution(1, ModuleType.kRev);
 
-  /*public static PowerDistribution getPDP(){
+  public static PowerDistribution getPDP(){
     return powerModule;
   }*/
   /**

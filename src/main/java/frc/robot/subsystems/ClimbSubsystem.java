@@ -79,6 +79,8 @@ public class ClimbSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic(){        
+        SmartDashboard.putNumber("R Climb Input Current", mRightClimb.getSupplyCurrent());
+        SmartDashboard.putNumber("l Climb Input Current", mLeftClimb.getSupplyCurrent());
        /* SmartDashboard.putNumber("L Climb Voltage", mLeftClimb.getMotorOutputVoltage());
         SmartDashboard.putNumber("L Climb Output Current", mLeftClimb.getStatorCurrent());
         SmartDashboard.putNumber("l Climb Input Current", mLeftClimb.getSupplyCurrent());
