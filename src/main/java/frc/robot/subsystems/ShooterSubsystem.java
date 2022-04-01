@@ -80,18 +80,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("Shooter Percent", mMasterShooter.getMotorOutputPercent());
-        SmartDashboard.putNumber("Shooter Target", velocity);
-        SmartDashboard.putNumber("Shooter Vel", mMasterShooter.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Shooter Voltage", mMasterShooter.getMotorOutputVoltage());
-        SmartDashboard.putNumber("Shooter Output Current", mMasterShooter.getStatorCurrent());
-        SmartDashboard.putNumber("Shooter Input Current", mMasterShooter.getSupplyCurrent());
-        SmartDashboard.putNumber("Slave Shooter Voltage", mSlaveShooter.getMotorOutputVoltage());
-        SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
-        SmartDashboard.putNumber("Slave Shooter Input Current", mSlaveShooter.getSupplyCurrent());
-        SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));
+        SmartDashboard.putNumber("S%", mMasterShooter.getMotorOutputPercent());
+        SmartDashboard.putNumber("STarg", velocity);
+        SmartDashboard.putNumber("SVel", mMasterShooter.getSelectedSensorVelocity());
+        //SmartDashboard.putNumber("Shooter Voltage", mMasterShooter.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("Shooter Output Current", mMasterShooter.getStatorCurrent());
+        SmartDashboard.putNumber("SInput", mMasterShooter.getSupplyCurrent());
+        SmartDashboard.putNumber("SVoltage", mSlaveShooter.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("Slave Shooter Output Current", mSlaveShooter.getStatorCurrent());
+        SmartDashboard.putNumber("Slave Input", mSlaveShooter.getSupplyCurrent());
+        //SmartDashboard.putBoolean("Is Shooter At Velocity?", isShooterAtVelocity(10000, 150));
 
-        SmartDashboard.putNumber("Shooter total current from PDP", RobotContainer.getPDP().getCurrent(10) + RobotContainer.getPDP().getCurrent(11));
+        SmartDashboard.putNumber("S2", RobotContainer.getPDP().getCurrent(10));
+        SmartDashboard.putNumber("S1", RobotContainer.getPDP().getCurrent(11));
     }
 
     public double getVelocity() {

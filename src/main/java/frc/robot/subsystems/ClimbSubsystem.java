@@ -79,10 +79,6 @@ public class ClimbSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic(){        
-        SmartDashboard.putNumber("L Climb Input Current", mLeftClimb.getSupplyCurrent());
-        SmartDashboard.putNumber("R Climb Input Current", mRightClimb.getSupplyCurrent());
-        SmartDashboard.putNumber("L Pivot Input Current", mLeftPivot.getSupplyCurrent());
-        SmartDashboard.putNumber("R Pivot Input Current", mRightPivot.getSupplyCurrent());
        /* SmartDashboard.putNumber("L Climb Voltage", mLeftClimb.getMotorOutputVoltage());
         SmartDashboard.putNumber("L Climb Output Current", mLeftClimb.getStatorCurrent());
         SmartDashboard.putNumber("l Climb Input Current", mLeftClimb.getSupplyCurrent());
@@ -96,8 +92,8 @@ public class ClimbSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("R Pivot Output Current", mRightPivot.getStatorCurrent());
         SmartDashboard.putNumber("R Pivot Input Current", mRightPivot.getSupplyCurrent());*/
 
-        SmartDashboard.putNumber("Left climb current from PDP", RobotContainer.getPDP().getCurrent(9));
-        SmartDashboard.putNumber("Right climb current from PDP", RobotContainer.getPDP().getCurrent(8));
+        SmartDashboard.putNumber("LClimb", RobotContainer.getPDP().getCurrent(9));
+        SmartDashboard.putNumber("RClimb", RobotContainer.getPDP().getCurrent(8));
     }
 
 }

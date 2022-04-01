@@ -40,23 +40,34 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //   5880.0 / 60.0 / SdsModuleConfigurations.MK4_L2.getDriveReduction() * SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI
     private final SwerveDriveOdometry m_odometry;
     private final SimpleMotorFeedforward m_feedforward;
+    
     private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+    
     // These are our modules. We initialize them in the constructor.
     private final SwerveModule m_frontLeftModule;
     private final SwerveModule m_frontRightModule;
     private final SwerveModule m_backLeftModule;
     private final SwerveModule m_backRightModule;
+    
     private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
     private Field2d m_field = new Field2d();
+    
+    public static DrivetrainSubsystem getInstance() {
+      if (m_instance == null) {
+          m_instance = new DrivetrainSubsystem();
+      }
+      return m_instance;
+  }
+
     public DrivetrainSubsystem() {
         setDefaultCommand(new TeleopDriveCommand(this));
 
         SmartDashboard.putData(m_field);
-        ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+        //ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
         m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                 // This parameter is optional, but will allow you to see the current state of the module on the dashboard.
-                tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0),
+        //        tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0),
                 // This can either be STANDARD or FAST depending on your gear configuration
                 Mk4SwerveModuleHelper.GearRatio.L2,
                 // Port ID of drive motor, steer motor, steer encoder offset
@@ -67,29 +78,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         // We will do the same for the other modules
         m_frontRightModule = Mk4SwerveModuleHelper.createFalcon500(
-                tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0),
+                //tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0),
                 Mk4SwerveModuleHelper.GearRatio.L2, Ports.FRONT_RIGHT_DRIVE, Ports.FRONT_RIGHT_STEER,
                 Ports.FRONT_RIGHT_STEER_ENCODER, Ports.FRONT_RIGHT_OFFSET);
 
         m_backLeftModule = Mk4SwerveModuleHelper.createFalcon500(
-                tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0),
+                //tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0),
                 Mk4SwerveModuleHelper.GearRatio.L2, Ports.BACK_LEFT_DRIVE, Ports.BACK_LEFT_STEER,
                 Ports.BACK_LEFT_STEER_ENCODER, Ports.BACK_LEFT_OFFSET);
 
         m_backRightModule = Mk4SwerveModuleHelper.createFalcon500(
-                tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0),
+                //tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0),
                 Mk4SwerveModuleHelper.GearRatio.L2, Ports.BACK_RIGHT_DRIVE, Ports.BACK_RIGHT_STEER,
                 Ports.BACK_RIGHT_STEER_ENCODER, Ports.BACK_RIGHT_OFFSET);
 
         m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
         m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
-    }
-
-    public static DrivetrainSubsystem getInstance() {
-        if (m_instance == null) {
-            m_instance = new DrivetrainSubsystem();
-        }
-        return m_instance;
     }
 
     public static double normalize(double deg) {
@@ -202,16 +206,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
 
-        SmartDashboard.putNumber("Front left steer (channel 4)", RobotContainer.getPDP().getCurrent(4));
-        SmartDashboard.putNumber("Front left drive (channel 6)", RobotContainer.getPDP().getCurrent(6));
-        SmartDashboard.putNumber("Back left steer (channel 5)", RobotContainer.getPDP().getCurrent(5));
-        SmartDashboard.putNumber("Back left drive (channel 7)", RobotContainer.getPDP().getCurrent(7));
-        SmartDashboard.putNumber("Back right drive (channel 12)", RobotContainer.getPDP().getCurrent(12));
-        SmartDashboard.putNumber("Front right drive (channel 13)", RobotContainer.getPDP().getCurrent(13));
-        SmartDashboard.putNumber("Back right steer (channel 14)", RobotContainer.getPDP().getCurrent(14));
-        SmartDashboard.putNumber("Front right steer (channel 15)", RobotContainer.getPDP().getCurrent(15));
-
-        applyDrive();
+        SmartDashboard.putNumber("FLSteer", RobotContainer.getPDP().getCurrent(4));
+        SmartDashboard.putNumber("FLDrive", RobotContainer.getPDP().getCurrent(6));
+        SmartDashboard.putNumber("BLSteer", RobotContainer.getPDP().getCurrent(5));
+        SmartDashboard.putNumber("BLDrive", RobotContainer.getPDP().getCurrent(7));
+        SmartDashboard.putNumber("FRSteer", RobotContainer.getPDP().getCurrent(15));
+        SmartDashboard.putNumber("FRDrive", RobotContainer.getPDP().getCurrent(13));
+        SmartDashboard.putNumber("BRDrive", RobotContainer.getPDP().getCurrent(12));
+        SmartDashboard.putNumber("BRDrive", RobotContainer.getPDP().getCurrent(14));
 
     }
 
@@ -223,6 +225,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_frontRightModule.set(getVoltageByVelocity(states[1].speedMetersPerSecond), states[1].angle.getRadians());
         m_backLeftModule.set(getVoltageByVelocity(states[2].speedMetersPerSecond), states[2].angle.getRadians());
         m_backRightModule.set(getVoltageByVelocity(states[3].speedMetersPerSecond), states[3].angle.getRadians());
+        // m_frontLeftModule.set(states[0].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE , states[0].angle.getRadians());
+        // m_frontRightModule.set(states[1].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[1].angle.getRadians());
+        // m_backLeftModule.set(states[2].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[2].angle.getRadians());
+        // m_backRightModule.set(states[3].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[3].angle.getRadians());
 
         if (DriverStation.isAutonomousEnabled()) {
             m_odometry.update(getGyroscopeRotation(),

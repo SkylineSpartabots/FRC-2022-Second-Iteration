@@ -29,9 +29,9 @@ public class TeleopDriveCommand extends CommandBase {
     protected final Controller m_controller;
 
     //limit accel/deccel
-    protected SlewRateLimiter driveXFilter = new SlewRateLimiter(6);
-    protected SlewRateLimiter driveYFilter = new SlewRateLimiter(6);
-    protected SlewRateLimiter rotFilter = new SlewRateLimiter(20);
+    protected SlewRateLimiter driveXFilter = new SlewRateLimiter(4);
+    protected SlewRateLimiter driveYFilter = new SlewRateLimiter(4);
+    protected SlewRateLimiter rotFilter = new SlewRateLimiter(18);
     
     public void driveWithJoystick() {
         // get joystick input for drive
@@ -65,10 +65,10 @@ public class TeleopDriveCommand extends CommandBase {
 
     protected static double modifyAxis(double value) {
         // Deadband
-        value = applyDeadband(value, 0.2);
+        value = applyDeadband(value, 0.1);
 
         // Square the axis
-        value = Math.copySign(value, value);
+        value = Math.copySign(value*value, value);
 
         return value;
     }
