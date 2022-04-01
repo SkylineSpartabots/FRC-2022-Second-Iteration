@@ -28,17 +28,16 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    addPeriodic(
+      () -> {
+      },
+      0.02, // drive at higher frequency
+      0.000);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    addPeriodic(
-      () -> {
-        DrivetrainSubsystem.getInstance().applyDrive();
-      },
-      0.02, // drive at higher frequency
-      0.000);
   }
 
 
@@ -89,7 +88,7 @@ public class Robot extends TimedRobot {
     
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-    new DiagnosticTestCommand().schedule();
+    //new DiagnosticTestCommand().schedule();
   }
 
   /** This function is called periodically during test mode. */

@@ -122,8 +122,8 @@ public class IndexerSubsystem extends SubsystemBase{
         //SmartDashboard.putNumber("indexer Output Current", m_IndexerMotor.getStatorCurrent());
         SmartDashboard.putNumber("indexer Input Current", m_IndexerMotor.getSupplyCurrent());
 
-        SmartDashboard.putNumber("Indexer current from PDP", RobotContainer.getPDP().getCurrent(16));
-        SmartDashboard.putNumber("Intake current from PDP", RobotContainer.getPDP().getCurrent(3));
+        //SmartDashboard.putNumber("Indexer current from PDP", RobotContainer.getPDP().getCurrent(16));
+        //SmartDashboard.putNumber("Intake current from PDP", RobotContainer.getPDP().getCurrent(3));
 
         if(autoIndexer && isIndexerBallLoaded()){                
             m_IndexerMotor.set(ControlMode.PercentOutput, 0);

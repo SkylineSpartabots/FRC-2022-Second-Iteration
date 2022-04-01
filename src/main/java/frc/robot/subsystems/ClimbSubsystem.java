@@ -92,8 +92,8 @@ public class ClimbSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("R Pivot Output Current", mRightPivot.getStatorCurrent());
         SmartDashboard.putNumber("R Pivot Input Current", mRightPivot.getSupplyCurrent());*/
 
-        SmartDashboard.putNumber("LClimb", RobotContainer.getPDP().getCurrent(9));
-        SmartDashboard.putNumber("RClimb", RobotContainer.getPDP().getCurrent(8));
+        //SmartDashboard.putNumber("LClimb", RobotContainer.getPDP().getCurrent(9));
+        //SmartDashboard.putNumber("RClimb", RobotContainer.getPDP().getCurrent(8));
     }
 
 }

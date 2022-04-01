@@ -193,9 +193,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        applyDrive();
         //can only read odo during auto
-        if (!DriverStation.isTeleop()) {
+        /*if (!DriverStation.isTeleop()) {
             Pose2d pose = m_odometry.getPoseMeters();
 
             SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
@@ -214,7 +214,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("FRDrive", RobotContainer.getPDP().getCurrent(13));
         SmartDashboard.putNumber("BRDrive", RobotContainer.getPDP().getCurrent(12));
         SmartDashboard.putNumber("BRDrive", RobotContainer.getPDP().getCurrent(14));
-
+*/
     }
 
     public void applyDrive() {
