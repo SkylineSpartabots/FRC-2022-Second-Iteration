@@ -38,7 +38,7 @@ public class IndexerSubsystem extends SubsystemBase{
     //MERGE INDEXER SUBSYSTEM WITH INTAKE SUBSYSTEM???
 
     
-    public IndexerSubsystem() {
+    public IndexerSubsystem() {//TODO: ADD CURRENT LIMITATIONS
         m_IndexerMotor = TalonFXFactory.createDefaultFalcon("Indexer Motor", Ports.INDEXER_MOTOR);//creates motor
         //configure motor
         m_IndexerMotor.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);

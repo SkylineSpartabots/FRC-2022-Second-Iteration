@@ -31,7 +31,7 @@ public class TeleopDriveCommand extends CommandBase {
     //limit accel/deccel
     protected SlewRateLimiter driveXFilter = new SlewRateLimiter(8);
     protected SlewRateLimiter driveYFilter = new SlewRateLimiter(8);
-    protected SlewRateLimiter rotFilter = new SlewRateLimiter(20);
+    protected SlewRateLimiter rotFilter = new SlewRateLimiter(24);
     
     public void driveWithJoystick() {
         // get joystick input for drive
