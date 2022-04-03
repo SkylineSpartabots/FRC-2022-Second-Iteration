@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
       },
       0.02, // drive at higher frequency
       0.000);
+      RobotContainer.printDiagnostics();
   }
 
   @Override
