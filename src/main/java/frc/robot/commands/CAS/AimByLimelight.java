@@ -25,7 +25,7 @@ public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQU
     public AimByLimelight(String direction) {
         super(DrivetrainSubsystem.getInstance());
        
-        m_thetaController = new PIDController(2.0,0,0);
+        m_thetaController = new PIDController(0.5,0,0);
         m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
         m_limelightSubsystem = LimelightSubsystem.getInstance();
         this.direction = direction;
@@ -34,7 +34,7 @@ public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQU
     public AimByLimelight() {
         super(DrivetrainSubsystem.getInstance());
        
-        m_thetaController = new PIDController(2.0,0,0);
+        m_thetaController = new PIDController(0.5,0,0);
         m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
         m_limelightSubsystem = LimelightSubsystem.getInstance();
     }
@@ -44,6 +44,8 @@ public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQU
         var xSpeed = -modifyAxis(m_controller.getLeftY()) * DriveConstants.kMaxSpeedMetersPerSecond;
         var ySpeed = -modifyAxis(m_controller.getLeftX()) * DriveConstants.kMaxSpeedMetersPerSecond;
         double rot;
+
+        
         if(LimelightSubsystem.getInstance().hasTarget()){
             rot = m_thetaController.calculate(Math.toRadians(LimelightSubsystem.getInstance().getXOffset()),0.0);
             if(Math.abs(m_limelightSubsystem.getXOffset()) < 3.0){
@@ -60,7 +62,7 @@ public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQU
             else{
                 rot = 0;
             }
-        }       
+        }      
 
         SmartDashboard.putNumber("xSpeed", xSpeed);
         SmartDashboard.putNumber("ySpeed", ySpeed);
@@ -68,5 +70,6 @@ public class AimByLimelight extends TeleopDriveCommand{ //REPLACABLE BY AIM SEQU
     
         m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
                 rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));
+                //rot, m_drivetrainSubsystem.getGyroscopeRotation()));
     }
 }

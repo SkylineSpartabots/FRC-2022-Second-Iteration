@@ -77,7 +77,10 @@ public class ShooterSubsystem extends SubsystemBase {
         double actual = mMasterShooter.getSelectedSensorVelocity();
         return actual >= velocity - threshold && actual <= velocity + threshold;
     }
-
+    public int getVelocity()
+    {
+        return (int) mMasterShooter.getSelectedSensorVelocity();
+    }
     @Override
     public void periodic(){
         SmartDashboard.putNumber("S%", mMasterShooter.getMotorOutputPercent());
@@ -93,9 +96,5 @@ public class ShooterSubsystem extends SubsystemBase {
 
         //SmartDashboard.putNumber("S2", RobotContainer.getPDP().getCurrent(10));
         //SmartDashboard.putNumber("S1", RobotContainer.getPDP().getCurrent(11));
-    }
-
-    public double getVelocity() {
-        return (mMasterShooter.getSelectedSensorVelocity() + mSlaveShooter.getSelectedSensorPosition())/2; 
     }
 }

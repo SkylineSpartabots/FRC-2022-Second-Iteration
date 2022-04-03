@@ -17,12 +17,12 @@ import edu.wpi.first.wpilibj.util.Color;
 public final class Constants {
     // timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
-    public static final double kMinimumBatteryVoltage = 12.5;
+    public static final double kMinimumBatteryVoltage = 12;
     public static final int kCanDeviceCount = 0;
     
     public static final double shooterFixed = 10500;
     public static final double shooterRamped = 11000;
-    public static final double shooterIdle = 10000;
+    public static final double shooterIdle = 10500;
     public static final double shooterEjection = 8000;
 
     public static final double indexerUp = 0.5;

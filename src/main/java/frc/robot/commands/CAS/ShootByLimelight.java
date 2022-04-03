@@ -32,7 +32,7 @@ public class ShootByLimelight extends CommandBase {
     public void initialize() {
     }
 
-    double targetShooterVelocity = 0;
+    double targetVel = 0;
     int threshold = 200;
     @Override
     public void execute(){
@@ -45,19 +45,19 @@ public class ShootByLimelight extends CommandBase {
         shooterSpeed = calculateShooterSpeed(LimelightSubsystem.getInstance().getDistance());
       }
       
+      targetVel = shooterSpeed;
       m_shooter.setShooterVelocity(shooterSpeed);
     }
-    
     private int calculateShooterSpeed(double distance){
 
       double shooterSlope = 1099;
-      double shooterIntercept = 6900.0;
+      double shooterIntercept = 6700.0;
 
       double minVelocity = 9500;
       double maxVelocity = 12500;
 
       
-      targetShooterVelocity = shooterSlope * distance + shooterIntercept;
+      double targetShooterVelocity = shooterSlope * distance + shooterIntercept;
 
       if(targetShooterVelocity > maxVelocity) {
         targetShooterVelocity = maxVelocity;
@@ -75,14 +75,18 @@ public class ShootByLimelight extends CommandBase {
 
     @Override
     public boolean isFinished(){
-      //return Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;
-      return LimelightSubsystem.getInstance().hasTarget() && Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;               
+      //return LimelightSubsystem.getInstance().hasTarget() && Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3;  
+      //int currentVel = Integer.parseInt(SmartDashboard.getNumber("SVel", 10000) + ""); 
+      int currentVel = m_shooter.getVelocity();
+      int threshold = 200;  
+      return LimelightSubsystem.getInstance().hasTarget() && Math.abs(LimelightSubsystem.getInstance().getXOffset()) < 3
+       && (currentVel >= targetVel - threshold && currentVel <= targetVel + threshold);                  
     }
     @Override
     public void end(boolean interruptable){   
       if(moveIndexer){
         new SequentialCommandGroup(
-          new WaitCommand(0.3),
+          //new WaitCommand(0.3),
           new SetIntakeIndexerCommand(Constants.intakeOn, Constants.indexerUp)
         ).schedule();
       }   

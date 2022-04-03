@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.swervedrivespecialties.swervelib.Mk4ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -65,10 +66,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putData(m_field);
         //ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
+        Mk4ModuleConfiguration driveConfiguration = new Mk4ModuleConfiguration();
+        driveConfiguration.setDriveCurrentLimit(20);
         m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                 // This parameter is optional, but will allow you to see the current state of the module on the dashboard.
         //        tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0),
                 // This can either be STANDARD or FAST depending on your gear configuration
+                driveConfiguration,
                 Mk4SwerveModuleHelper.GearRatio.L2,
                 // Port ID of drive motor, steer motor, steer encoder offset
                 Ports.FRONT_LEFT_DRIVE, Ports.FRONT_LEFT_STEER,
@@ -79,16 +83,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // We will do the same for the other modules
         m_frontRightModule = Mk4SwerveModuleHelper.createFalcon500(
                 //tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0),
+                driveConfiguration,
                 Mk4SwerveModuleHelper.GearRatio.L2, Ports.FRONT_RIGHT_DRIVE, Ports.FRONT_RIGHT_STEER,
                 Ports.FRONT_RIGHT_STEER_ENCODER, Ports.FRONT_RIGHT_OFFSET);
 
         m_backLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                 //tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0),
+                driveConfiguration,
                 Mk4SwerveModuleHelper.GearRatio.L2, Ports.BACK_LEFT_DRIVE, Ports.BACK_LEFT_STEER,
                 Ports.BACK_LEFT_STEER_ENCODER, Ports.BACK_LEFT_OFFSET);
 
         m_backRightModule = Mk4SwerveModuleHelper.createFalcon500(
                 //tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0),
+                driveConfiguration,
                 Mk4SwerveModuleHelper.GearRatio.L2, Ports.BACK_RIGHT_DRIVE, Ports.BACK_RIGHT_STEER,
                 Ports.BACK_RIGHT_STEER_ENCODER, Ports.BACK_RIGHT_OFFSET);
 
@@ -195,18 +202,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     public void periodic() {
         applyDrive();
         SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
-        //can only read odo during auto
-        /*if (!DriverStation.isTeleop()) {
-            Pose2d pose = m_odometry.getPoseMeters();
-
-            SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
-            SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
-    
-            m_field.setRobotPose(pose);
-        }        
-        SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putBoolean("IsCalibrating", m_navx.isCalibrating());
-*/
+
         /*SmartDashboard.putNumber("FLSteer", RobotContainer.getPDP().getCurrent(4));
         SmartDashboard.putNumber("FLDrive", RobotContainer.getPDP().getCurrent(6));
         SmartDashboard.putNumber("BLSteer", RobotContainer.getPDP().getCurrent(5));
@@ -231,12 +228,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // m_backLeftModule.set(states[2].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[2].angle.getRadians());
         // m_backRightModule.set(states[3].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[3].angle.getRadians());
 
-        if (DriverStation.isAutonomousEnabled()) {
+        if (DriverStation.isAutonomous()) {
             m_odometry.update(getGyroscopeRotation(),
                     new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
                     new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),
                     new SwerveModuleState(m_backLeftModule.getDriveVelocity(), new Rotation2d(m_backLeftModule.getSteerAngle())),
                     new SwerveModuleState(m_backRightModule.getDriveVelocity(), new Rotation2d(m_backRightModule.getSteerAngle())));
+            
+            Pose2d pose = m_odometry.getPoseMeters();
+
+            SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
+            SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
+            
+            m_field.setRobotPose(pose);
         }
     }
 
