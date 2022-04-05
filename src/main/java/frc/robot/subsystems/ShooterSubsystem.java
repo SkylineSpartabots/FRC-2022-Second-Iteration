@@ -35,7 +35,6 @@ public class ShooterSubsystem extends SubsystemBase {
         mSlaveShooter = TalonFXFactory.createSlaveFalcon("Follower Shooter Motor", Ports.FOLLOW_SHOOTER_MOTOR, Ports.MASTER_SHOOTER_MOTOR);
         mSlaveShooter.setMaster(mMasterShooter);
         configureMotor(mSlaveShooter, false);
-
     }
 
     private void configureMotor(LazyTalonFX talon, boolean b){

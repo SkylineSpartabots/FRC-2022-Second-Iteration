@@ -9,6 +9,7 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.drivers.LazyTalonFX;
 import frc.lib.drivers.TalonFXFactory;
+import frc.lib.drivers.TalonFXUtil;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
@@ -38,18 +39,22 @@ public class IndexerSubsystem extends SubsystemBase{
     //MERGE INDEXER SUBSYSTEM WITH INTAKE SUBSYSTEM???
 
     
-    public IndexerSubsystem() {//TODO: ADD CURRENT LIMITATIONS
+    public IndexerSubsystem() {
         m_IndexerMotor = TalonFXFactory.createDefaultFalcon("Indexer Motor", Ports.INDEXER_MOTOR);//creates motor
         //configure motor
         m_IndexerMotor.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         m_IndexerMotor.enableVoltageCompensation(true);        
         m_IndexerMotor.setNeutralMode(NeutralMode.Brake);
+        TalonFXUtil.setStatorCurrentLimit(m_IndexerMotor, 20);
+        TalonFXUtil.setSupplyCurrentLimit(m_IndexerMotor, 20);
         m_indexerSensor = new TunedColorSensor(Constants.kColorSensorIndexerDistance, kMxpI2C);
 
         m_IntakeMotor = TalonFXFactory.createDefaultFalcon("Intake Motor", Ports.INTAKE_MOTOR);//creates motor
         m_IntakeMotor.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         m_IntakeMotor.enableVoltageCompensation(true);        
         m_IntakeMotor.setNeutralMode(NeutralMode.Coast);
+        TalonFXUtil.setStatorCurrentLimit(m_IntakeMotor, 20);
+        TalonFXUtil.setSupplyCurrentLimit(m_IntakeMotor, 20);
         m_intakeSensor = new TunedColorSensor(Constants.kColorSensorLoadingDistance, onboardI2C);
     }
     
